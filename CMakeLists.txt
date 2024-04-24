@@ -17,7 +17,8 @@ add_library(code_utils_libs
     src/sensor/imu.cc
     src/sensor/imu.cc
     src/util/logger.cc
-    src/util/time.cc)
+    src/util/time.cc
+    src/util/math.cc)
 
 
 target_link_libraries(code_utils_libs ${OpenCV_LIBS} ${CERES_LIBRARIES})

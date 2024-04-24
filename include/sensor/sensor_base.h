@@ -16,7 +16,6 @@ class SensorBase {
  public:
   virtual ~SensorBase() {}
   virtual void Initialize() = 0;
-  virtual void ReadData(const std::string& file_path) = 0;
 
 protected:
   Utils::Logger logger_;

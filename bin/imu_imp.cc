@@ -9,7 +9,8 @@ int main(int argc, char** argv) {
   }
   std::string file_path = argv[1];
   Sensor::IMU imu_processer;
-  imu_processer.ReadData(file_path);
-  std::cout << "imu date size is " << imu_processer.GetVecData().size() << "\n";
+  std::vector<Sensor::IMUData> data_vec;
+  imu_processer.ReadData(file_path, &data_vec);
+  std::cout << "imu date size is " << data_vec.size() << "\n";
   return 0;
 }
