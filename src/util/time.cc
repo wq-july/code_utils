@@ -5,22 +5,22 @@
 
 namespace Utils {
 
-TimeUtils::TimeUtils() : elapsed_time_(0) {}
+Timer::Timer() : elapsed_time_(0) {}
 
-void TimeUtils::StartTimer(const std::string& description) {
+void Timer::StartTimer(const std::string& description) {
     timer_description_ = description;
     if (!timer_description_.empty()) {
-        std::cout << timer_description_ << std::endl;
+        std::cout << timer_description_ << " Start! " << std::endl;
     }
     start_time_ = std::chrono::high_resolution_clock::now();
 }
 
-void TimeUtils::StopTimer() {
+void Timer::StopTimer() {
     end_time_ = std::chrono::high_resolution_clock::now();
     CalculateElapsedTime();
 }
 
-double TimeUtils::GetElapsedTime(TimeUnit unit) {
+double Timer::GetElapsedTime(TimeUnit unit) {
     switch (unit) {
         case Microseconds:
             return std::chrono::duration<double, std::micro>(end_time_ - start_time_).count();
@@ -32,28 +32,28 @@ double TimeUtils::GetElapsedTime(TimeUnit unit) {
     }
 }
 
-void TimeUtils::PrintElapsedTime(TimeUnit unit) {
+void Timer::PrintElapsedTime(TimeUnit unit) {
     std::cout << timer_description_ << " took " << GetElapsedTime(unit);
     switch (unit) {
         case Microseconds:
-            std::cout << " microseconds.";
+            std::cout << " us.";
             break;
         case Seconds:
-            std::cout << " seconds.";
+            std::cout << " s.";
             break;
         case Milliseconds:
         default:
-            std::cout << " milliseconds.";
+            std::cout << " ms.";
             break;
     }
     std::cout << std::endl;
 }
 
-void TimeUtils::CalculateElapsedTime() {
+void Timer::CalculateElapsedTime() {
     elapsed_time_ = std::chrono::duration<double, std::milli>(end_time_ - start_time_).count();
 }
 
-std::string TimeUtils::TimestampToReadable(long long timestamp) {
+std::string Timer::TimestampToReadable(long long timestamp) {
     std::time_t t = timestamp;
     std::tm *tm = std::localtime(&t);
     std::stringstream ss;
@@ -61,7 +61,7 @@ std::string TimeUtils::TimestampToReadable(long long timestamp) {
     return ss.str();
 }
 
-double TimeUtils::TimestampToDoubleSeconds(const uint64_t timestamp) {
+double Timer::TimestampToDoubleSeconds(const uint64_t timestamp) {
   return static_cast<double>(timestamp) / 1.0e9;
 }
 
