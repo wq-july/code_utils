@@ -1,4 +1,4 @@
-#include "sensor/imu.h"
+#include "imu/imu.h"
 
 namespace Sensor {
 
