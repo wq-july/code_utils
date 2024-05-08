@@ -2,12 +2,14 @@
 #include "util/logger.h"
 
 namespace Utils {
-Logger::Logger(const std::string& filename)
-    : console_log_levels_(FATAL + 1, false), console_log_enabled_(true) {
+Logger::Logger(const std::string& filename) {
   if (!filename.empty()) {
     file_stream_ = std::make_unique<std::ofstream>(filename, std::ios::app);
   }
-  console_log_levels_[INFO] = true;  // 默认启用INFO级别
+  console_log_enabled_ = true;
+  console_log_levels_.resize(5, false);
+  console_log_levels_[FATAL] = true;  // 默认启用FATAL级别
+  console_log_levels_[ERROR] = true;  // 默认启用ERROR级别
 }
 
 Logger::~Logger() {

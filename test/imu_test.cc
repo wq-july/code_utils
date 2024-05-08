@@ -1,28 +1,27 @@
 #include <gtest/gtest.h>
+
 #include <vector>
+
+#include "util/config.h"
+
+#define private public
+
 #include "imu/imu.h"
 
 class IMUTest : public testing::Test {
-protected:
+ protected:
   void SetUp() override {
-    // Setup code that runs before each test case
-    // For example, you can initialize variables here
+    Config config("../conf/imu_config.yaml");
+    imu_processer_ = std::make_shared<Sensor::IMU>(config.imu_config_);
   }
-
-  void TearDown() override {
-    // Teardown code that runs after each test case
-    // For example, you can release resources here
-  }
-
-  // Add any member variables or helper functions you need
+  std::shared_ptr<Sensor::IMU> imu_processer_ = nullptr;
 };
 
 // Test case for IMUData reading
 TEST_F(IMUTest, ReadDataTest) {
-  Sensor::IMU imu_processer;
   std::vector<Sensor::IMUData> data_vec;
   // Replace "test_data_file.txt" with your test data file path
-  imu_processer.ReadData("../data/imu/MS1.txt", &data_vec);
+  imu_processer_->ReadData("../data/imu/MS1.txt", &data_vec);
   EXPECT_GT(data_vec.size(), 0);  // Expecting at least one data point
 }
 

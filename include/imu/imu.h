@@ -4,6 +4,7 @@
 
 #include "Eigen/Dense"
 
+#include "util/config.h"
 #include "util/logger.h"
 
 using namespace Utils;
@@ -30,14 +31,22 @@ struct IMUData {
 
 class IMU {
  public:
-  IMU();
+  IMU() = default;
+  IMU(const Utils::ImuConfig& config);
   ~IMU() = default;
+
+  bool ProcessImu();
+
+ private:
+  // 用于读取配置文件参数
+  void SetConfig(const Utils::ImuConfig& config);
+  // 算法相关参数初始化
   void Initialize();
   bool ReadData(const std::string& file_path,
                 std::vector<IMUData>* const data_vec);
-  
-  private:
-   Utils::Logger logger_;
+
+ private:
+  Utils::Logger logger_;
 };
 
 }  // namespace Sensor
