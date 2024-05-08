@@ -1,0 +1,45 @@
+ImuConfig:
+  imu_file_path: "../data/imu/MS1.txt"
+  imu_topic: "imu_data"
+  frequency: 100
+  Transformation_i_c:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation_euler:
+      roll: 0.0
+      pitch: 0.0
+      yaw: 0.0
+  Transformation_i_l:
+    translation:
+      x: 1.0
+      y: 0.0
+      z: 0.0
+    rotation_euler:
+      roll: 0.0
+      pitch: 0.0
+      yaw: 180.0
+  Transformation_i_b:
+    translation:
+      x: 0.5
+      y: 0.5
+      z: 0.0
+    rotation_euler:
+      roll: 90.0
+      pitch: 0.0
+      yaw: 0.0
+
+  LoggerConfig:
+    log_file_path: "../log/imu_log.txt"
+    enable_console_log: true
+    console_log_levels:
+      - "FATAL"
+      - "ERROR"
+      # - "WARN"
+      # - "INFO"
+      # - "DEBUG"
+      # - "ALL"
+
+  TimerConfig:
+    time_unit: "ms"
