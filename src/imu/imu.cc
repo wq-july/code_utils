@@ -1,16 +1,16 @@
 #include "imu/imu.h"
 
-namespace Sensor {
+namespace IMU {
 
-IMU::IMU(const Utils::ImuConfig& config) {
+ImuProcessor::ImuProcessor(const Utils::ImuConfig& config) {
   SetConfig(config);
   Initialize();
 }
 
 // TODO
-bool IMU::ProcessImu() { return true; }
+bool ImuProcessor::ProcessImu() { return true; }
 
-void IMU::SetConfig(const Utils::ImuConfig& config) {
+void ImuProcessor::SetConfig(const Utils::ImuConfig& config) {
   // 配置 Logger
   logger_.EnableConsoleLog(
       config.logger_config_.enable_console_log_);  // 启用控制台日志
@@ -18,10 +18,10 @@ void IMU::SetConfig(const Utils::ImuConfig& config) {
   logger_.Log(INFO) << "Initializing IMU sensor.";
 }
 
-void IMU::Initialize() {}
+void ImuProcessor::Initialize() {}
 
-bool IMU::ReadData(const std::string& file_path,
-                   std::vector<IMUData>* const data_vec) {
+bool ImuProcessor::ReadData(const std::string& file_path,
+                            std::vector<IMUData>* const data_vec) {
   if (file_path.empty()) {
     logger_.Log(ERROR) << "File path is empty.";
     return false;
@@ -56,4 +56,4 @@ bool IMU::ReadData(const std::string& file_path,
   logger_.Log(INFO) << "Completed data reading from IMU sensor.";
   return true;
 }
-}  // namespace Sensor
+}  // namespace IMU

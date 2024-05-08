@@ -8,27 +8,27 @@ ImuConfig:
       y: 0.0
       z: 0.0
     rotation_euler:
-      roll: 0.0
-      pitch: 0.0
-      yaw: 0.0
+      x: 0.0          # roll 
+      y: 0.0          # pitch
+      z: 0.0          # yaw  
   Transformation_i_l:
     translation:
       x: 1.0
       y: 0.0
       z: 0.0
     rotation_euler:
-      roll: 0.0
-      pitch: 0.0
-      yaw: 180.0
+      x: 0.0          # roll 
+      y: 0.0          # pitch
+      z: 0.0          # yaw  
   Transformation_i_b:
     translation:
       x: 0.5
       y: 0.5
       z: 0.0
     rotation_euler:
-      roll: 90.0
-      pitch: 0.0
-      yaw: 0.0
+      x: 0.0          # roll 
+      y: 0.0          # pitch
+      z: 0.0          # yaw  
 
   LoggerConfig:
     log_file_path: "../log/imu_log.txt"
@@ -43,3 +43,15 @@ ImuConfig:
 
   TimerConfig:
     time_unit: "ms"
+
+  PreIntegration:
+    init_ba:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    init_bg:
+      x: 90.0
+      y: 0.0
+      z: 0.0
+    noise_acc: 0.0
+    noise_gyr: 0.0

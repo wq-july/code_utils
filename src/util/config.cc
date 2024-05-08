@@ -12,15 +12,28 @@ void Config::LoadConfigFile(const std::string& filename) {
       const YAML::Node& imu = config["ImuConfig"];
       imu_config_.imu_file_path_ = imu["imu_file_path"].as<std::string>();
       imu_config_.imu_topic = imu["imu_topic"].as<std::string>();
-      imu_config_.frequency_ = imu["frequency"].as<int>();
+      imu_config_.frequency_ = imu["frequency"].as<int32_t>();
 
       // Load transformations
       LoadTransformation(imu["Transformation_i_c"],
-                         &imu_config_.Transformation_i_c);
+                         &imu_config_.Transformation_i_c_);
       LoadTransformation(imu["Transformation_i_l"],
-                         &imu_config_.Transformation_i_l);
+                         &imu_config_.Transformation_i_l_);
       LoadTransformation(imu["Transformation_i_b"],
-                         &imu_config_.Transformation_i_b);
+                         &imu_config_.Transformation_i_b_);
+
+      // Load IMU PreIntegration conf
+      if (imu["ImuPreIntegration"]) {
+        const YAML::Node& preintegration = imu["ImuPreIntegration"];
+        LoadVector(preintegration["init_ba"],
+                   &imu_config_.pre_integration_config_.init_ba_);
+        LoadVector(preintegration["init_bg"],
+                   &imu_config_.pre_integration_config_.init_bg_);
+        imu_config_.pre_integration_config_.noise_gyr_ =
+            preintegration["noise_gyr"].as<double>();
+        imu_config_.pre_integration_config_.noise_acc_ =
+            preintegration["noise_acc"].as<double>();
+      }
 
       // Load IMU LoggerConfig
       if (imu["LoggerConfig"]) {
@@ -48,15 +61,26 @@ void Config::LoadConfigFile(const std::string& filename) {
   }
 }
 
+void Config::LoadVector(const YAML::Node& node,
+                        Eigen::Vector3d* const vector3d) {
+  if (!node) {
+    std::cerr << "null node! \n";
+    return;
+  }
+  *vector3d = Eigen::Vector3d(node["x"].as<double>(), node["y"].as<double>(),
+                              node["z"].as<double>());
+}
+
 void Config::LoadTransformation(const YAML::Node& node,
                                 Eigen::Isometry3d* const transform) {
-  if (!node) return;
-  Eigen::Vector3d translation(node["translation"]["x"].as<double>(),
-                              node["translation"]["y"].as<double>(),
-                              node["translation"]["z"].as<double>());
-  Eigen::Vector3d euler_angles(node["rotation_euler"]["roll"].as<double>(),
-                               node["rotation_euler"]["pitch"].as<double>(),
-                               node["rotation_euler"]["yaw"].as<double>());
+  if (!node) {
+    std::cerr << "null node! \n";
+    return;
+  }
+  Eigen::Vector3d translation = Eigen::Vector3d::Zero();
+  Eigen::Vector3d euler_angles = Eigen::Vector3d::Zero();
+  LoadVector(node["translation"], &translation);
+  LoadVector(node["rotation_euler"], &euler_angles);
   *transform = Eigen::Translation3d(translation) *
                Eigen::AngleAxisd(euler_angles.z(), Eigen::Vector3d::UnitZ()) *
                Eigen::AngleAxisd(euler_angles.y(), Eigen::Vector3d::UnitY()) *
