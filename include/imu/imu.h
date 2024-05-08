@@ -3,7 +3,8 @@
 #include <vector>
 
 #include "Eigen/Dense"
-#include "sensor_base.h"
+
+#include "util/logger.h"
 
 using namespace Utils;
 
@@ -27,14 +28,16 @@ struct IMUData {
   }
 };
 
-class IMU : public SensorBase {
-  // override
+class IMU {
  public:
   IMU();
   ~IMU() = default;
-  void Initialize() override;
+  void Initialize();
   bool ReadData(const std::string& file_path,
                 std::vector<IMUData>* const data_vec);
+  
+  private:
+   Utils::Logger logger_;
 };
 
 }  // namespace Sensor
