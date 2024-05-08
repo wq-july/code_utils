@@ -2,14 +2,23 @@
 
 namespace Sensor {
 
-IMU::IMU() { Initialize(); }
+IMU::IMU(const Utils::ImuConfig& config) {
+  SetConfig(config);
+  Initialize();
+}
 
-void IMU::Initialize() {
+// TODO
+bool IMU::ProcessImu() { return true; }
+
+void IMU::SetConfig(const Utils::ImuConfig& config) {
   // 配置 Logger
-  logger_.EnableConsoleLog(true);  // 启用控制台日志
+  logger_.EnableConsoleLog(
+      config.logger_config_.enable_console_log_);  // 启用控制台日志
   logger_.SetConsoleLevel("ALL");  // 设置控制台日志级别
   logger_.Log(INFO) << "Initializing IMU sensor.";
 }
+
+void IMU::Initialize() {}
 
 bool IMU::ReadData(const std::string& file_path,
                    std::vector<IMUData>* const data_vec) {

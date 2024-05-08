@@ -12,7 +12,7 @@
 
 namespace Utils {
 
-enum LogLevel { ALL = -1, DEBUG, INFO, WARN, ERROR, FATAL };
+enum LogLevel { ALL = -1, DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3, FATAL = 4 };
 
 class Logger {
  public:
