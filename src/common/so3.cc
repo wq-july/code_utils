@@ -1,6 +1,6 @@
-#include "util/math.h"
+#include "common/so3.h"
 
-namespace Utils {
+namespace Common {
 
 Eigen::Matrix3d SO3::JacobianRight(const Eigen::Vector3d &w) {
   Eigen::Matrix3d Jr = Eigen::Matrix3d::Identity();
@@ -36,9 +36,7 @@ Eigen::Matrix3d SO3::JacobianRightInverse(const Eigen::Vector3d &w) {
   return Jrinv;
 }
 
-Eigen::Matrix3d SO3::JacobianLeft(const Eigen::Vector3d &w) {
-  return JacobianRight(-w);
-}
+Eigen::Matrix3d SO3::JacobianLeft(const Eigen::Vector3d &w) { return JacobianRight(-w); }
 
 Eigen::Matrix3d SO3::JacobianLeftInverse(const Eigen::Vector3d &w) {
   return JacobianRightInverse(-w);
@@ -50,9 +48,7 @@ SO3::SO3(const SO3 &other) : unit_quaternion_(other.unit_quaternion_) {
   unit_quaternion_.normalize();
 }
 
-SO3::SO3(const Eigen::Matrix3d &R) : unit_quaternion_(R) {
-  unit_quaternion_.normalize();
-}
+SO3::SO3(const Eigen::Matrix3d &R) : unit_quaternion_(R) { unit_quaternion_.normalize(); }
 
 SO3::SO3(const Eigen::Quaterniond &quat) : unit_quaternion_(quat) {
   assert(unit_quaternion_.squaredNorm() > EPS);
@@ -61,16 +57,14 @@ SO3::SO3(const Eigen::Quaterniond &quat) : unit_quaternion_(quat) {
 
 // 绕三轴的旋转
 SO3::SO3(double rot_x, double rot_y, double rot_z) {
-  unit_quaternion_ = (SO3::Exp(Eigen::Vector3d(rot_x, 0.f, 0.f)) *
-                      SO3::Exp(Eigen::Vector3d(0.f, rot_y, 0.f)) *
-                      SO3::Exp(Eigen::Vector3d(0.f, 0.f, rot_z)))
-                         .unit_quaternion_;
+  unit_quaternion_ =
+      (SO3::Exp(Eigen::Vector3d(rot_x, 0.f, 0.f)) * SO3::Exp(Eigen::Vector3d(0.f, rot_y, 0.f)) *
+       SO3::Exp(Eigen::Vector3d(0.f, 0.f, rot_z)))
+          .unit_quaternion_;
 }
 
 // 符号重载
-void SO3::operator=(const SO3 &other) {
-  this->unit_quaternion_ = other.unit_quaternion_;
-}
+void SO3::operator=(const SO3 &other) { this->unit_quaternion_ = other.unit_quaternion_; }
 
 SO3 SO3::operator*(const SO3 &other) const {
   SO3 result(*this);
@@ -95,9 +89,7 @@ SO3 SO3::Inverse() const {
 }
 
 // 转换为旋转矩阵
-Eigen::Matrix3d SO3::GetMatrix() const {
-  return unit_quaternion_.toRotationMatrix();
-}
+Eigen::Matrix3d SO3::GetMatrix() const { return unit_quaternion_.toRotationMatrix(); }
 
 // 返回旋转矩阵的伴随矩阵
 Eigen::Matrix3d SO3::Adj() const { return GetMatrix(); }
@@ -172,8 +164,7 @@ SO3 SO3::ExpAndTheta(const Eigen::Vector3d &omega, double *theta) {
     imag_factor = sin_half_theta / (*theta);
   }
 
-  return SO3(Eigen::Quaterniond(real_factor, imag_factor * omega.x(),
-                                imag_factor * omega.y(),
+  return SO3(Eigen::Quaterniond(real_factor, imag_factor * omega.x(), imag_factor * omega.y(),
                                 imag_factor * omega.z()));
 }
 
@@ -192,15 +183,12 @@ Eigen::Vector3d SO3::Vee(const Eigen::Matrix3d &Omega) {
 }
 
 // 李括号操作，向量叉乘
-Eigen::Vector3d SO3::LieBracket(const Eigen::Vector3d &omega1,
-                                const Eigen::Vector3d &omega2) {
+Eigen::Vector3d SO3::LieBracket(const Eigen::Vector3d &omega1, const Eigen::Vector3d &omega2) {
   return omega1.cross(omega2);
 }
 
 // 是把一个角速度转化为角速度矩阵的函数
-Eigen::Matrix3d SO3::DLieBrackeTabByDa(const Eigen::Vector3d &b) {
-  return -Hat(b);
-}
+Eigen::Matrix3d SO3::DLieBrackeTabByDa(const Eigen::Vector3d &b) { return -Hat(b); }
 
 void SO3::SetQuaternion(const Eigen::Quaterniond &quaternion) {
   assert(quaternion.norm() != 0);
@@ -208,4 +196,4 @@ void SO3::SetQuaternion(const Eigen::Quaterniond &quaternion) {
   unit_quaternion_.normalize();
 }
 
-}  // namespace Utils
+}  // namespace Common

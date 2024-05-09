@@ -4,7 +4,7 @@
 #include "Eigen/Geometry"
 #include "Eigen/StdVector"
 
-namespace Utils {
+namespace Common {
 
 namespace {
 constexpr double EPS = 1.0e-10;
@@ -61,8 +61,7 @@ class SO3 {
 
   static Eigen::Vector3d Vee(const Eigen::Matrix3d &Omega);  // 反对称矩阵=>向量
 
-  static Eigen::Vector3d LieBracket(const Eigen::Vector3d &omega1,
-                                    const Eigen::Vector3d &omega2);
+  static Eigen::Vector3d LieBracket(const Eigen::Vector3d &omega1, const Eigen::Vector3d &omega2);
 
   static Eigen::Matrix3d DLieBrackeTabByDa(const Eigen::Vector3d &b);
 
@@ -87,4 +86,4 @@ inline std::ostream &operator<<(std::ostream &out_str, const SO3 &so3) {
   return out_str;
 }
 
-}  // namespace Utils
+}  // namespace Common
