@@ -21,14 +21,14 @@ class IMUTest : public testing::Test {
 // Test case for IMUData reading
 TEST_F(IMUTest, ReadDataTest) {
   std::vector<Common::IMUData> data_vec;
-  imu_processer_->ReadData("../data/imu/MS1.txt", &data_vec);
+  imu_processer_->ReadData("../test/data/imu/MS1.txt", &data_vec);
   EXPECT_GT(data_vec.size(), 0);  // Expecting at least one data point
 }
 
 // Test case for IMU Preintegration
 TEST_F(IMUTest, PreIntegrationTest) {
   std::vector<Common::IMUData> data_vec;
-  imu_processer_->ReadData("../data/imu/MG35.txt", &data_vec);
+  imu_processer_->ReadData("../test/data/imu/MG35.txt", &data_vec);
 
   Common::SimpleState start_status(data_vec.front().timestamp_);
 

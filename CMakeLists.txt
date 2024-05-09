@@ -19,6 +19,7 @@ include_directories(
 
 add_library(code_utils_libs
     include/common/sensor_data.hpp
+    include/common/lru.hpp
     src/imu/imu_processor.cc
     src/imu/preintegration.cc
     src/util/logger.cc
