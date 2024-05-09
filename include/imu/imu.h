@@ -9,7 +9,7 @@
 
 using namespace Utils;
 
-namespace Sensor {
+namespace IMU {
 
 struct IMUData {
   double timestamp_ = -1.0;
@@ -29,11 +29,11 @@ struct IMUData {
   }
 };
 
-class IMU {
+class ImuProcessor {
  public:
-  IMU() = default;
-  IMU(const Utils::ImuConfig& config);
-  ~IMU() = default;
+  ImuProcessor() = default;
+  ImuProcessor(const Utils::ImuConfig& config);
+  ~ImuProcessor() = default;
 
   bool ProcessImu();
 
