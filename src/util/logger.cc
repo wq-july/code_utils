@@ -27,8 +27,7 @@ void Logger::SetLogFile(const std::string& file_path) {
 void Logger::Log(const std::string& message, LogLevel level) {
   std::lock_guard<std::mutex> lock(mutex_);
   std::ostringstream log_stream;
-  log_stream << GetTimestamp() << " [" << GetLevelString(level) << "] "
-             << message << std::endl;
+  log_stream << GetTimestamp() << " [" << GetLevelString(level) << "] " << message << std::endl;
   std::string log_output = log_stream.str();
 
   if (console_log_enabled_ && IsLevelEnabledForConsole(level)) {
@@ -54,13 +53,10 @@ LogLevel Logger::StringToLogLevel(const std::string& levelStr) {
       {"ALL", ALL},   {"DEBUG", DEBUG}, {"INFO", INFO},
       {"WARN", WARN}, {"ERROR", ERROR}, {"FATAL", FATAL}};
   auto it = levelMap.find(levelStr);
-  return it != levelMap.end() ? it->second
-                              : INFO;  // Default to INFO if not found
+  return it != levelMap.end() ? it->second : INFO;  // Default to INFO if not found
 }
 
-void Logger::EnableConsoleLog(const bool enable) {
-  console_log_enabled_ = enable;
-}
+void Logger::EnableConsoleLog(const bool enable) { console_log_enabled_ = enable; }
 
 std::string Logger::GetTimestamp() {
   std::time_t now = std::time(nullptr);
