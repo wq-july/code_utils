@@ -18,8 +18,7 @@ class Logger {
  public:
   class LogStream {
    public:
-    LogStream(Logger& logger, LogLevel level)
-        : logger_(logger), level_(level) {}
+    LogStream(Logger& logger, LogLevel level) : logger_(logger), level_(level) {}
     ~LogStream() {
       if (!buffer_.str().empty()) {  // Ensure there is something to log
         logger_.Log(buffer_.str(), level_);

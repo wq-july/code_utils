@@ -1,27 +1,27 @@
-#include "imu/imu.h"
+#include "imu/imu_processor.h"
 
 namespace IMU {
 
 ImuProcessor::ImuProcessor(const Utils::ImuConfig& config) {
   SetConfig(config);
-  Initialize();
+  Initialize(config);
+}
+
+void ImuProcessor::SetConfig(const Utils::ImuConfig& config) {
+  // 配置 Logger
+  logger_.EnableConsoleLog(config.logger_config_.enable_console_log_);  // 启用控制台日志
+  logger_.SetConsoleLevel("ALL");  // 设置控制台日志级别
+  logger_.Log(INFO) << "Initializing IMU sensor.";
+}
+
+void ImuProcessor::Initialize(const Utils::ImuConfig& config) {
+  pre_integrator_ = std::make_shared<IMUPreIntegration>(config.pre_integration_config_);
 }
 
 // TODO
 bool ImuProcessor::ProcessImu() { return true; }
 
-void ImuProcessor::SetConfig(const Utils::ImuConfig& config) {
-  // 配置 Logger
-  logger_.EnableConsoleLog(
-      config.logger_config_.enable_console_log_);  // 启用控制台日志
-  logger_.SetConsoleLevel("ALL");  // 设置控制台日志级别
-  logger_.Log(INFO) << "Initializing IMU sensor.";
-}
-
-void ImuProcessor::Initialize() {}
-
-bool ImuProcessor::ReadData(const std::string& file_path,
-                            std::vector<IMUData>* const data_vec) {
+bool ImuProcessor::ReadData(const std::string& file_path, std::vector<IMUData>* const data_vec) {
   if (file_path.empty()) {
     logger_.Log(ERROR) << "File path is empty.";
     return false;
@@ -43,8 +43,7 @@ bool ImuProcessor::ReadData(const std::string& file_path,
         data_vec->emplace_back(IMUData(timestamp / 1.0e9, acc, gyr));
       }
       if (count % 10000 == 0) {
-        logger_.Log(INFO) << "Processed " + std::to_string(count) +
-                                 " data entries...";
+        logger_.Log(INFO) << "Processed " + std::to_string(count) + " data entries...";
       }
     }
     file.close();

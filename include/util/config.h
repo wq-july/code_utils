@@ -57,8 +57,7 @@ class Config {
 
  private:
   void LoadConfigFile(const std::string& filename);
-  void LoadTransformation(const YAML::Node& node,
-                          Eigen::Isometry3d* const transform);
+  void LoadTransformation(const YAML::Node& node, Eigen::Isometry3d* const transform);
   void LoadVector(const YAML::Node& node, Eigen::Vector3d* const vector3d);
 };
 
