@@ -8,7 +8,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g -fPIC -fopenmp")
 #set(EIGEN_INCLUDE_DIR "/usr/local/include/eigen3")
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
-find_package(Sophus REQUIRED)
 # 寻找 yaml-cpp 库
 find_package(yaml-cpp REQUIRED)
 
@@ -19,15 +18,17 @@ include_directories(
 )
 
 add_library(code_utils_libs
-    src/imu/imu.cc
+    include/common/sensor_data.hpp
+    src/imu/imu_processor.cc
+    src/imu/preintegration.cc
     src/util/logger.cc
     src/util/time.cc
-    src/util/math.cc
     src/util/config.cc
     src/common/state.cc
+    src/common/so3.cc
 )
 
-target_link_libraries(code_utils_libs ${Sophus_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES} yaml-cpp)
+target_link_libraries(code_utils_libs ${OpenCV_LIBS} ${CERES_LIBRARIES} yaml-cpp)
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
