@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "common/sensor_data.hpp"
+#include "common/hpp/sensor_data.hpp"
 #include "util/config.h"
 
 #define private public
