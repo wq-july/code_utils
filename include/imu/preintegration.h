@@ -5,7 +5,7 @@
 #include "Eigen/Core"
 #include "Eigen/Dense"
 
-#include "common/sensor_data.hpp"
+#include "common/hpp/sensor_data.hpp"
 #include "common/state.h"
 #include "util/config.h"
 
@@ -13,6 +13,8 @@ using namespace Common;
 using namespace Utils;
 
 namespace IMU {
+
+// TODO, 将下面的几个维度控制开关集成到Common下的DIMS中
 
 // 预积分量的噪声，也就是误差项
 static constexpr uint32_t PreIntegrationDims = 9u;
