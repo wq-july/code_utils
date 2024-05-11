@@ -4,7 +4,7 @@
 
 #include "Eigen/Dense"
 
-#include "common/sensor_data.hpp"
+#include "common/hpp/sensor_data.hpp"
 #include "util/config.h"
 #include "util/logger.h"
 
