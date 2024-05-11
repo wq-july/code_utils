@@ -8,6 +8,8 @@
 namespace Common {
 
 static constexpr double Gravity = -9.81;
+
+struct DIMS {
 // static error state index
 static constexpr uint32_t DIM_STATE = 27u;
 static constexpr uint32_t DIM_SimpleState = 15u;
@@ -30,6 +32,7 @@ static constexpr uint32_t N_G = 0u;
 static constexpr uint32_t N_A = 3u;
 static constexpr uint32_t N_BG = 6u;
 static constexpr uint32_t N_BA = 9u;
+};
 
 struct SimpleState {
   SimpleState();
