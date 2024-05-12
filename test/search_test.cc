@@ -1,10 +1,9 @@
-#include <gtest/gtest.h>
 #include <gflags/gflags.h>
+#include <gtest/gtest.h>
 
 #include <vector>
 
 #include "pcl/io/pcd_io.h"
-
 #include "util/time.h"
 
 #define private public
@@ -45,10 +44,20 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
 
   kdtree.SetEnableANN(true, FLAGS_ann_alpha);
   LOG(INFO) << "Kd tree leaves: " << kdtree.Size() << ", points: " << map_->size()
-            << ", time / size: " << timer_.GetElapsedTime() / map_->size();
+            << ", time / size: "
+            << timer_.GetElapsedTime(Utils::Timer::Microseconds) / map_->size();
 
+  timer_.StartTimer("KnnSearch Single Thread");
+  std::vector<uint32_t> cloest_index;
+  kdtree.GetClosestPoint(scan_->points.at(0), &cloest_index, 5);
+  timer_.StopTimer();
+  timer_.PrintElapsedTime();
+
+  // timer_.StartTimer("KnnSearch Multi Threads");
   // std::vector<std::pair<uint32_t, uint32_t>> matches;
-  // kdtree.GetClosestPointMT(scan_, matches, 5);
+  // kdtree.GetClosestPointMT(scan_, &matches, 5);
+  // timer_.StopTimer();
+  // timer_.PrintElapsedTime();
 
   LOG(INFO) << "done....";
 
@@ -59,7 +68,7 @@ int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);
   FLAGS_stderrthreshold = google::INFO;
   FLAGS_colorlogtostderr = true;
-  
+
   // Initialize Google Test framework
   ::testing::InitGoogleTest(&argc, argv);
   google::ParseCommandLineFlags(&argc, &argv, true);

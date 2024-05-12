@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(code_utils)
 
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS "-std=c++17")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g -fPIC -fopenmp")
+set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -55,4 +55,7 @@ if(BUILD_TESTS)
 
   add_executable(search_test test/search_test.cc)
   target_link_libraries(search_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(utils_test test/utils_test.cc)
+  target_link_libraries(utils_test code_utils_libs ${GTEST_LIBRARIES})
 endif()
