@@ -1,5 +1,7 @@
 #include "common/search/kdtree.h"
 
+#include <execution>
+
 namespace Common {
 
 bool KdTree::BuildTree(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud) {
@@ -13,6 +15,9 @@ bool KdTree::BuildTree(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud) {
   uint32_t size = cloud->size();
   cloud_.reserve(size);
   cloud_.resize(size);
+  for (uint32_t i = 0; i < cloud->size(); ++i) {
+    cloud_.at(i) = cloud->points.at(i).getArray3fMap().cast<double>();
+  }
 
   // 清空数据，合理
   Clear();
@@ -31,13 +36,13 @@ bool KdTree::BuildTree(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud) {
 
 // 按照p162算法步骤来
 void KdTree::Insert(const std::vector<uint32_t>& points, KdTreeNode* const node) {
-  // 显然需要用到递归的方法
+  // ? 成员变量noed_存储着树的所有结点，函数一进来就直接将node插入到表中
   nodes_.insert({node->id_, node});
 
   // 递归，考虑将子集点云points插入到node中
   // Insert(processed_clouds, next_node);
 
-  // 1.如果子集点云是空的，说明已经插入结束到叶子节点中了， 感觉这一步没啥必要吧？
+  //? 1.如果子集点云是空的，说明已经插入结束到叶子节点中了， 感觉这一步没啥必要吧？
   if (points.empty()) {
     return;
   }
@@ -84,19 +89,18 @@ bool KdTree::GetClosestPoint(const pcl::PointXYZ& pt, std::vector<uint32_t>* con
   KnnSearch(pt.getArray3fMap().cast<double>(), root_.get(), &knn_result);
   // 排序并返回结果
   closest_index->resize(knn_result.size());
-  for (uint32_t i = closest_index->size() - 1; i >= 0; --i) {
+  for (uint32_t i = closest_index->size() - 1; i > 0; --i) {
     // 倒序插入
     closest_index->at(i) = knn_result.top().node_->point_index_;
     knn_result.pop();
   }
-
   return true;
 }
 
 bool KdTree::GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
-                               std::vector<std::pair<uint32_t, uint32_t>>& matches,
+                               std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                                const uint32_t k_nums) {
-  matches.resize(cloud->size() * k_nums);
+  matches->resize(cloud->size() * k_nums);
 
   // 索引
   std::vector<int> index(cloud->size());
@@ -109,11 +113,11 @@ bool KdTree::GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
                   std::vector<uint32_t> closest_idx;
                   GetClosestPoint(cloud->points[idx], &closest_idx, k_nums);
                   for (uint32_t i = 0; i < k_nums; ++i) {
-                    matches[idx * k_nums + i].second = idx;
+                    (*matches)[idx * k_nums + i].second = idx;
                     if (i < closest_idx.size()) {
-                      matches[idx * k_nums + i].first = closest_idx[i];
+                      (*matches)[idx * k_nums + i].first = closest_idx[i];
                     } else {
-                      matches[idx * k_nums + i].first = Utils::kINVALID;
+                      (*matches)[idx * k_nums + i].first = Utils::ConstMath::kINVALID;
                     }
                   }
                 });
@@ -194,11 +198,13 @@ void KdTree::ComputeDisForLeaf(const Eigen::Vector3d& pt, KdTreeNode* node,
 bool KdTree::FindSpliteAxisAndThresh(const std::vector<uint32_t>& point_index, uint32_t* const axis,
                                      double* const thresh, std::vector<uint32_t>* const left,
                                      std::vector<uint32_t>* const right) {
+  if (point_index.empty()) {
+    LOG(ERROR) << "point index is empty!!";
+  }
   // 使用方差最大的那个轴作为分割轴，对应的均值作为分割阈值
   Eigen::Vector3d var = Eigen::Vector3d::Zero();
   Eigen::Vector3d mean = Eigen::Vector3d::Zero();
-  Utils::Math::ComputeMeanAndCovDiag(point_index, &mean, &var,
-                                     [this](int idx) { return cloud_[idx]; });
+  Utils::Math::ComputeMeanAndVariance(point_index, cloud_, &mean, &var);
   var.maxCoeff(axis);
   *thresh = mean[*axis];
 

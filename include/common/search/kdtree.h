@@ -53,7 +53,7 @@ class KdTree {
 
   // 多线程并行为点云寻找最近邻
   bool GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
-                         std::vector<std::pair<uint32_t, uint32_t>>& matches,
+                         std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                          const uint32_t k_nums = 5);
 
   // 返回节点数量
@@ -97,7 +97,6 @@ class KdTree {
                   std::priority_queue<NodeAndDistance>* const knn_res) const;
 
  private:
-  uint32_t nearest_nums_ = 1;
   // 根节点
   std::shared_ptr<KdTreeNode> root_ = nullptr;
   // 输入的点云，那这个点云能否进一步动态扩展呢？这样就成了一个动态的点云地图，变成ikdtree?

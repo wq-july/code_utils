@@ -5,38 +5,46 @@
 #include <cassert>
 #include <cstdint>
 #include <numeric>
+#include <vector>
 
 #include "Eigen/Core"
 #include "Eigen/Dense"
 
 namespace Utils {
-
-constexpr double kGravity = -9.81;             // 重力
-constexpr double kDegreeToRad = M_PI / 180.0;  // 角度转为弧度
-constexpr double kRadToDegree = 180.0 / M_PI;  // 弧度转角度
+namespace ConstMath {
+constexpr double kGravity = -9.81;                   // 重力
+constexpr const double kDegreeToRad = M_PI / 180.0;  // 角度转为弧度
+constexpr double kRadToDegree = 180.0 / M_PI;        // 弧度转角度
 // 非法定义
 constexpr uint32_t kINVALID = std::numeric_limits<uint32_t>::max();
+};  // namespace ConstMath
 
 class Math {
  public:
-  template <typename ContainerType, typename Getter>
-  static void ComputeMeanAndCovDiag(const ContainerType& data, Eigen::Vector3d* const mean,
-                                   Eigen::Vector3d* const cov_diag, Getter&& getter) {
-    uint32_t length = data.size();
-    assert(length > 1);
+  template <typename ContainerType>
+  static void ComputeMeanAndVariance(const std::vector<uint32_t>& indices,
+                                     const ContainerType& data, Eigen::Vector3d* const mean,
+                                     Eigen::Vector3d* const variance) {
+    assert(!indices.empty() && "Indices vector cannot be empty!");
+    assert(!data.empty() && "data vector cannot be empty!");
 
-    // clang-format off
-    // 实际上这个就是提供容器开始和结束位置，然后提供加法运算规则，最后输出结果类型就可以
-    *mean = std::accumulate(data.begin(), data.end(), Eigen::Vector3d::Zero().eval(),
-        [&getter](const Eigen::Vector3d& sum, const auto& data) {
-          return sum + getter(data);
-        }) / length;
+    // 计算指定索引处元素的总和
+    Eigen::Vector3d sum = Eigen::Vector3d::Zero();
+    for (uint32_t index : indices) {
+      assert(index < data.size() && "Index out of range");
+      sum += data[index];
+    }
 
-    *cov_diag = std::accumulate(data.begin(), data.end(), Eigen::Vector3d::Zero().eval(),
-        [&mean, &getter](const Eigen::Vector3d& sum, const auto &data) {
-          return sum + (getter(data) - *mean).cwiseAbs2().eval();
-        }) / (length - 1);
-    // clang-format on
+    // 计算均值
+    *mean = sum / indices.size();
+
+    // 计算方差
+    Eigen::Vector3d squared_diff_sum = Eigen::Vector3d::Zero();
+    for (uint32_t index : indices) {
+      Eigen::Vector3d diff = data[index] - *mean;
+      squared_diff_sum += diff.cwiseProduct(diff);
+    }
+    *variance = squared_diff_sum / indices.size();
   }
 };
 
