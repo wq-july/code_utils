@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/pcl-1.10",
-                "/usr/include/eigen3"
+                "/usr/include/eigen3",
+                "${workspaceFolder}/thirdparty/robin-map/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
