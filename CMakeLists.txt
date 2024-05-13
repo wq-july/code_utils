@@ -12,8 +12,11 @@ find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(PCL REQUIRED)
+find_package(Sophus REQUIRED)
 find_package(gflags REQUIRED)
 find_package(Glog REQUIRED)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/robin-map)
 
 include_directories(
   ${EIGEN3_INCLUDE_DIR}
@@ -21,7 +24,9 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
   ${GFLAGS_INCLUDE_DIRS}
   ${GLOG_INCLUDE_DIRS}
+  ${SOPHUS_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/thirdparty/robin-map/include
 )
 
 add_library(code_utils_libs
@@ -36,12 +41,16 @@ add_library(code_utils_libs
     src/common/state.cc
     src/common/so3.cc
     src/common/search/kdtree.cc
+    src/common/search/voxel_map.cc
 )
 
+
 target_link_libraries(code_utils_libs 
+  PRIVATE tsl::robin_map
   ${OpenCV_LIBS}
   ${CERES_LIBRARIES}
   ${PCL_LIBRARIES}
+  ${SOPHUS_LIBRARIES}
   glog
   gflags
   yaml-cpp
