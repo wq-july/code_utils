@@ -4,7 +4,7 @@ namespace Common {
 
 SimpleState::SimpleState() = default;
 
-SimpleState::SimpleState(double time, const SO3& rot, const Eigen::Vector3d& trans,
+SimpleState::SimpleState(double time, const Sophus::SO3d& rot, const Eigen::Vector3d& trans,
                          const Eigen::Vector3d& vel, const Eigen::Vector3d& bg,
                          const Eigen::Vector3d& ba)
     : timestamp_(time), rot_(rot), trans_(trans), vel_(vel), bg_(bg), ba_(ba) {}
@@ -18,7 +18,7 @@ SimpleState::SimpleState(double time, const Eigen::Matrix3d& rot, const Eigen::V
 
 Eigen::Isometry3d SimpleState::GetSE3() const {
   Eigen::Isometry3d SE3 = Eigen::Isometry3d::Identity();
-  SE3.rotate(rot_.GetMatrix());
+  SE3.rotate(rot_.matrix());
   SE3.pretranslate(trans_);
   return SE3;
 }

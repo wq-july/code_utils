@@ -41,7 +41,7 @@ TEST_F(IMUTest, PreIntegrationTest) {
       imu_processer_->pre_integrator_->Predict(start_status, Eigen::Vector3d(0.0, 0.0, -9.81));
 
   std::cout << "preinteg result: \n";
-  std::cout << "end rotation: \n" << this_status.rot_.GetMatrix() << "\n";
+  std::cout << "end rotation: \n" << this_status.rot_.matrix() << "\n";
   std::cout << "end trans: \n" << this_status.trans_.transpose() << "\n";
   std::cout << "end v: \n" << this_status.vel_.transpose() << "\n";
 }
