@@ -85,7 +85,7 @@ TEST_F(SearchTest, VoxelMapKnnSearchTest) {
 
   timer_.StartTimer("100 VoxelMap KnnSearch");
   for (uint32_t i = 0; i < 100; ++i) {
-    auto res = voxel_map.GetClosestNeighbor(map_points.at(i));
+    voxel_map.GetClosestNeighbor(map_points.at(i));
   }
   timer_.StopTimer();
   timer_.PrintElapsedTime();

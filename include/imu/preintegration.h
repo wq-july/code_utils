@@ -40,7 +40,7 @@ class IMUPreIntegration {
   SimpleState Predict(const SimpleState &state, const Eigen::Vector3d &gravity) const;
 
   // 获取修正之后的观测量，bias可以与预积分时期的不同，会有一阶修正
-  Common::SO3 GetDeltaRotation(const Eigen::Vector3d &bg);
+  Sophus::SO3d GetDeltaRotation(const Eigen::Vector3d &bg);
 
   Eigen::Vector3d GetDeltaVelocity(const Eigen::Vector3d &bg, const Eigen::Vector3d &ba);
 
@@ -66,7 +66,7 @@ class IMUPreIntegration {
   // 预积分观测量
   Eigen::Vector3d dv_ = Eigen::Vector3d::Zero();
   Eigen::Vector3d dp_ = Eigen::Vector3d::Zero();
-  Common::SO3 dq_ = Common::SO3();
+  Sophus::SO3d dq_ = Sophus::SO3d();
 
   // Jacobian
   Eigen::Matrix3d dr_dbg_ = Eigen::Matrix3d::Zero();

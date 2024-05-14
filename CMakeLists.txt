@@ -8,10 +8,14 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(PCL REQUIRED)
+#sophus need fmt
+# find_package(fmt REQUIRED PATHS /usr/local/include/fmt)
+find_package(fmt REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(gflags REQUIRED)
 find_package(Glog REQUIRED)
@@ -39,7 +43,6 @@ add_library(code_utils_libs
     src/util/config.cc
     src/util/math.cc
     src/common/state.cc
-    src/common/so3.cc
     src/common/search/kdtree.cc
     src/common/search/voxel.cc
     src/common/search/voxel_map.cc
@@ -52,10 +55,12 @@ target_link_libraries(code_utils_libs
   ${CERES_LIBRARIES}
   ${PCL_LIBRARIES}
   ${SOPHUS_LIBRARIES}
+  # ${fmt_LIBRARIES}
   glog
   gflags
   yaml-cpp
   tbb
+  fmt
 )
 
 option(BUILD_TESTS "Build tests" ON)
