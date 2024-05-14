@@ -9,13 +9,14 @@
 #define private public
 
 #include "common/search/kdtree.h"
+#include "common/search/voxel_map.h"
 
 DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
 DEFINE_string(map_pcd_path, "../test/data/lidar/map.pcd", "地图点云路径");
 DEFINE_double(ann_alpha, 1.0, "AAN的比例因子");
 
 class SearchTest : public testing::Test {
- protected:
+ public:
   void SetUp() override {
     scan_.reset(new pcl::PointCloud<pcl::PointXYZ>());
     map_.reset(new pcl::PointCloud<pcl::PointXYZ>());
@@ -47,9 +48,11 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
             << ", time / size: "
             << timer_.GetElapsedTime(Utils::Timer::Microseconds) / map_->size();
 
-  timer_.StartTimer("KnnSearch Single Thread");
-  std::vector<uint32_t> cloest_index;
-  kdtree.GetClosestPoint(scan_->points.at(0), &cloest_index, 5);
+  timer_.StartTimer("100 KnnSearch Single Thread");
+  for (uint32_t i = 0; i < 100; ++i) {
+    std::vector<uint32_t> cloest_index;
+    kdtree.GetClosestPoint(map_->points.at(i), &cloest_index, 5);
+  }
   timer_.StopTimer();
   timer_.PrintElapsedTime();
 
@@ -63,6 +66,36 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
 
   SUCCEED();
 }
+
+// Test case for IMU Preintegration
+TEST_F(SearchTest, VoxelMapKnnSearchTest) {
+  if (scan_->empty() || map_->empty()) {
+    LOG(ERROR) << "cannot load cloud";
+    FAIL();
+  }
+
+  // TODO，地图初始化改成配置类进行初始化
+  Common::VoxelMap voxel_map(0.5, 100, 10);
+  auto map_points = Utils::PclToEigen3d(map_);
+
+  timer_.StartTimer("Voxel Map Load map");
+  voxel_map.AddPoints(map_points);
+  timer_.StopTimer();
+  timer_.PrintElapsedTime();
+
+  timer_.StartTimer("100 VoxelMap KnnSearch");
+  for (uint32_t i = 0; i < 100; ++i) {
+    auto res = voxel_map.GetClosestNeighbor(map_points.at(i));
+  }
+  timer_.StopTimer();
+  timer_.PrintElapsedTime();
+
+  LOG(INFO) << "done....";
+
+  SUCCEED();
+}
+
+
 
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);

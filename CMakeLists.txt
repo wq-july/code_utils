@@ -41,11 +41,12 @@ add_library(code_utils_libs
     src/common/state.cc
     src/common/so3.cc
     src/common/search/kdtree.cc
+    src/common/search/voxel.cc
     src/common/search/voxel_map.cc
 )
 
 
-target_link_libraries(code_utils_libs 
+target_link_libraries(code_utils_libs
   PRIVATE tsl::robin_map
   ${OpenCV_LIBS}
   ${CERES_LIBRARIES}

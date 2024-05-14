@@ -1,18 +1,28 @@
-#include <gflags/gflags.h>
-#include <gtest/gtest.h>
-
 #include <vector>
 
+#include <gflags/gflags.h>
+#include <gtest/gtest.h>
+#include <glog/logging.h>
+
+#include "pcl/io/pcd_io.h"
+
 #define private public
-#include "../../../../../usr/include/glog/logging.h"
+
 #include "util/math.h"
 #include "util/time.h"
+#include "util/utils.h"
 
 DEFINE_string(config_path, "../conf/imu_config.yaml", "imu的配置文件");
+DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
 
 class UtilsTest : public testing::Test {
  public:
-  void SetUp() override {}
+  void SetUp() override {
+    scan_.reset(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::io::loadPCDFile<pcl::PointXYZ>(FLAGS_scan_pcd_path, *scan_);
+  }
+  pcl::PointCloud<pcl::PointXYZ>::Ptr scan_ = nullptr;
+
   Utils::Timer timer_;
 };
 
@@ -28,6 +38,15 @@ TEST_F(UtilsTest, ComputeMeanAndVariance) {
   Utils::Math::ComputeMeanAndVariance(indices, data, &mean, &variance);
   EXPECT_EQ(mean, Eigen::Vector3d(4.0, 5.0, 6.0));
   EXPECT_EQ(variance, Eigen::Vector3d(6.0, 6.0, 6.0));
+}
+
+TEST_F(UtilsTest, PclToEigen3dTest) {
+  timer_.StartTimer("Pcl to Eigen scan");
+  auto scan_points = Utils::PclToEigen3d(scan_);
+  timer_.StopTimer();
+  timer_.PrintElapsedTime();
+
+  EXPECT_GT(scan_points.size(), 100);
 }
 
 int main(int argc, char** argv) {
