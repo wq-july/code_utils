@@ -46,6 +46,7 @@ add_library(code_utils_libs
     src/common/search/kdtree.cc
     src/common/search/voxel.cc
     src/common/search/voxel_map.cc
+    src/optimizer/optimizer.cc
 )
 
 
@@ -73,4 +74,7 @@ if(BUILD_TESTS)
 
   add_executable(utils_test test/utils_test.cc)
   target_link_libraries(utils_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(optimizer_test test/optimizer_test.cc)
+  target_link_libraries(optimizer_test code_utils_libs ${GTEST_LIBRARIES})
 endif()
