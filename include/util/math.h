@@ -3,12 +3,13 @@
 #include <math.h>
 
 #include <cassert>
+#include <cmath>
 #include <cstdint>
-#include <numeric>
 #include <vector>
 
 #include "Eigen/Core"
 #include "Eigen/Dense"
+#include "glog/logging.h"
 
 namespace Utils {
 namespace ConstMath {

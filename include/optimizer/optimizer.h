@@ -1,6 +1,10 @@
 #pragma once
 
+#include <algorithm>
+
 #include "Eigen/Dense"
+#include "glog/logging.h"
+#include "util/time.h"
 
 namespace Optimizer {
 
@@ -10,70 +14,81 @@ enum class OptimizeMethod {
   DOGLEG,
 };
 
+enum class SolverType { QR, SVD, INVERSE };
+
 class NonlinearOptimizer {
  public:
-  NonlinearOptimizer(const OptimizeMethod& method, const uint32_t max_iters,
-                     const double brake_threshold) {}
-  ~NonlinearOptimizer() = default;
+  NonlinearOptimizer(const int32_t max_iters, const double brake_threshold);
 
-  void SetParameter(const Eigen::VectorXd& parameter) { parameter_ = parameter; }
+  ~NonlinearOptimizer();
 
-  void SetJacobian(const Eigen::MatrixXd& jacobian) { jacobian_ = jacobian; }
+  // 通常最外层可以套上核函数
+  virtual Eigen::MatrixXd LossFunction(const Eigen::VectorXd& err);
 
-  void SetResidual(const Eigen::VectorXd& residuals) { residuals_ = residuals; }
+  virtual Eigen::VectorXd CostFunction(const Eigen::VectorXd& x);
+  virtual Eigen::MatrixXd ComputeJacobian(const Eigen::VectorXd& x);
 
-  void GaussNewton() {}
+  virtual Eigen::VectorXd Update(const Eigen::VectorXd& dx);
 
-  void LevenbergMarquardt();
+  // 这两个函数应该可以搞成通用可选的方法来判断；
+  virtual bool IsConverge(const Eigen::VectorXd& dx);
 
-  void DogLeg();
+  virtual bool ResultCheckout(const Eigen::VectorXd& dx);
 
-  void Optimize() {
-    {
-      // 检查需要参数是不是已经设置好，否则弹出一些日志或者错误信息
-    }
+  Eigen::VectorXd GaussNewton();
 
-    for (uint32_t i = 0; i < max_iters_; ++i) {
-      // Eigen::VectorXd delta_x = Eigen::VectorXd::Zero(parameter_dims_);
+  Eigen::VectorXd LevenbergMarquardt();
 
-      switch (method_) {
-        case OptimizeMethod::GAUSS_NEWTON:
-          GaussNewton();
-          break;
-        case OptimizeMethod::LEVENBERG_MARQUARDT:
-          LevenbergMarquardt();
-          break;
-        case OptimizeMethod::DOGLEG:
-          DogLeg();
-          break;
-        default:
-          GaussNewton();
-          break;
-      }
+  Eigen::VectorXd DogLeg();
 
-      // if (delta_x.norm() < brake_threshold_) {
-      //   break;
-      // }
-    }
-  }
+  bool Optimize(OptimizeMethod method = OptimizeMethod::GAUSS_NEWTON);
 
- private:
+  Eigen::VectorXd GetX() const { return x_; }
+
+  Eigen::MatrixXd GetJacobian() const { return jac_; }
+
+  Eigen::VectorXd Solver(const Eigen::MatrixXd& H, const Eigen::VectorXd& b, SolverType solverType);
+
+ public:
+  bool initialized_ = false;
+
+  // 待优化状态量的维度
   uint32_t parameter_dims_ = 0;
+  // 残差量的维度，也就是观测量的维度，等式方程维度
   uint32_t residuals_dims_ = 0;
 
- private:
+  // 最大迭代次数
+  int32_t max_iters_ = 0;
+
+  // 迭代截止阈值，迭代截止有多种截止标准，到时可以具体展开
+  double break_threshold_ = 1.0e-6;
+  bool first_iter_ = true;
+
+  // LM方法的阻尼参数
+  double lambda_ = 1.0;
+
+  // 计算初始的λ值，初值比较好，t取小；初值未知，t取大，取H对角线最大元素作为初值
+  // 1e-6  1e-3  或者 1.0
+  double init_tao_ = 1.0;
+
+  // 用来调整阻尼系数的参数
+  double meu_ = 2.0;
+
+ public:
   // 待优化变量，状态量
-  Eigen::VectorXd parameter_;
-  // 残差量
-  Eigen::VectorXd residuals_;
+  Eigen::VectorXd x_;
+
   // 雅可比矩阵块
-  Eigen::MatrixXd jacobian_;
+  Eigen::MatrixXd jac_;
+
+  Eigen::VectorXd sum_err_;
+  Eigen::VectorXd last_sum_err_;
 
  private:
-  OptimizeMethod method_ = OptimizeMethod::GAUSS_NEWTON;
-  uint32_t max_iters_ = 3;
-  double brake_threshold_ = 0.001;  // 截止的阈值
-  double lambda_ = 1.0;             // LM方法的阻尼参数
+  SolverType solve_type_ = SolverType::INVERSE;
+
+ private:
+  Utils::Timer timer_;
 };
 
 }  // namespace Optimizer
