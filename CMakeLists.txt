@@ -12,6 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED)
 #sophus need fmt
 # find_package(fmt REQUIRED PATHS /usr/local/include/fmt)
@@ -46,6 +47,8 @@ add_library(code_utils_libs
     src/common/search/kdtree.cc
     src/common/search/voxel.cc
     src/common/search/voxel_map.cc
+    src/optimizer/optimizer.cc
+    src/optimizer/curve_fitter.cc
 )
 
 
@@ -73,4 +76,7 @@ if(BUILD_TESTS)
 
   add_executable(utils_test test/utils_test.cc)
   target_link_libraries(utils_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(optimizer_test test/optimizer_test.cc)
+  target_link_libraries(optimizer_test code_utils_libs ${GTEST_LIBRARIES})
 endif()

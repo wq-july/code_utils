@@ -1,8 +1,9 @@
-#include <vector>
-
 #include <gflags/gflags.h>
-#include <gtest/gtest.h>
 #include <glog/logging.h>
+#include <gtest/gtest.h>
+
+#include <filesystem>
+#include <vector>
 
 #include "pcl/io/pcd_io.h"
 
@@ -14,6 +15,7 @@
 
 DEFINE_string(config_path, "../conf/imu_config.yaml", "imu的配置文件");
 DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
+DEFINE_string(random_data_path, "../log/random_data.txt", "随机生成的函数仿真数据");
 
 class UtilsTest : public testing::Test {
  public:
@@ -26,7 +28,16 @@ class UtilsTest : public testing::Test {
   Utils::Timer timer_;
 };
 
-// Define your test cases
+TEST_F(UtilsTest, PclToEigen3dTest) {
+  timer_.StartTimer("Pcl to Eigen scan");
+  auto scan_points = Utils::PclToEigen3d(scan_);
+  timer_.StopTimer();
+  timer_.PrintElapsedTime();
+
+  EXPECT_GT(scan_points.size(), 100);
+}
+
+// Math::ComputeMeanAndVariance
 TEST_F(UtilsTest, ComputeMeanAndVariance) {
   std::vector<uint32_t> indices{0u, 1u, 2u};
   std::vector<Eigen::Vector3d> data = {Eigen::Vector3d(1.0, 2.0, 3.0),
@@ -40,13 +51,27 @@ TEST_F(UtilsTest, ComputeMeanAndVariance) {
   EXPECT_EQ(variance, Eigen::Vector3d(6.0, 6.0, 6.0));
 }
 
-TEST_F(UtilsTest, PclToEigen3dTest) {
-  timer_.StartTimer("Pcl to Eigen scan");
-  auto scan_points = Utils::PclToEigen3d(scan_);
-  timer_.StopTimer();
-  timer_.PrintElapsedTime();
+// Math::GenerateRandomCoefficientsAndData
+TEST_F(UtilsTest, GenerateRandomCoefficientsAndData) {
+  Eigen::VectorXd parameters;
+  std::vector<std::pair<double, double>> data;
 
-  EXPECT_GT(scan_points.size(), 100);
+  // Define a lambda function for the polynomial exp(a0 + a1*x + a2*x^2)
+  auto poly_func = [](const Eigen::VectorXd& params, double x) {
+    double result = 0.0;
+
+    for (uint32_t i = 0; i < params.size(); ++i) {
+      result += params[i] * std::pow(x, i);
+    }
+    return std::exp(result);
+  };
+
+  Utils::GenerateRandomCoefficientsAndData(poly_func,
+                                           3,            // Number of parameters
+                                           1000,         // Number of data points
+                                           {-1.0, 1.0},  // Parameter range
+                                           {-0.1, 0.1},  // Noise range
+                                           FLAGS_random_data_path, &parameters, &data);
 }
 
 int main(int argc, char** argv) {
