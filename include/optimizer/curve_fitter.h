@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ceres/ceres.h"
 #include "optimizer/optimizer.h"
 #include "util/utils.h"
 
@@ -32,5 +33,24 @@ class CurveFittingOptimizer : public NonlinearOptimizer {
   Eigen::VectorXd real_paras_;  // 随机生成的真值
   std::function<double(const Eigen::VectorXd&, const double)> curve_function_;
 };
+
+  // ======================================================================================
+  //  ceres实现曲线拟合
+  // 需要自定义一个结构体
+  struct CurveFitter {
+   public:
+    CurveFitter(double x, double y) : x_(x), y_(y) {
+    }
+    template <typename T>
+    bool operator()(const T* const p, T* redisual) const {
+      redisual[0] = y_ - exp(p[0] + p[1] * x_ + p[2] * x_ * x_);
+      return true;
+    }
+
+   private:
+    const double x_;
+    const double y_;
+  };
+
 
 }  // namespace Optimizer

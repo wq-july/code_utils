@@ -1,0 +1,24 @@
+BasedOnStyle: Google
+Cpp11BracedListStyle: true
+Standard: Cpp11
+BinPackArguments: false
+BinPackParameters: false
+PointerAlignment: Left
+DerivePointerAlignment: false
+CommentPragmas: NOLINT.*
+AllowShortFunctionsOnASingleLine: None
+AllowShortLambdasOnASingleLine: None
+ColumnLimit: 100
+
+IncludeCategories:
+  - Regex: '^<(.*)(\.h>)$'
+    Priority: 1
+  - Regex: "^<"
+    Priority: 2
+  - Regex: '^"([a-zA-Z_]*)(\.h")$'
+    Priority: 3
+  - Regex: '^"(gtest|gflags|google|opencv2|boost|Eigen|pcl|yaml-cpp|rapidjson)/'
+    Priority: 4
+  - Regex: ".*"
+    Priority: 5
+

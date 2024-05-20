@@ -117,7 +117,7 @@ bool KdTree::GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
                     if (i < closest_idx.size()) {
                       (*matches)[idx * k_nums + i].first = closest_idx[i];
                     } else {
-                      (*matches)[idx * k_nums + i].first = Utils::ConstMath::kINVALID;
+                      (*matches)[idx * k_nums + i].first = Utils::Math::ConstMath::kINVALID;
                     }
                   }
                 });

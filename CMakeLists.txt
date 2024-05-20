@@ -8,30 +8,28 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-
 find_package(Eigen3 REQUIRED)
+find_package(Ceres REQUIRED)
 find_package(GTest REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED)
 #sophus need fmt
-# find_package(fmt REQUIRED PATHS /usr/local/include/fmt)
 find_package(fmt REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(gflags REQUIRED)
 find_package(Glog REQUIRED)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/robin-map)
-
 include_directories(
   ${EIGEN3_INCLUDE_DIR}
+  ${CERES_INCLUDE_DIR}
   ${GTEST_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${GFLAGS_INCLUDE_DIRS}
   ${GLOG_INCLUDE_DIRS}
   ${SOPHUS_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/thirdparty/robin-map/include
+  "usr/local/include/tsl"
 )
 
 add_library(code_utils_libs
@@ -43,6 +41,7 @@ add_library(code_utils_libs
     src/util/time.cc
     src/util/config.cc
     src/util/math.cc
+    src/util/utils.cc
     src/common/state.cc
     src/common/search/kdtree.cc
     src/common/search/voxel.cc
@@ -51,14 +50,11 @@ add_library(code_utils_libs
     src/optimizer/curve_fitter.cc
 )
 
-
 target_link_libraries(code_utils_libs
-  PRIVATE tsl::robin_map
   ${OpenCV_LIBS}
   ${CERES_LIBRARIES}
   ${PCL_LIBRARIES}
   ${SOPHUS_LIBRARIES}
-  # ${fmt_LIBRARIES}
   glog
   gflags
   yaml-cpp
@@ -68,15 +64,18 @@ target_link_libraries(code_utils_libs
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
-  add_executable(imu_test test/imu_test.cc)
+  add_executable(imu_test bin/test/imu_test.cc)
   target_link_libraries(imu_test code_utils_libs ${GTEST_LIBRARIES})
 
-  add_executable(search_test test/search_test.cc)
+  add_executable(search_test bin/test/search_test.cc)
   target_link_libraries(search_test code_utils_libs ${GTEST_LIBRARIES})
 
-  add_executable(utils_test test/utils_test.cc)
+  add_executable(utils_test bin/test/utils_test.cc)
   target_link_libraries(utils_test code_utils_libs ${GTEST_LIBRARIES})
 
-  add_executable(optimizer_test test/optimizer_test.cc)
+  add_executable(optimizer_test bin/test/optimizer_test.cc)
   target_link_libraries(optimizer_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(ceres_test bin/test/ceres_test.cc)
+  target_link_libraries(ceres_test code_utils_libs ${GTEST_LIBRARIES})
 endif()
