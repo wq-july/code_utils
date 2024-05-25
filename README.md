@@ -14,8 +14,12 @@ git clone https://github.com/wq-july/code_utils.git
 cd code_utils
 
 # 首次使用会创建镜像，然后进入到容器中
-bash ./scrips/docker.sh
+bash ./scrips/docker.sh init
 
+# 之后直接使用脚本进入到容器中
+bash ./scripts/docker.sh
+
+# 手动编译
 mkdir build \ 
 && cd build \
 && cmake .. \
