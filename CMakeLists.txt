@@ -48,6 +48,7 @@ add_library(code_utils_libs
     src/common/search/voxel_map.cc
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
+    src/optimizer/slam2d.cc
 )
 
 target_link_libraries(code_utils_libs

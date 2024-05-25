@@ -1,9 +1,9 @@
 #!/bin/zsh
 # 获取今天的日期
-TODAY=$(date +%Y-%m-%d)
+# TODAY=$(date +%Y-%m-%d)
 
 # 定义镜像名称和容器名称
-IMAGE_NAME="wq_env:${TODAY}"
+IMAGE_NAME="wq_env:2024-05-25"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数

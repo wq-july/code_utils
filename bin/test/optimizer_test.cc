@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <random>
@@ -18,13 +19,27 @@
 
 #include "optimizer/curve_fitter.h"
 #include "optimizer/optimizer.h"
+#include "optimizer/slam2d.h"
 
 DEFINE_string(curve_path, "../log/curve.txt", "拟合曲线原始数据路径");
+
+DEFINE_string(slam2d_g2o_data_path,
+              "../bin/data/slam2d/input_M3500_g2o.g2o",
+              "2d slam的数据集路径");
+DEFINE_string(slam2d_original_pose_path,
+              "../bin/data/slam2d/original_2d.txt",
+              "保存从g2o中读取的原始2d位姿的路径");
+DEFINE_string(slam2d_optimized_pose_path,
+              "../bin/data/slam2d/optimized_2d.txt",
+              "保存优化之后的2d位姿的路径");
 
 class OptimizerTest : public testing::Test {
  public:
   void SetUp() override {
     optimizer_ = std::make_shared<Optimizer::CurveFittingOptimizer>(15u, 0.0001);
+    // slamer_2d_ = std::make_shared<Optimizer::SLAM2D::Slam2d>(FLAGS_slam2d_g2o_data_path,
+    //                                                          FLAGS_slam2d_original_pose_path,
+    //                                                          FLAGS_slam2d_optimized_pose_path);
 
     // Define a lambda function for the polynomial a0 + a1*x + a2*x^2
     curve_function_ = [](const Eigen::VectorXd& params, const double x) -> double {
@@ -53,6 +68,8 @@ class OptimizerTest : public testing::Test {
   std::function<double(const Eigen::VectorXd&, const double)> curve_function_;
   std::vector<std::pair<double, double>> data_;
   Eigen::VectorXd real_paras_;  // 随机生成的真值
+
+  std::shared_ptr<Optimizer::SLAM2D::Slam2d> slamer_2d_ = nullptr;
   bool debug_ = true;
 };
 
@@ -98,17 +115,23 @@ TEST_F(OptimizerTest, LMTest) {
   }
 }
 
-// TEST_F(OptimizerTest, DogLegTest) {
-//   if (!debug_) {
-//     return;
-//   }
+// TEST_F(OptimizerTest, DogLegTest)
 
-//   optimizer_->Optimize(Optimizer::OptimizeMethod::DOGLEG);
+TEST_F(OptimizerTest, SLAM2DTest) {
+  if (!debug_) {
+    return;
+  }
 
-//   for (uint32_t i = 0; i < optimizer_->parameter_dims_; ++i) {
-//     EXPECT_LE(std::fabs(optimizer_->GetX()(i) - optimizer_->real_paras_(i)), 0.1);
-//   }
-// }
+  slamer_2d_ = std::make_shared<Optimizer::SLAM2D::Slam2d>(FLAGS_slam2d_g2o_data_path,
+                                                           FLAGS_slam2d_original_pose_path,
+                                                           FLAGS_slam2d_optimized_pose_path);
+  // 构建命令字符串
+  std::string command = "python3 ../scripts/plot_2d_slam.py --initial_poses " +
+                        FLAGS_slam2d_original_pose_path + " --optimized_poses " +
+                        FLAGS_slam2d_optimized_pose_path;
+  // 执行系统命令
+  EXPECT_NE(system(command.c_str()), 1);
+}
 
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);

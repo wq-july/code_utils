@@ -3,8 +3,11 @@
 #include <algorithm>
 
 #include "Eigen/Dense"
+
 #include "glog/logging.h"
+#include "util/math.h"
 #include "util/time.h"
+#include "util/utils.h"
 
 namespace Optimizer {
 
@@ -43,9 +46,13 @@ class NonlinearOptimizer {
 
   bool Optimize(OptimizeMethod method = OptimizeMethod::GAUSS_NEWTON);
 
-  Eigen::VectorXd GetX() const { return x_; }
+  Eigen::VectorXd GetX() const {
+    return x_;
+  }
 
-  Eigen::MatrixXd GetJacobian() const { return jac_; }
+  Eigen::MatrixXd GetJacobian() const {
+    return jac_;
+  }
 
   Eigen::VectorXd Solver(const Eigen::MatrixXd& H, const Eigen::VectorXd& b, SolverType solverType);
 
