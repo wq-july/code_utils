@@ -64,6 +64,7 @@ function enter_container {
         && cd /root/project && if [ ! -d build ]; then mkdir build; fi \
         && cd build && cmake .. && make -j24 && ./hello_world && zsh"
     fi
+    echo ' ' | sudo -S chmod -R 777 .
 }
 
 
