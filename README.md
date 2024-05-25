@@ -1,6 +1,30 @@
-#  TODO LIST
+# Code Utils
 
-## Features
+## 介绍
+
+这个代码库是个人做的一个小项目，实现一些基本的slam底层算法，包含视觉和激光的一些常用算法。
+
+## 使用
+
+提供了dockerfile文件可以手动构建镜像，提供了shell脚本快速的创建docker镜像以及进入容器；
+
+``` bash 
+git clone https://github.com/wq-july/code_utils.git
+
+cd code_utils
+
+# 首次使用会创建镜像，然后进入到容器中
+bash ./scrips/docker.sh
+
+mkdir build \ 
+&& cd build \
+&& cmake .. \
+&& make -j4
+
+```
+
+
+## TODOs
 
 ### 基本算法
   - [x] imu预积分；
