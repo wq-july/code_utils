@@ -11,6 +11,8 @@ RUN apt-get update \
     build-essential \
     wget \
     curl \
+    zsh \
+    ssh \
     git \
     cmake \
     vim \
@@ -29,11 +31,14 @@ RUN apt-get update \
     libgflags-dev \
     libgtest-dev \
     libatlas-base-dev \
-# Install OpenCV
+    # Install OpenCV
     libopencv-dev \
-# Install PCL
+    # Install PCL
     libpcl-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# ssh 
+RUN ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa -q
 
 # Install fmt v0.11.0 (required by Sophus)
 RUN git clone https://github.com/fmtlib/fmt.git \
@@ -84,6 +89,22 @@ RUN git clone https://github.com/ceres-solver/ceres-solver.git \
     && make install \
     && cd ../.. \
     && rm -rf ceres-solver
+
+# Install oh-my-zsh
+# Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github
+# Uses "git", "ssh-agent" and "history-substring-search" bundled plugins
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+    -t ys \
+    -p git \
+    -p docker \
+    -p ssh-agent \
+    -p 'history-substring-search' \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -p https://github.com/zsh-users/zsh-completions \
+    -p https://github.com/zsh-users/zsh-syntax-highlighting \
+    -x
+
+RUN chsh -s /bin/zsh
 
 # Clean up
 RUN apt-get clean \
