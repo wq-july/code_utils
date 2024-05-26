@@ -19,7 +19,7 @@
 
 #include "optimizer/curve_fitter.h"
 #include "optimizer/optimizer.h"
-#include "optimizer/slam2d.h"
+#include "optimizer/slam_model.hpp"
 
 DEFINE_string(curve_path, "../log/curve.txt", "拟合曲线原始数据路径");
 
@@ -32,15 +32,24 @@ DEFINE_string(slam2d_original_pose_path,
 DEFINE_string(slam2d_optimized_pose_path,
               "../bin/data/slam2d/optimized_2d.txt",
               "保存优化之后的2d位姿的路径");
+DEFINE_string(slam2d_plot, "../bin/data/slam2d/slam2d_plot.png", "2d slam 对比图");
+
+DEFINE_string(slam3d_g2o_data_path, "../bin/data/slam3d/cubicle.g2o", "3d slam的数据集路径");
+DEFINE_string(slam3d_original_pose_path,
+              "../bin/data/slam3d/original_3d.txt",
+              "保存从g2o中读取的原始3d位姿的路径");
+DEFINE_string(slam3d_optimized_pose_path,
+              "../bin/data/slam3d/optimized_3d.txt",
+              "保存优化之后的3d位姿的路径");
+DEFINE_string(slam3d_plot, "../bin/data/slam3d/slam3d_plot.png", "3d slam 对比图");
+
+using namespace Optimizer;
+using namespace Optimizer::SlamDataStruct;
 
 class OptimizerTest : public testing::Test {
  public:
   void SetUp() override {
     optimizer_ = std::make_shared<Optimizer::CurveFittingOptimizer>(15u, 0.0001);
-    // slamer_2d_ = std::make_shared<Optimizer::SLAM2D::Slam2d>(FLAGS_slam2d_g2o_data_path,
-    //                                                          FLAGS_slam2d_original_pose_path,
-    //                                                          FLAGS_slam2d_optimized_pose_path);
-
     // Define a lambda function for the polynomial a0 + a1*x + a2*x^2
     curve_function_ = [](const Eigen::VectorXd& params, const double x) -> double {
       double result = 0.0;
@@ -69,7 +78,6 @@ class OptimizerTest : public testing::Test {
   std::vector<std::pair<double, double>> data_;
   Eigen::VectorXd real_paras_;  // 随机生成的真值
 
-  std::shared_ptr<Optimizer::SLAM2D::Slam2d> slamer_2d_ = nullptr;
   bool debug_ = true;
 };
 
@@ -122,13 +130,37 @@ TEST_F(OptimizerTest, SLAM2DTest) {
     return;
   }
 
-  slamer_2d_ = std::make_shared<Optimizer::SLAM2D::Slam2d>(FLAGS_slam2d_g2o_data_path,
-                                                           FLAGS_slam2d_original_pose_path,
-                                                           FLAGS_slam2d_optimized_pose_path);
+  SlamModel<Pose2d, Constraint2d> slam_2d(FLAGS_slam2d_g2o_data_path,
+                                          FLAGS_slam2d_original_pose_path,
+                                          FLAGS_slam2d_optimized_pose_path,
+                                          modetype::Slam2dExample,
+                                          100);
+  slam_2d.Process();
   // 构建命令字符串
   std::string command = "python3 ../scripts/plot_2d_slam.py --initial_poses " +
                         FLAGS_slam2d_original_pose_path + " --optimized_poses " +
                         FLAGS_slam2d_optimized_pose_path;
+  // 执行系统命令
+  EXPECT_NE(system(command.c_str()), 1);
+}
+
+TEST_F(OptimizerTest, SLAM3DTest) {
+  if (!debug_) {
+    return;
+  }
+
+  std::shared_ptr<SlamModel<Pose3d, Constraint3d>> slam_3d =
+      std::make_shared<SlamModel<Pose3d, Constraint3d>>(FLAGS_slam3d_g2o_data_path,
+                                                        FLAGS_slam3d_original_pose_path,
+                                                        FLAGS_slam3d_optimized_pose_path,
+                                                        modetype::Slam3dExample,
+                                                        200);
+  slam_3d->Process();
+
+  // 构建命令字符串
+  std::string command = "python3 ../scripts/plot_3d_slam.py --initial_poses " +
+                        FLAGS_slam3d_original_pose_path + " --optimized_poses " +
+                        FLAGS_slam3d_optimized_pose_path;
   // 执行系统命令
   EXPECT_NE(system(command.c_str()), 1);
 }

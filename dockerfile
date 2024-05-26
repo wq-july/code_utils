@@ -36,6 +36,7 @@ RUN apt-get update \
     # Install PCL
     libpcl-dev \
     python3-pip \
+    python3-tk \
     && rm -rf /var/lib/apt/lists/*
 
 # python3

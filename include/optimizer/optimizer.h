@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Eigen/Core"
 #include "Eigen/Dense"
 
 #include "glog/logging.h"
