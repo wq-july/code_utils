@@ -35,6 +35,8 @@ include_directories(
 add_library(code_utils_libs
     include/common/hpp/sensor_data.hpp
     include/common/hpp/lru.hpp
+    include/optimizer/slam_data_struct.hpp
+    include/optimizer/slam_model.hpp
     src/imu/imu_processor.cc
     src/imu/preintegration.cc
     src/util/logger.cc
@@ -48,7 +50,6 @@ add_library(code_utils_libs
     src/common/search/voxel_map.cc
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
-    src/optimizer/slam2d.cc
 )
 
 target_link_libraries(code_utils_libs
