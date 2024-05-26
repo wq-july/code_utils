@@ -61,8 +61,7 @@ function enter_container {
         && git config --global --add safe.directory /root/project \
         && git config --global user.email "wqjuly@qq.com" \
         && git config --global user.name "wq"  \
-        && cd /root/project && if [ ! -d build ]; then mkdir build; fi \
-        && cd build && cmake .. && make -j24 && ./hello_world && zsh"
+        && cd /root/project && zsh"
     fi
     echo ' ' | sudo -S chmod -R 777 .
 }
@@ -81,10 +80,12 @@ if [ "$1" == "init" ]; then
     fi
     create_container
     enter_container
+    ./scripts/build.sh
 else
    if [ ! $(check_container_exists) ]; then
         echo "容器不存在，创建容器..."
         create_container
+        ./scripts/build.sh
     fi
     enter_container
 fi

@@ -4,6 +4,9 @@ FROM nvidia/cuda:12.1.0-base-ubuntu20.04
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+
 # Install essential packages
 RUN apt-get update \
     && apt-get upgrade -y \ 
@@ -37,10 +40,19 @@ RUN apt-get update \
     libpcl-dev \
     python3-pip \
     python3-tk \
+    python3-rosdep \
+    python3-rosinstall \
+    python3-rosinstall-generator \
+    python3-wstool \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# python3
-RUN pip3 install matplotlib
+# python3设置 pip 使用清华大学的镜像源
+RUN mkdir -p ~/.pip && \
+    echo "[global]" > ~/.pip/pip.conf && \
+    echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> ~/.pip/pip.conf
+
+RUN pip3 install numpy scipy matplotlib pandas scikit-learn
 
 # ssh 
 RUN ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa -q
@@ -111,9 +123,20 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 
 RUN chsh -s /bin/zsh
 
+
+# ROS-Noetic
+RUN sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+    && apt update \
+    && apt install ros-noetic-desktop-full -y \
+    && echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc \
+    && source ~/.zshrc \
+    && rosdep init \
+    && rosdep update
+
 # Clean up
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Default command
-CMD ["bash"]
+CMD ["zsh"]
