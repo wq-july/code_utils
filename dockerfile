@@ -35,7 +35,11 @@ RUN apt-get update \
     libopencv-dev \
     # Install PCL
     libpcl-dev \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
+# python3
+RUN pip3 install matplotlib
 
 # ssh 
 RUN ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa -q
