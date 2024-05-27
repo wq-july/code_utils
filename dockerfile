@@ -4,8 +4,9 @@ FROM nvidia/cuda:12.1.0-base-ubuntu20.04
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
-    && sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+# 更换清华源
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
+    && sed -i 's/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
 # Install essential packages
 RUN apt-get update \
@@ -44,7 +45,6 @@ RUN apt-get update \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # python3设置 pip 使用清华大学的镜像源
@@ -52,7 +52,8 @@ RUN mkdir -p ~/.pip && \
     echo "[global]" > ~/.pip/pip.conf && \
     echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> ~/.pip/pip.conf
 
-RUN pip3 install numpy scipy matplotlib pandas scikit-learn
+RUN pip3 install --upgrade pip \
+    && pip3 install numpy scipy matplotlib rosdepc
 
 # ssh 
 RUN ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa -q
@@ -111,28 +112,40 @@ RUN git clone https://github.com/ceres-solver/ceres-solver.git \
 # Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github
 # Uses "git", "ssh-agent" and "history-substring-search" bundled plugins
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
-    -t ys \
-    -p git \
-    -p docker \
-    -p ssh-agent \
-    -p 'history-substring-search' \
-    -p https://github.com/zsh-users/zsh-autosuggestions \
-    -p https://github.com/zsh-users/zsh-completions \
-    -p https://github.com/zsh-users/zsh-syntax-highlighting \
-    -x
+-t ys \
+-p git \
+-p docker \
+-p ssh-agent \
+-p 'history-substring-search' \
+-p https://github.com/zsh-users/zsh-autosuggestions \
+-p https://github.com/zsh-users/zsh-completions \
+-p https://github.com/zsh-users/zsh-syntax-highlighting \
+-x
 
 RUN chsh -s /bin/zsh
 
-
 # ROS-Noetic
-RUN sh -c 'echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
-    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
-    && apt update \
+RUN rm -rf /etc/apt/sources.list.d/ros-latest.list \
+    && sh -c 'echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - \
+    && cd /var/lib/dpkg \
+    && rm -rf info \
+    && mkdir info \
+    && cd ~ \
+    && apt-get update \
+    && apt-get upgrade -y \
     && apt install ros-noetic-desktop-full -y \
-    && echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc \
-    && source ~/.zshrc \
-    && rosdep init \
-    && rosdep update
+    && echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc
+
+# 设置 SHELL 为 zsh
+SHELL ["/bin/zsh", "-c"]
+
+# 初始化 rosdep
+RUN source ~/.zshrc \
+    && rm -rf /etc/ros/rosdep/sources.list.d/20-default.list \
+    # 其中rosdepc，c指的是China中国，主要用于和rosdep区分。
+    && rosdepc init \
+    && rosdepc update
 
 # Clean up
 RUN apt-get clean \

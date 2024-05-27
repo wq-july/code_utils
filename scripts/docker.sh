@@ -31,6 +31,9 @@ function build_image {
 function create_container {
     echo "正在创建Docker容器..."
     docker run \
+    # 如果宿主机提示cuda版本不支持驱动，就把cuda禁用，暂时先不用好了，或者修改dockerfile，使用nvidia-smi查看最高
+    # 支持的cuda版本，然后修改对应的From img版本
+    --env NVIDIA_DISABLE_REQUIRE=1 \ 
     -v $(pwd):/root/project \
     -v /mnt/e:/root/data \
     -itd --gpus all --name $CONTAINER_NAME $IMAGE_NAME zsh
