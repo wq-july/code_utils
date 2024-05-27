@@ -8,8 +8,8 @@
 
 #define private public
 
-#include "common/search/kdtree.h"
-#include "common/search/voxel_map.h"
+#include "common/kdtree.h"
+#include "common/voxel_map.h"
 
 DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
 DEFINE_string(map_pcd_path, "../test/data/lidar/map.pcd", "地图点云路径");

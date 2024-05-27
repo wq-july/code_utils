@@ -1,4 +1,4 @@
-#include "common/search/kdtree.h"
+#include "common/kdtree.h"
 
 #include <execution>
 

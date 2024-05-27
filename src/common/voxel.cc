@@ -1,4 +1,4 @@
-#include "common/search/voxel.h"
+#include "common/voxel.h"
 
 namespace Common {
 

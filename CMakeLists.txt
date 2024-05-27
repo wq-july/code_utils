@@ -33,8 +33,7 @@ include_directories(
 )
 
 add_library(code_utils_libs
-    include/common/hpp/sensor_data.hpp
-    include/common/hpp/lru.hpp
+    include/common/sensor_data.hpp
     include/optimizer/slam_data_struct.hpp
     include/optimizer/slam_model.hpp
     src/imu/imu_processor.cc
@@ -45,9 +44,10 @@ add_library(code_utils_libs
     src/util/math.cc
     src/util/utils.cc
     src/common/state.cc
-    src/common/search/kdtree.cc
-    src/common/search/voxel.cc
-    src/common/search/voxel_map.cc
+    src/common/kdtree.cc
+    src/common/voxel.cc
+    src/common/voxel_map.cc
+    src/common/lru.tpp
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
 )

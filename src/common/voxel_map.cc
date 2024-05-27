@@ -1,4 +1,4 @@
-#include "common/search/voxel_map.h"
+#include "common/voxel_map.h"
 
 #include <algorithm>
 
