@@ -78,14 +78,14 @@ Eigen::Vector3d IMUPreIntegration::GetDeltaPosition(const Eigen::Vector3d &bg,
   return dp_ + dp_dbg_ * (bg - bg_) + dp_dba_ * (ba - ba_);
 }
 
-SimpleState IMUPreIntegration::Predict(const SimpleState &start,
+State IMUPreIntegration::Predict(const State &start,
                                        const Eigen::Vector3d &gravity) const {
   Sophus::SO3d rot_j = start.rot_ * dq_;
   Eigen::Vector3d vel_j = start.rot_ * dv_ + start.vel_ + gravity * dt_;
   Eigen::Vector3d pos_j =
       start.rot_ * dp_ + start.trans_ + start.vel_ * dt_ + 0.5f * gravity * dt_ * dt_;
 
-  auto state = SimpleState(start.timestamp_ + dt_, rot_j, pos_j, vel_j);
+  auto state = State(start.timestamp_ + dt_, rot_j, pos_j, vel_j);
   state.bg_ = bg_;
   state.ba_ = ba_;
   return state;

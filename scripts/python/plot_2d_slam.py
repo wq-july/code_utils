@@ -8,8 +8,8 @@
 # The files have the following format:
 #   ID x y yaw_radians
 
-import matplotlib
-matplotlib.use('Agg')
+# import matplotlib
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plot
 import numpy
 import sys
@@ -45,7 +45,7 @@ plot.axis('equal')
 plot.legend()
 
 # 保存图像为PNG格式
-plot.savefig('../bin/data/slam2d/plot_2d_slam.png')
+# plot.savefig('../bin/data/slam2d/plot_2d_slam.png')
 
 # # Show the plot and wait for the user to close.
-# plot.show()
+plot.show()

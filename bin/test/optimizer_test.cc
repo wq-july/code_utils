@@ -34,7 +34,7 @@ DEFINE_string(slam2d_optimized_pose_path,
               "保存优化之后的2d位姿的路径");
 DEFINE_string(slam2d_plot, "../bin/data/slam2d/slam2d_plot.png", "2d slam 对比图");
 
-DEFINE_string(slam3d_g2o_data_path, "../bin/data/slam3d/cubicle.g2o", "3d slam的数据集路径");
+DEFINE_string(slam3d_g2o_data_path, "../bin/data/slam3d/torus3D.g2o", "3d slam的数据集路径");
 DEFINE_string(slam3d_original_pose_path,
               "../bin/data/slam3d/original_3d.txt",
               "保存从g2o中读取的原始3d位姿的路径");
@@ -137,7 +137,7 @@ TEST_F(OptimizerTest, SLAM2DTest) {
                                           100);
   slam_2d.Process();
   // 构建命令字符串
-  std::string command = "python3 ../scripts/plot_2d_slam.py --initial_poses " +
+  std::string command = "python3 ../scripts/python/plot_2d_slam.py --initial_poses " +
                         FLAGS_slam2d_original_pose_path + " --optimized_poses " +
                         FLAGS_slam2d_optimized_pose_path;
   // 执行系统命令
@@ -158,7 +158,7 @@ TEST_F(OptimizerTest, SLAM3DTest) {
   slam_3d->Process();
 
   // 构建命令字符串
-  std::string command = "python3 ../scripts/plot_3d_slam.py --initial_poses " +
+  std::string command = "python3 ../scripts/python/plot_3d_slam.py --initial_poses " +
                         FLAGS_slam3d_original_pose_path + " --optimized_poses " +
                         FLAGS_slam3d_optimized_pose_path;
   // 执行系统命令

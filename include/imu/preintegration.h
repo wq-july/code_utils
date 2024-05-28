@@ -5,16 +5,17 @@
 #include "Eigen/Core"
 #include "Eigen/Dense"
 
-#include "common/sensor_data.h"
+#include "common/data/imu.h"
 #include "common/state.h"
 #include "util/config.h"
 
 using namespace Common;
+using namespace Common::Data;
 using namespace Utils;
 
 namespace IMU {
 
-// TODO, 将下面的几个维度控制开关集成到Common下的DIMS中
+// TODO, 将下面的几个维度控制开关集成到Common下的Constant中
 
 // 预积分量的噪声，也就是误差项
 static constexpr uint32_t PreIntegrationDims = 9u;
@@ -32,19 +33,19 @@ class IMUPreIntegration {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  IMUPreIntegration(const ImuPreIntegrationConfig &config);
+  IMUPreIntegration(const ImuPreIntegrationConfig& config);
 
-  void Update(const IMUData &imu);
+  void Update(const IMUData& imu);
 
   // 重力可能是一个待优化的变量，如果参与优化的话，会变化
-  SimpleState Predict(const SimpleState &state, const Eigen::Vector3d &gravity) const;
+  State Predict(const State& state, const Eigen::Vector3d& gravity) const;
 
   // 获取修正之后的观测量，bias可以与预积分时期的不同，会有一阶修正
-  Sophus::SO3d GetDeltaRotation(const Eigen::Vector3d &bg);
+  Sophus::SO3d GetDeltaRotation(const Eigen::Vector3d& bg);
 
-  Eigen::Vector3d GetDeltaVelocity(const Eigen::Vector3d &bg, const Eigen::Vector3d &ba);
+  Eigen::Vector3d GetDeltaVelocity(const Eigen::Vector3d& bg, const Eigen::Vector3d& ba);
 
-  Eigen::Vector3d GetDeltaPosition(const Eigen::Vector3d &bg, const Eigen::Vector3d &ba);
+  Eigen::Vector3d GetDeltaPosition(const Eigen::Vector3d& bg, const Eigen::Vector3d& ba);
 
   // TODO
   void Reset();

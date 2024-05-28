@@ -45,7 +45,6 @@ add_library(code_utils_libs
     src/common/kdtree.cc
     src/common/voxel.cc
     src/common/voxel_map.cc
-    src/common/sensor_data.cc
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
     src/optimizer/slam_data_struct.cc

@@ -4,14 +4,14 @@
 
 #include "Eigen/Dense"
 
-#include "common/sensor_data.h"
+#include "common/data/imu.h"
 #include "util/config.h"
 #include "util/logger.h"
 
 #include "imu/preintegration.h"
 
 using namespace Utils;
-using namespace Common;
+using namespace Common::Data;
 
 namespace IMU {
 

@@ -9,6 +9,8 @@
 #   ID x y z q_x q_y q_z q_w
 
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plot
 import numpy
 import sys
@@ -77,7 +79,7 @@ if poses_optimized is not None:
 
 
 # 保存图像为PNG格式
-# plot.savefig('../bin/data/slam3d/plot_3d_slam.png')
+plot.savefig('../bin/data/slam3d/plot_3d_slam.png')
 
 # # Show the plot and wait for the user to close.
-plot.show()
+# plot.show()

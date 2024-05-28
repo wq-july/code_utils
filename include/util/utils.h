@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "Eigen/Core"
+#include "Eigen/Dense"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
@@ -106,7 +107,8 @@ inline Eigen::Matrix<T, 2, 2> RotationMatrix2D(T yaw_radians) {
 // Reads a single pose from the input and inserts it into the map. Returns false
 // if there is a duplicate entry.
 template <typename Pose, typename Allocator>
-bool ReadVertex(std::ifstream* infile, std::map<int, Pose, std::less<int>, Allocator>* poses) {
+inline bool ReadVertex(std::ifstream* infile,
+                       std::map<int, Pose, std::less<int>, Allocator>* poses) {
   int id;
   Pose pose;
   *infile >> id >> pose;
@@ -123,7 +125,7 @@ bool ReadVertex(std::ifstream* infile, std::map<int, Pose, std::less<int>, Alloc
 
 // Reads the constraints between two vertices in the pose graph
 template <typename Constraint, typename Allocator>
-void ReadConstraint(std::ifstream* infile, std::vector<Constraint, Allocator>* constraints) {
+inline void ReadConstraint(std::ifstream* infile, std::vector<Constraint, Allocator>* constraints) {
   Constraint constraint;
   *infile >> constraint;
 
@@ -165,6 +167,50 @@ bool ReadG2oFile(const std::string& filename,
   }
 
   return true;
+}
+
+template <typename PointType, typename Scalar>
+inline typename pcl::PointCloud<PointType>::Ptr PclToVec3d(
+    const pcl::PointCloud<PointType>* pcl_cloud_ptr) {
+  if (!pcl_cloud_ptr) {
+    return nullptr;
+  }
+
+  typename pcl::PointCloud<PointType>::Ptr pcl_cloud(new pcl::PointCloud<PointType>);
+  pcl_cloud->reserve(pcl_cloud_ptr->size());
+
+  std::for_each(std::execution::par,
+                pcl_cloud_ptr->begin(),
+                pcl_cloud_ptr->end(),
+                [&](const PointType& point) {
+                  pcl_cloud->emplace_back(static_cast<Scalar>(point.x),
+                                          static_cast<Scalar>(point.y),
+                                          static_cast<Scalar>(point.z));
+                });
+
+  return pcl_cloud;
+}
+
+template <typename PointType, typename Scalar>
+inline std::vector<Eigen::Matrix<Scalar, 3, 1>> Vec3dToPcl(
+    const typename pcl::PointCloud<PointType>::Ptr& pcl_cloud_ptr) {
+  if (!pcl_cloud_ptr) {
+    return {};
+  }
+
+  std::vector<Eigen::Matrix<Scalar, 3, 1>> eigen_cloud;
+  eigen_cloud.reserve(pcl_cloud_ptr->size());
+
+  std::for_each(std::execution::par,
+                pcl_cloud_ptr->begin(),
+                pcl_cloud_ptr->end(),
+                [&](const PointType& point) {
+                  eigen_cloud.emplace_back(static_cast<Scalar>(point.x),
+                                           static_cast<Scalar>(point.y),
+                                           static_cast<Scalar>(point.z));
+                });
+
+  return eigen_cloud;
 }
 
 }  // namespace Utils
