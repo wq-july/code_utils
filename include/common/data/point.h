@@ -1,5 +1,9 @@
 #include "Eigen/Dense"
 
+namespace Common {
+
+namespace Data {
+
 // 简单的 3D 点结构体，基于 Eigen::Vector3d
 struct PointXYZ {
   double x = 0.0;
@@ -107,3 +111,7 @@ struct PointXYZI : public PointXYZ {
     return PointXYZI(static_cast<PointXYZ>(*this) * scalar, intensity);
   }
 };
+
+}  // namespace Data
+
+}  // namespace Common
