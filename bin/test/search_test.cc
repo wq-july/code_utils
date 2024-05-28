@@ -76,7 +76,7 @@ TEST_F(SearchTest, VoxelMapKnnSearchTest) {
 
   // TODO，地图初始化改成配置类进行初始化
   Common::VoxelMap voxel_map(0.5, 100, 10);
-  auto map_points = Utils::PclToEigen3d(map_);
+  auto map_points = Utils::PclToVec3d<pcl::PointXYZ>(map_);
 
   timer_.StartTimer("Voxel Map Load map");
   voxel_map.AddPoints(map_points);

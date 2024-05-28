@@ -65,24 +65,6 @@ inline double ComputeDistance(const Eigen::Vector3d& p1, const Eigen::Vector3d& 
   return (p1 - p2).norm();
 }
 
-// TODO，后期将对这个函数封装到一个类中用作pcl的接口, 此外可以指定并行线程的数量，以及使用omp等效率
-inline std::vector<Eigen::Vector3d> PclToEigen3d(
-    const pcl::PointCloud<pcl::PointXYZ>::Ptr& input_cloud) {
-  if (!input_cloud || input_cloud->empty()) {
-    throw std::invalid_argument("Input cloud is empty!");
-  }
-  std::vector<Eigen::Vector3d> out_points(input_cloud->points.size());  // 预分配内存
-  std::transform(std::execution::par,
-                 input_cloud->points.begin(),
-                 input_cloud->points.end(),
-                 out_points.begin(),
-                 [](const pcl::PointXYZ& point) -> Eigen::Vector3d {
-                   return point.getArray3fMap().cast<double>();
-                 });
-
-  return out_points;
-}
-
 void GenerateRandomCoefficientsAndData(
     const std::function<double(const Eigen::VectorXd&, const double)>& func,
     const int32_t param_count,
@@ -169,26 +151,24 @@ bool ReadG2oFile(const std::string& filename,
   return true;
 }
 
-template <typename PointType, typename Scalar>
-inline typename pcl::PointCloud<PointType>::Ptr PclToVec3d(
-    const pcl::PointCloud<PointType>* pcl_cloud_ptr) {
-  if (!pcl_cloud_ptr) {
-    return nullptr;
+// TODO，后期将对这个函数封装到一个类中用作pcl的接口, 此外可以指定并行线程的数量，以及使用omp等效率
+template <typename PointType>
+inline std::vector<Eigen::Vector3d> PclToVec3d(
+    const typename pcl::PointCloud<PointType>::Ptr& pcl_cloud_ptr) {
+  if (!pcl_cloud_ptr || pcl_cloud_ptr->empty()) {
+    throw std::invalid_argument("Input cloud is empty!");
   }
 
-  typename pcl::PointCloud<PointType>::Ptr pcl_cloud(new pcl::PointCloud<PointType>);
-  pcl_cloud->reserve(pcl_cloud_ptr->size());
+  std::vector<Eigen::Vector3d> out_points(pcl_cloud_ptr->points.size());  // 预分配内存
+  std::transform(std::execution::par,
+                 pcl_cloud_ptr->points.begin(),
+                 pcl_cloud_ptr->points.end(),
+                 out_points.begin(),
+                 [](const PointType& point) -> Eigen::Vector3d {
+                   return point.getArray3fMap().cast<double>();
+                 });
 
-  std::for_each(std::execution::par,
-                pcl_cloud_ptr->begin(),
-                pcl_cloud_ptr->end(),
-                [&](const PointType& point) {
-                  pcl_cloud->emplace_back(static_cast<Scalar>(point.x),
-                                          static_cast<Scalar>(point.y),
-                                          static_cast<Scalar>(point.z));
-                });
-
-  return pcl_cloud;
+  return out_points;
 }
 
 template <typename PointType, typename Scalar>
