@@ -78,6 +78,9 @@ if(BUILD_TESTS)
 
   add_executable(ceres_test bin/test/ceres_test.cc)
   target_link_libraries(ceres_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(point_test bin/test/point_test.cc)
+  target_link_libraries(point_test code_utils_libs ${GTEST_LIBRARIES})
 endif()
 
 add_executable(hello_world bin/hello_world.cc)

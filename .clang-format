@@ -6,7 +6,7 @@ BinPackParameters: false
 PointerAlignment: Left
 DerivePointerAlignment: false
 CommentPragmas: NOLINT.*
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortLambdasOnASingleLine: None
 ColumnLimit: 100
 
