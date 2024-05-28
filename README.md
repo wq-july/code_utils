@@ -41,7 +41,7 @@ mkdir build \
   - [ ] 简单的EKF算法实现；
 
 ### lidar部分算法
-  - [ ] icp；
+  - [ ] vicp；
   - [ ] gicp；
   - [ ] vgicp；
   - [ ] ndt；

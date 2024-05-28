@@ -19,7 +19,7 @@
 
 #include "optimizer/curve_fitter.h"
 #include "optimizer/optimizer.h"
-#include "optimizer/slam_model.hpp"
+#include "optimizer/slam_model.h"
 
 DEFINE_string(curve_path, "../log/curve.txt", "拟合曲线原始数据路径");
 

@@ -29,13 +29,11 @@ include_directories(
   ${GLOG_INCLUDE_DIRS}
   ${SOPHUS_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/src
   "usr/local/include/tsl"
 )
 
 add_library(code_utils_libs
-    include/common/sensor_data.hpp
-    include/optimizer/slam_data_struct.hpp
-    include/optimizer/slam_model.hpp
     src/imu/imu_processor.cc
     src/imu/preintegration.cc
     src/util/logger.cc
@@ -47,9 +45,10 @@ add_library(code_utils_libs
     src/common/kdtree.cc
     src/common/voxel.cc
     src/common/voxel_map.cc
-    src/common/lru.tpp
+    src/common/sensor_data.cc
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
+    src/optimizer/slam_data_struct.cc
 )
 
 target_link_libraries(code_utils_libs

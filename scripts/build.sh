@@ -17,4 +17,4 @@ make -j$NUM_CORES
 ./hello_world
 
 # 返回项目根目录
-cd ..
+# cd ..

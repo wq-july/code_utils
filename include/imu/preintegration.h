@@ -5,7 +5,7 @@
 #include "Eigen/Core"
 #include "Eigen/Dense"
 
-#include "common/sensor_data.hpp"
+#include "common/sensor_data.h"
 #include "common/state.h"
 #include "util/config.h"
 
