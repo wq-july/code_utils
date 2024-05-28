@@ -11,8 +11,8 @@
 #include "common/kdtree.h"
 #include "common/voxel_map.h"
 
-DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
-DEFINE_string(map_pcd_path, "../test/data/lidar/map.pcd", "地图点云路径");
+DEFINE_string(scan_pcd_path, "../bin/data/lidar/scan.pcd", "scan点云路径");
+DEFINE_string(map_pcd_path, "../bin/data/lidar/map.pcd", "地图点云路径");
 DEFINE_double(ann_alpha, 1.0, "AAN的比例因子");
 
 class SearchTest : public testing::Test {

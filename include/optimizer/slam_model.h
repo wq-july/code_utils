@@ -1,13 +1,15 @@
 #pragma once
 
-#include "optimizer/slam_data_struct.h"
-#include <map>
-#include <vector>
 #include <fstream>
+#include <map>
 #include <string>
-#include <Eigen/StdVector>
-#include <glog/logging.h>
-#include <ceres/ceres.h>
+#include <vector>
+
+#include "Eigen/StdVector"
+
+#include "ceres/ceres.h"
+#include "glog/logging.h"
+#include "optimizer/slam_data_struct.h"
 
 namespace Optimizer {
 
@@ -39,7 +41,9 @@ class SlamModel {
 
  private:
   bool OutputPoses(const std::string& filename, const PoseTypeVec& poses);
-  void BuildOptimizationProblem(const ConstraintsVec& constraints, PoseTypeVec* poses, ceres::Problem* problem);
+  void BuildOptimizationProblem(const ConstraintsVec& constraints,
+                                PoseTypeVec* poses,
+                                ceres::Problem* problem);
   bool SolveOptimizationProblem(ceres::Problem* problem);
 
   const std::string g2o_file_path_;

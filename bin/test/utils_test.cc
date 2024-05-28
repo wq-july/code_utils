@@ -14,7 +14,7 @@
 #include "util/utils.h"
 
 DEFINE_string(config_path, "../conf/imu_config.yaml", "imu的配置文件");
-DEFINE_string(scan_pcd_path, "../test/data/lidar/scan.pcd", "scan点云路径");
+DEFINE_string(scan_pcd_path, "../bin/data/lidar/scan.pcd", "scan点云路径");
 DEFINE_string(random_data_path, "../log/random_data.txt", "随机生成的函数仿真数据");
 
 class UtilsTest : public testing::Test {
