@@ -30,7 +30,7 @@ class UtilsTest : public testing::Test {
 
 TEST_F(UtilsTest, PclToEigen3dTest) {
   timer_.StartTimer("Pcl to Eigen scan");
-  auto scan_points = Utils::PclToEigen3d(scan_);
+  auto scan_points = Utils::PclToVec3d<pcl::PointXYZ>(scan_);
   timer_.StopTimer();
   timer_.PrintElapsedTime();
 

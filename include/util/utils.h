@@ -158,39 +158,16 @@ inline std::vector<Eigen::Vector3d> PclToVec3d(
   if (!pcl_cloud_ptr || pcl_cloud_ptr->empty()) {
     throw std::invalid_argument("Input cloud is empty!");
   }
-
-  std::vector<Eigen::Vector3d> out_points(pcl_cloud_ptr->points.size());  // 预分配内存
+  std::vector<Eigen::Vector3d> eigen_points(pcl_cloud_ptr->points.size());  // 预分配内存
   std::transform(std::execution::par,
                  pcl_cloud_ptr->points.begin(),
                  pcl_cloud_ptr->points.end(),
-                 out_points.begin(),
+                 eigen_points.begin(),
                  [](const PointType& point) -> Eigen::Vector3d {
-                   return point.getArray3fMap().cast<double>();
+                   return point.getArray3fMap().template cast<double>();
                  });
 
-  return out_points;
-}
-
-template <typename PointType, typename Scalar>
-inline std::vector<Eigen::Matrix<Scalar, 3, 1>> Vec3dToPcl(
-    const typename pcl::PointCloud<PointType>::Ptr& pcl_cloud_ptr) {
-  if (!pcl_cloud_ptr) {
-    return {};
-  }
-
-  std::vector<Eigen::Matrix<Scalar, 3, 1>> eigen_cloud;
-  eigen_cloud.reserve(pcl_cloud_ptr->size());
-
-  std::for_each(std::execution::par,
-                pcl_cloud_ptr->begin(),
-                pcl_cloud_ptr->end(),
-                [&](const PointType& point) {
-                  eigen_cloud.emplace_back(static_cast<Scalar>(point.x),
-                                           static_cast<Scalar>(point.y),
-                                           static_cast<Scalar>(point.z));
-                });
-
-  return eigen_cloud;
+  return eigen_points;
 }
 
 }  // namespace Utils

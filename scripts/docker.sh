@@ -3,7 +3,7 @@
 # TODAY=$(date +%Y-%m-%d)
 
 # 定义镜像名称和容器名称
-IMAGE_NAME="wq_env:2024-05-25"
+IMAGE_NAME="qiangwangjuly/slam_practise_env:2024-05-27"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数
@@ -30,10 +30,12 @@ function build_image {
 # 创建Docker容器的函数
 function create_container {
     echo "正在创建Docker容器..."
-    docker run \
     # 如果宿主机提示cuda版本不支持驱动，就把cuda禁用，暂时先不用好了，或者修改dockerfile，使用nvidia-smi查看最高
     # 支持的cuda版本，然后修改对应的From img版本
-    --env NVIDIA_DISABLE_REQUIRE=1 \ 
+    docker run \
+    -e NVIDIA_DISABLE_REQUIRE=1 \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $(pwd):/root/project \
     -v /mnt/e:/root/data \
     -itd --gpus all --name $CONTAINER_NAME $IMAGE_NAME zsh

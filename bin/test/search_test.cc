@@ -18,14 +18,14 @@ DEFINE_double(ann_alpha, 1.0, "AAN的比例因子");
 class SearchTest : public testing::Test {
  public:
   void SetUp() override {
-    scan_.reset(new pcl::PointCloud<pcl::PointXYZ>());
-    map_.reset(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::io::loadPCDFile<pcl::PointXYZ>(FLAGS_scan_pcd_path, *scan_);
-    pcl::io::loadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path, *map_);
+    scan_ = std::make_shared<Common::Data::PointCloud>();
+    map_ = std::make_shared<Common::Data::PointCloud>();
+    scan_->LoadPCDFile<pcl::PointXYZ>(FLAGS_scan_pcd_path);
+    map_->LoadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path);
   }
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr scan_ = nullptr;
-  pcl::PointCloud<pcl::PointXYZ>::Ptr map_ = nullptr;
+  Common::Data::PointCloudPtr scan_ = nullptr;
+  Common::Data::PointCloudPtr map_ = nullptr;
   Utils::Timer timer_;
 };
 
@@ -37,21 +37,23 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
   }
 
   Common::KdTree kdtree;
+  int32_t size = map_->size();
 
   timer_.StartTimer("Build KdTree");
+  // 注意kdtree成员变量map_使用了移动构造函数，这个map_将会变成空的；
   kdtree.BuildTree(map_);
   timer_.StopTimer();
   timer_.PrintElapsedTime();
 
   kdtree.SetEnableANN(true, FLAGS_ann_alpha);
-  LOG(INFO) << "Kd tree leaves: " << kdtree.Size() << ", points: " << map_->size()
+  LOG(INFO) << "Kd tree leaves: " << kdtree.Size() << ", points: " << size
             << ", time / size: "
-            << timer_.GetElapsedTime(Utils::Timer::Microseconds) / map_->size();
+            << timer_.GetElapsedTime(Utils::Timer::Microseconds) / size;
 
   timer_.StartTimer("100 KnnSearch Single Thread");
   for (uint32_t i = 0; i < 100; ++i) {
     std::vector<uint32_t> cloest_index;
-    kdtree.GetClosestPoint(map_->points.at(i), &cloest_index, 5);
+    kdtree.GetClosestPoint(map_->points().at(i), &cloest_index, 5);
   }
   timer_.StopTimer();
   timer_.PrintElapsedTime();
@@ -76,16 +78,15 @@ TEST_F(SearchTest, VoxelMapKnnSearchTest) {
 
   // TODO，地图初始化改成配置类进行初始化
   Common::VoxelMap voxel_map(0.5, 100, 10);
-  auto map_points = Utils::PclToVec3d<pcl::PointXYZ>(map_);
 
   timer_.StartTimer("Voxel Map Load map");
-  voxel_map.AddPoints(map_points);
+  voxel_map.AddPoints(*map_);
   timer_.StopTimer();
   timer_.PrintElapsedTime();
 
   timer_.StartTimer("100 VoxelMap KnnSearch");
   for (uint32_t i = 0; i < 100; ++i) {
-    voxel_map.GetClosestNeighbor(map_points.at(i));
+    voxel_map.GetClosestNeighbor(map_->points().at(i));
   }
   timer_.StopTimer();
   timer_.PrintElapsedTime();

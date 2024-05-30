@@ -21,9 +21,9 @@ TEST(PointCloudTest, EmplaceBack) {
     EXPECT_FALSE(pc.empty());
     EXPECT_EQ(pc.size(), 1);
     auto& point = pc.at(0);
-    EXPECT_EQ(point.x, 1.0f);
-    EXPECT_EQ(point.y, 2.0f);
-    EXPECT_EQ(point.z, 3.0f);
+    EXPECT_EQ(point.x(), 1.0f);
+    EXPECT_EQ(point.y(), 2.0f);
+    EXPECT_EQ(point.z(), 3.0f);
 }
 
 // 测试从Eigen::Vector3d向量构造
@@ -34,12 +34,12 @@ TEST(PointCloudTest, EigenConstructor) {
     };
     PointCloud pc(eigen_points);
     EXPECT_EQ(pc.size(), 2);
-    EXPECT_EQ(pc.at(0).x, 1.0f);
-    EXPECT_EQ(pc.at(0).y, 2.0f);
-    EXPECT_EQ(pc.at(0).z, 3.0f);
-    EXPECT_EQ(pc.at(1).x, 4.0f);
-    EXPECT_EQ(pc.at(1).y, 5.0f);
-    EXPECT_EQ(pc.at(1).z, 6.0f);
+    EXPECT_EQ(pc.at(0).x(), 1.0f);
+    EXPECT_EQ(pc.at(0).y(), 2.0f);
+    EXPECT_EQ(pc.at(0).z(), 3.0f);
+    EXPECT_EQ(pc.at(1).x(), 4.0f);
+    EXPECT_EQ(pc.at(1).y(), 5.0f);
+    EXPECT_EQ(pc.at(1).z(), 6.0f);
 }
 
 // 测试从PCL点云构造
@@ -52,12 +52,12 @@ TEST(PointCloudTest, PCLConstructor) {
     pc.GetPointsFromPCL<pcl::PointXYZ>(pcl_points);
 
     EXPECT_EQ(pc.size(), 2);
-    EXPECT_EQ(pc.at(0).x, 1.0f);
-    EXPECT_EQ(pc.at(0).y, 2.0f);
-    EXPECT_EQ(pc.at(0).z, 3.0f);
-    EXPECT_EQ(pc.at(1).x, 4.0f);
-    EXPECT_EQ(pc.at(1).y, 5.0f);
-    EXPECT_EQ(pc.at(1).z, 6.0f);
+    EXPECT_EQ(pc.at(0).x(), 1.0f);
+    EXPECT_EQ(pc.at(0).y(), 2.0f);
+    EXPECT_EQ(pc.at(0).z(), 3.0f);
+    EXPECT_EQ(pc.at(1).x(), 4.0f);
+    EXPECT_EQ(pc.at(1).y(), 5.0f);
+    EXPECT_EQ(pc.at(1).z(), 6.0f);
 }
 
 // 测试reserve函数

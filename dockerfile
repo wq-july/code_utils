@@ -21,6 +21,12 @@ RUN apt-get update \
     cmake \
     vim \
     libeigen3-dev \
+    libgl1-mesa-glx \
+    libx11-dev \
+    libgtk2.0-dev \
+    libglew-dev \
+    libboost-all-dev \
+    freeglut3-dev \
     libyaml-cpp-dev \
     pkg-config \
     libvtk7-dev \
@@ -150,6 +156,9 @@ RUN source ~/.zshrc \
 # Clean up
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# 设置 DISPLAY 环境变量
+ENV DISPLAY=:0
 
 # Default command
 CMD ["zsh"]
