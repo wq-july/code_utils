@@ -26,7 +26,7 @@ class NonlinearOptimizer {
 
   ~NonlinearOptimizer();
 
-  // 通常最外层可以套上核函数
+  // 通常是一个核函数
   virtual Eigen::MatrixXd LossFunction(const Eigen::VectorXd& err);
 
   virtual Eigen::VectorXd CostFunction(const Eigen::VectorXd& x);

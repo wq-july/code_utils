@@ -81,6 +81,12 @@ if(BUILD_TESTS)
 
   add_executable(point_test bin/test/point_test.cc)
   target_link_libraries(point_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(point_cloud_test bin/test/point_cloud_test.cc)
+  target_link_libraries(point_cloud_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(cloud_match_test bin/test/cloud_match_test.cc)
+  target_link_libraries(cloud_match_test code_utils_libs ${GTEST_LIBRARIES})
 endif()
 
 add_executable(hello_world bin/hello_world.cc)

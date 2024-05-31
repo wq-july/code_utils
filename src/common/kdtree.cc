@@ -4,31 +4,40 @@
 
 namespace Common {
 
-bool KdTree::BuildTree(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud) {
+bool KdTree::BuildTree(const Common::Data::PointCloudPtr& cloud) {
+  Utils::Timer timer;
   // 基本的安全性检测判断
   if (cloud->empty()) {
     return false;
   }
 
-  // 清空点云，并且预分配内存和空间
-  cloud_.clear();
+  // 清空点云，并且预分配内存和空间, for pcl cloud
+  // cloud_.clear();
+  // uint32_t size = cloud->size();
+  // cloud_.reserve(size);
+  // cloud_.resize(size);
+  // for (uint32_t i = 0; i < cloud->size(); ++i) {
+  //   cloud_.at(i) = cloud->points.at(i);
+  // }
+
   uint32_t size = cloud->size();
-  cloud_.reserve(size);
-  cloud_.resize(size);
-  for (uint32_t i = 0; i < cloud->size(); ++i) {
-    cloud_.at(i) = cloud->points.at(i).getArray3fMap().cast<double>();
-  }
+
+  timer.StartTimer("PointCloud Construction");
+  // 注意这里显式的调用了复制构造函数而不是移动构造函数
+  cloud_ = std::make_shared<Common::Data::PointCloud>(*cloud);
+  // 注意，这样写会默认的调用移动构造函数，需要理解区别
+  // cloud_ = std::make_shared<Common::Data::PointCloud>(cloud);
+  timer.StopTimer();
+  timer.PrintElapsedTime(Utils::Timer::Microseconds);
 
   // 清空数据，合理
   Clear();
   Reset();
-
   // 这个有点奇怪，index.at(i) = i的话不是有点多余吗？
   std::vector<uint32_t> index(size);
   for (uint32_t i = 0; i < size; ++i) {
     index.at(i) = i;
   }
-
   // 这个合理，将所有点云的索引以根节点作为入口，开始往里面插入
   Insert(index, root_.get());
   return true;
@@ -78,7 +87,8 @@ void KdTree::Insert(const std::vector<uint32_t>& points, KdTreeNode* const node)
   creat_if_not_empty(right, &node->right_);
 }
 
-bool KdTree::GetClosestPoint(const pcl::PointXYZ& pt, std::vector<uint32_t>* const closest_index,
+bool KdTree::GetClosestPoint(const Eigen::Vector3d& pt,
+                             std::vector<uint32_t>* const closest_index,
                              const uint32_t k_nums) {
   if (k_nums > size_) {
     LOG(ERROR) << "最近邻数量不能大于点云的数量！！";
@@ -86,7 +96,7 @@ bool KdTree::GetClosestPoint(const pcl::PointXYZ& pt, std::vector<uint32_t>* con
   }
   k_nums_ = k_nums;
   std::priority_queue<NodeAndDistance> knn_result;
-  KnnSearch(pt.getArray3fMap().cast<double>(), root_.get(), &knn_result);
+  KnnSearch(pt, root_.get(), &knn_result);
   // 排序并返回结果
   closest_index->resize(knn_result.size());
   for (uint32_t i = closest_index->size() - 1; i > 0; --i) {
@@ -97,21 +107,23 @@ bool KdTree::GetClosestPoint(const pcl::PointXYZ& pt, std::vector<uint32_t>* con
   return true;
 }
 
-bool KdTree::GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
+bool KdTree::GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
                                std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                                const uint32_t k_nums) {
   matches->resize(cloud->size() * k_nums);
 
   // 索引
   std::vector<int> index(cloud->size());
-  for (uint32_t i = 0; i < cloud->points.size(); ++i) {
+  for (uint32_t i = 0; i < cloud->size(); ++i) {
     index[i] = i;
   }
 
-  std::for_each(std::execution::par_unseq, index.begin(), index.end(),
+  std::for_each(std::execution::par_unseq,
+                index.begin(),
+                index.end(),
                 [this, &cloud, &matches, &k_nums](int idx) {
                   std::vector<uint32_t> closest_idx;
-                  GetClosestPoint(cloud->points[idx], &closest_idx, k_nums);
+                  GetClosestPoint(cloud->points()[idx], &closest_idx, k_nums);
                   for (uint32_t i = 0; i < k_nums; ++i) {
                     (*matches)[idx * k_nums + i].second = idx;
                     if (i < closest_idx.size()) {
@@ -125,7 +137,8 @@ bool KdTree::GetClosestPointMT(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
   return true;
 }
 
-void KdTree::KnnSearch(const Eigen::Vector3d& pt, KdTreeNode* node,
+void KdTree::KnnSearch(const Eigen::Vector3d& pt,
+                       KdTreeNode* node,
                        std::priority_queue<NodeAndDistance>* const knn_res) const {
   // 1. 首先检查当前节点是不是叶子节点，如果是叶子节点直接就计算距离比较就行了
   if (node->IsLeaf()) {
@@ -154,7 +167,8 @@ void KdTree::KnnSearch(const Eigen::Vector3d& pt, KdTreeNode* node,
   }
 }
 
-bool KdTree::NeedExpand(const Eigen::Vector3d& pt, const KdTreeNode* node,
+bool KdTree::NeedExpand(const Eigen::Vector3d& pt,
+                        const KdTreeNode* node,
                         std::priority_queue<NodeAndDistance>* const knn_res) const {
   // 需要找到k个近邻
   if (knn_res->size() < k_nums_) {
@@ -178,10 +192,11 @@ bool KdTree::NeedExpand(const Eigen::Vector3d& pt, const KdTreeNode* node,
   }
 }
 
-void KdTree::ComputeDisForLeaf(const Eigen::Vector3d& pt, KdTreeNode* node,
+void KdTree::ComputeDisForLeaf(const Eigen::Vector3d& pt,
+                               KdTreeNode* node,
                                std::priority_queue<NodeAndDistance>* const result) const {
   // 叶子节点中直接存储着点在点云中的索引，不在是中间节点中没有意义的序号
-  double dis_square = DistanceSquare(pt, cloud_.at(node->point_index_));
+  double dis_square = DistanceSquare(pt, cloud_->points().at(node->point_index_));
   if (result->size() < k_nums_) {
     // 这个牛逼了，优先级队列中可以直接插入数据类型的构造函数入参就行
     result->emplace(node, dis_square);
@@ -195,8 +210,10 @@ void KdTree::ComputeDisForLeaf(const Eigen::Vector3d& pt, KdTreeNode* node,
 }
 
 // 根据点云的分布计算高斯分布的均值和方差来确定分割面和分割值
-bool KdTree::FindSpliteAxisAndThresh(const std::vector<uint32_t>& point_index, uint32_t* const axis,
-                                     double* const thresh, std::vector<uint32_t>* const left,
+bool KdTree::FindSpliteAxisAndThresh(const std::vector<uint32_t>& point_index,
+                                     uint32_t* const axis,
+                                     double* const thresh,
+                                     std::vector<uint32_t>* const left,
                                      std::vector<uint32_t>* const right) {
   if (point_index.empty()) {
     LOG(ERROR) << "point index is empty!!";
@@ -204,12 +221,13 @@ bool KdTree::FindSpliteAxisAndThresh(const std::vector<uint32_t>& point_index, u
   // 使用方差最大的那个轴作为分割轴，对应的均值作为分割阈值
   Eigen::Vector3d var = Eigen::Vector3d::Zero();
   Eigen::Vector3d mean = Eigen::Vector3d::Zero();
-  Utils::Math::ComputeMeanAndVariance(point_index, cloud_, &mean, &var);
+
+  Utils::Math::ComputeMeanAndVariance(point_index, cloud_->points(), &mean, &var);
   var.maxCoeff(axis);
   *thresh = mean[*axis];
 
   for (const auto& index : point_index) {
-    if (cloud_[index][*axis] < *thresh) {
+    if (cloud_->points()[index][*axis] < *thresh) {
       left->emplace_back(index);
     } else {
       right->emplace_back(index);

@@ -5,6 +5,8 @@
 #include <optional>
 #include <unordered_map>
 
+#include "tsl/robin_map.h"
+
 namespace Common {
 
 template <typename KeyType, typename ValueType>
@@ -44,7 +46,10 @@ class LRUCache {
   void Remove(DlistNode<KeyType, ValueType>* const node);
 
  private:
-  std::unordered_map<KeyType, DlistNode<KeyType, ValueType>*, Hash, KeyEqual> cache_;
+  // std::unordered_map<KeyType, DlistNode<KeyType, ValueType>*, Hash, KeyEqual> cache_;
+  
+  tsl::robin_map<KeyType, DlistNode<KeyType, ValueType>*, Hash, KeyEqual> cache_;
+
   DlistNode<KeyType, ValueType>* head_;
   DlistNode<KeyType, ValueType>* tail_;
   int32_t size_;
