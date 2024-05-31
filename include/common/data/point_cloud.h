@@ -4,7 +4,6 @@
 
 #include <execution>
 #include <stdexcept>
-#include <vector>
 
 #include "Eigen/Core"
 #include "pcl/point_cloud.h"
@@ -16,6 +15,8 @@
 // 之后的代码都基于Eigen::Vector3d来进行
 // #include "common/data/point.h"
 #include "glog/logging.h"
+
+#include "common/data/point.h"
 
 namespace Common {
 namespace Data {
@@ -122,6 +123,7 @@ class PointCloud {
  private:
   std::vector<PointXYZ> points_;
 };
+
 
 // 定义共享指针类型
 using PointCloudPtr = std::shared_ptr<PointCloud>;
