@@ -3,7 +3,7 @@
 # TODAY=$(date +%Y-%m-%d)
 
 # 定义镜像名称和容器名称
-IMAGE_NAME="qiangwangjuly/slam_practise_env:2024-05-27"
+IMAGE_NAME="qiangwangjuly/slam_practise_env:2024-06-01"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数
@@ -30,16 +30,20 @@ function build_image {
 # 创建Docker容器的函数
 function create_container {
     echo "正在创建Docker容器..."
+    xhost +local:docker
     # 如果宿主机提示cuda版本不支持驱动，就把cuda禁用，暂时先不用好了，或者修改dockerfile，使用nvidia-smi查看最高
     # 支持的cuda版本，然后修改对应的From img版本
+    # -e NVIDIA_DISABLE_REQUIRE=1 \
     docker run \
-    -e NVIDIA_DISABLE_REQUIRE=1 \
     -e DISPLAY=$DISPLAY \
+    -e QT_X11_NO_MITSHM=1 \
+    -e XDG_RUNTIME_DIR=/tmp \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v $HOME/.ssh:/root/.ssh \
     -v $(pwd):/root/project \
     -v /mnt/e:/root/data \
     -itd --gpus all --name $CONTAINER_NAME $IMAGE_NAME zsh
-    
+
     if [ $? -ne 0 ]; then
         echo "Docker容器创建失败!"
         exit 1
@@ -60,7 +64,7 @@ function enter_container {
         && git config --global --add safe.directory /root/project \
         && git config --global user.email "wqjuly@qq.com" \
         && git config --global user.name "wq"  \
-        && cd /root/project/build && ./hello_world && zsh"
+        && cd /root/project && ./build/hello_world && zsh"
     else
         docker exec -it $CONTAINER_NAME zsh -c "chsh -s /bin/zsh \
         && git config --global --add safe.directory /root/project \
@@ -85,12 +89,10 @@ if [ "$1" == "init" ]; then
     fi
     create_container
     enter_container
-    ./scripts/build.sh
 else
    if [ ! $(check_container_exists) ]; then
         echo "容器不存在，创建容器..."
         create_container
-        ./scripts/build.sh
     fi
     enter_container
 fi

@@ -12,8 +12,7 @@ DEFINE_string(curve_path, "../log/ceres_curve.txt", "曲线拟合原始数据路
 
 class CeresOptimizerTest : public testing::Test {
  public:
-  void SetUp() override {
-  }
+  void SetUp() override {}
 
   // ======================================================================================
   // 1. ceres hello world， 基于结构体，使用仿函数来实现代价函数f(x)
@@ -109,11 +108,11 @@ class CeresOptimizerTest : public testing::Test {
     }
   };
 
-  bool debug_ = true;
+  bool enable_test_ = true;
 };
 
 TEST_F(CeresOptimizerTest, CeresHelloWorldTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 
@@ -161,7 +160,7 @@ TEST_F(CeresOptimizerTest, CeresHelloWorldTest) {
 }
 
 TEST_F(CeresOptimizerTest, PowellTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 
@@ -211,7 +210,7 @@ TEST_F(CeresOptimizerTest, PowellTest) {
 }
 
 TEST_F(CeresOptimizerTest, CurveFitterTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 
@@ -229,7 +228,7 @@ TEST_F(CeresOptimizerTest, CurveFitterTest) {
                                            FLAGS_curve_path,
                                            &parameters,
                                            &data);
-  
+
   double x[3] = {0.0, 0.0, 0.0};
   ceres::Problem problem;
   for (uint32_t i = 0; i < data.size(); ++i) {
@@ -253,30 +252,10 @@ TEST_F(CeresOptimizerTest, CurveFitterTest) {
 }
 
 TEST_F(CeresOptimizerTest, SLAM2DTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
 
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);

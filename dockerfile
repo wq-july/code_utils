@@ -10,8 +10,8 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/source
 
 # Install essential packages
 RUN apt-get update \
-    && apt-get upgrade -y \ 
-    && apt-get install -y \
+    && apt upgrade -y \ 
+    && apt install -y \
     build-essential \
     wget \
     curl \
@@ -41,9 +41,6 @@ RUN apt-get update \
     libgflags-dev \
     libgtest-dev \
     libatlas-base-dev \
-    # Install OpenCV
-    libopencv-dev \
-    # Install PCL
     libpcl-dev \
     python3-pip \
     python3-tk \
@@ -51,6 +48,30 @@ RUN apt-get update \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
+    libwayland-dev \
+    libxkbcommon-dev \
+    wayland-protocols \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libepoxy-dev \
+    libc++-dev \
+    g++ \
+    ninja-build \
+    libjpeg-dev \
+    libpng-dev \
+    libavcodec-dev \
+    libavutil-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libavdevice-dev \
+    libdc1394-dev \
+    libraw1394-dev \
+    libopenni-dev \
+    python3-dev \
+    python3-distutils \
+    && apt-get install -f \
+    && apt-get install -y libopencv-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # python3设置 pip 使用清华大学的镜像源
@@ -60,9 +81,6 @@ RUN mkdir -p ~/.pip && \
 
 RUN pip3 install --upgrade pip \
     && pip3 install numpy scipy matplotlib rosdepc
-
-# ssh 
-RUN ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa -q
 
 # Install fmt v0.11.0 (required by Sophus)
 RUN git clone https://github.com/fmtlib/fmt.git \
@@ -113,6 +131,14 @@ RUN git clone https://github.com/ceres-solver/ceres-solver.git \
     && make install \
     && cd ../.. \
     && rm -rf ceres-solver
+
+# 使用Ninja构建，更加快速
+RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
+    && cd Pangolin \
+    && cmake -B build -G Ninja \
+    && cmake --build build/ --target install \
+    && cd .. \
+    && rm -rf Pangolin
 
 # Install oh-my-zsh
 # Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github

@@ -18,10 +18,14 @@ class IMUTest : public testing::Test {
     imu_processer_ = std::make_shared<IMU::ImuProcessor>(config.imu_config_);
   }
   std::shared_ptr<IMU::ImuProcessor> imu_processer_ = nullptr;
+  bool enable_test_ = true;
 };
 
 // Test case for IMUData reading
 TEST_F(IMUTest, ReadDataTest) {
+  if (!enable_test_) {
+    return;
+  }
   std::vector<Common::Data::IMUData> data_vec;
   imu_processer_->ReadData("../bin/data/imu/MS1.txt", &data_vec);
   EXPECT_GT(data_vec.size(), 0);  // Expecting at least one data point
@@ -29,6 +33,9 @@ TEST_F(IMUTest, ReadDataTest) {
 
 // Test case for IMU Preintegration
 TEST_F(IMUTest, PreIntegrationTest) {
+  if (!enable_test_) {
+    return;
+  }
   std::vector<Common::Data::IMUData> data_vec;
   imu_processer_->ReadData("../bin/data/imu/MG35.txt", &data_vec);
 

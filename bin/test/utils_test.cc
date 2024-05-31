@@ -26,9 +26,13 @@ class UtilsTest : public testing::Test {
   pcl::PointCloud<pcl::PointXYZ>::Ptr scan_ = nullptr;
 
   Utils::Timer timer_;
+  bool enable_test_ = true;
 };
 
 TEST_F(UtilsTest, PclToEigen3dTest) {
+  if (!enable_test_) {
+    return;
+  }
   timer_.StartTimer("Pcl to Eigen scan");
   auto scan_points = Utils::PclToVec3d<pcl::PointXYZ>(scan_);
   timer_.StopTimer();
@@ -39,6 +43,9 @@ TEST_F(UtilsTest, PclToEigen3dTest) {
 
 // Math::ComputeMeanAndVariance
 TEST_F(UtilsTest, ComputeMeanAndVariance) {
+  if (!enable_test_) {
+    return;
+  }
   std::vector<uint32_t> indices{0u, 1u, 2u};
   std::vector<Eigen::Vector3d> data = {Eigen::Vector3d(1.0, 2.0, 3.0),
                                        Eigen::Vector3d(4.0, 5.0, 6.0),
@@ -53,6 +60,9 @@ TEST_F(UtilsTest, ComputeMeanAndVariance) {
 
 // Math::GenerateRandomCoefficientsAndData
 TEST_F(UtilsTest, GenerateRandomCoefficientsAndData) {
+  if (!enable_test_) {
+    return;
+  }
   Eigen::VectorXd parameters;
   std::vector<std::pair<double, double>> data;
 
@@ -71,7 +81,9 @@ TEST_F(UtilsTest, GenerateRandomCoefficientsAndData) {
                                            1000,         // Number of data points
                                            {-1.0, 1.0},  // Parameter range
                                            {-0.1, 0.1},  // Noise range
-                                           FLAGS_random_data_path, &parameters, &data);
+                                           FLAGS_random_data_path,
+                                           &parameters,
+                                           &data);
 }
 
 int main(int argc, char** argv) {
