@@ -78,11 +78,11 @@ class OptimizerTest : public testing::Test {
   std::vector<std::pair<double, double>> data_;
   Eigen::VectorXd real_paras_;  // 随机生成的真值
 
-  bool debug_ = true;
+  bool enable_test_ = true;
 };
 
 TEST_F(OptimizerTest, GaussNewtonTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
   optimizer_->Optimize();
@@ -112,7 +112,7 @@ TEST_F(OptimizerTest, GaussNewtonTest) {
 }
 
 TEST_F(OptimizerTest, LMTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 
@@ -126,7 +126,7 @@ TEST_F(OptimizerTest, LMTest) {
 // TEST_F(OptimizerTest, DogLegTest)
 
 TEST_F(OptimizerTest, SLAM2DTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 
@@ -145,7 +145,7 @@ TEST_F(OptimizerTest, SLAM2DTest) {
 }
 
 TEST_F(OptimizerTest, SLAM3DTest) {
-  if (!debug_) {
+  if (!enable_test_) {
     return;
   }
 

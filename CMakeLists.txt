@@ -5,6 +5,8 @@ set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 
+cmake_policy(SET CMP0028 NEW)
+
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -20,6 +22,10 @@ find_package(Sophus REQUIRED)
 find_package(gflags REQUIRED)
 find_package(Glog REQUIRED)
 
+find_package(Epoxy REQUIRED)
+find_package(OpenGL REQUIRED COMPONENTS EGL)
+find_package(Pangolin REQUIRED)
+
 include_directories(
   ${EIGEN3_INCLUDE_DIR}
   ${CERES_INCLUDE_DIR}
@@ -28,6 +34,9 @@ include_directories(
   ${GFLAGS_INCLUDE_DIRS}
   ${GLOG_INCLUDE_DIRS}
   ${SOPHUS_INCLUDE_DIRS}
+  ${EPOXY_INCLUDE_DIRS}
+  ${OPENGL_INCLUDE_DIRS}
+  ${Pangolin_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/src
   "usr/local/include/tsl"
@@ -55,11 +64,14 @@ target_link_libraries(code_utils_libs
   ${CERES_LIBRARIES}
   ${PCL_LIBRARIES}
   ${SOPHUS_LIBRARIES}
+  ${EPOXY_LIBRARIES}
+  ${Pangolin_LIBRARIES}
   glog
   gflags
   yaml-cpp
   tbb
   fmt
+  OpenGL::EGL
 )
 
 option(BUILD_TESTS "Build tests" ON)
@@ -85,9 +97,12 @@ if(BUILD_TESTS)
   add_executable(point_cloud_test bin/test/point_cloud_test.cc)
   target_link_libraries(point_cloud_test code_utils_libs ${GTEST_LIBRARIES})
 
-  add_executable(cloud_match_test bin/test/cloud_match_test.cc)
-  target_link_libraries(cloud_match_test code_utils_libs ${GTEST_LIBRARIES})
-endif()
+  add_executable(pangolin_test bin/test/pangolin_test.cc)
+  target_link_libraries(pangolin_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(icp_gui_test bin/test/icp_gui_test.cc)
+  target_link_libraries(icp_gui_test code_utils_libs ${GTEST_LIBRARIES})
+  endif()
 
 add_executable(hello_world bin/hello_world.cc)
 target_link_libraries(hello_world code_utils_libs)

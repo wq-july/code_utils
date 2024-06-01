@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "pcl/io/pcd_io.h"
+
 #include "util/time.h"
 
 #define private public
@@ -27,10 +28,14 @@ class SearchTest : public testing::Test {
   Common::Data::PointCloudPtr scan_ = nullptr;
   Common::Data::PointCloudPtr map_ = nullptr;
   Utils::Timer timer_;
+  bool enable_test_ = true;
 };
 
 // Test case for IMU Preintegration
 TEST_F(SearchTest, KdTreeKnnSearchTest) {
+  if (!enable_test_) {
+    return;
+  }
   if (scan_->empty() || map_->empty()) {
     LOG(ERROR) << "cannot load cloud";
     FAIL();
@@ -47,8 +52,7 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
 
   kdtree.SetEnableANN(true, FLAGS_ann_alpha);
   LOG(INFO) << "Kd tree leaves: " << kdtree.Size() << ", points: " << size
-            << ", time / size: "
-            << timer_.GetElapsedTime(Utils::Timer::Microseconds) / size;
+            << ", time / size: " << timer_.GetElapsedTime(Utils::Timer::Microseconds) / size;
 
   timer_.StartTimer("100 KnnSearch Single Thread");
   for (uint32_t i = 0; i < 100; ++i) {
@@ -71,6 +75,9 @@ TEST_F(SearchTest, KdTreeKnnSearchTest) {
 
 // Test case for IMU Preintegration
 TEST_F(SearchTest, VoxelMapKnnSearchTest) {
+  if (!enable_test_) {
+    return;
+  }
   if (scan_->empty() || map_->empty()) {
     LOG(ERROR) << "cannot load cloud";
     FAIL();
@@ -95,8 +102,6 @@ TEST_F(SearchTest, VoxelMapKnnSearchTest) {
 
   SUCCEED();
 }
-
-
 
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);
