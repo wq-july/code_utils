@@ -176,9 +176,6 @@ if (GLOG_INCLUDE_DIR AND
             " ${GLOG_INCLUDE_DIR} does not contain glog/logging.h header.")
 endif (GLOG_INCLUDE_DIR AND
         NOT EXISTS ${GLOG_INCLUDE_DIR}/glog/logging.h)
-# TODO: This regex for glog library is pretty primitive, we use lowercase
-#       for comparison to handle Windows using CamelCase library names, could
-#       this check be better?
 string(TOLOWER "${GLOG_LIBRARY}" LOWERCASE_GLOG_LIBRARY)
 if (GLOG_LIBRARY AND
         NOT "${LOWERCASE_GLOG_LIBRARY}" MATCHES ".*glog[^/]*")

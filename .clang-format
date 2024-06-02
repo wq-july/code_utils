@@ -17,7 +17,7 @@ IncludeCategories:
     Priority: 2
   - Regex: '^"([a-zA-Z_]*)(\.h")$'
     Priority: 3
-  - Regex: '^"(gtest|gflags|glog|google|opencv2|boost|Eigen|pcl|pangolin|yaml-cpp|ceres|g2o|tsl)/'
+  - Regex: '^"(gtest|gflags|glog|google|opencv2|boost|Eigen|pcl|pangolin|yaml-cpp|ceres|g2o|tsl|sophus)/'
     Priority: 4
   - Regex: ".*"
     Priority: 5

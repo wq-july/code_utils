@@ -1,6 +1,11 @@
 #include "common/voxel_map.h"
 
 #include <algorithm>
+#include <future>
+#include <mutex>
+#include <queue>
+
+#include "util/time.h"
 
 namespace Common {
 
@@ -58,51 +63,79 @@ bool VoxelMap::GenerateNearbyGrids(const NearbyType& type) {
   return true;
 }
 
-std::pair<Eigen::Vector3d, double> VoxelMap::GetClosestNeighbor(const Eigen::Vector3d& point) {
+void VoxelMap::GetClosestNeighbor(const Eigen::Vector3d& point,
+                                  std::vector<std::pair<Eigen::Vector3d, double>>* const res,
+                                  const uint32_t k_nums) {
   const auto& index = PointToVoxelIndex(point);
   auto query_grids = nearby_grids_;
   for (auto& iter : query_grids) {
     iter += index;
   }
-
-  // TODO
-  // 直接在这个函数内部进行最近点查询，因为这个函数内部使用了多线程来选点，在选点的过程中可以使用有序队列
-  const auto& neighbors = GetPoints(query_grids);
-
-  // Find the nearest neighbor
-  Eigen::Vector3d closest_neighbor;
-  double closest_distance = std::numeric_limits<double>::max();
-  std::for_each(neighbors.cbegin(), neighbors.cend(), [&](const auto& neighbor) {
-    double distance = Utils::ComputeDistance(neighbor, point);
-    if (distance < closest_distance) {
-      closest_neighbor = neighbor;
-      closest_distance = distance;
-    }
-  });
-  return std::make_pair(closest_neighbor, closest_distance);
-}
-
-// TODO，其中points可以使用有序的队列来搞定，并且只需要最小值，最大值可以弹出
-std::vector<Eigen::Vector3d> VoxelMap::GetPoints(
-    const std::vector<Eigen::Vector3i>& query_voxels) const {
-  std::vector<Eigen::Vector3d> points;
-  points.reserve(query_voxels.size() * max_points_per_voxel_);
-  // 采用线程池来并行的塞点，后期可以尝试omp对比一下
-  std::for_each(query_voxels.cbegin(), query_voxels.cend(), [&](const auto& query) {
+  // 定义一个最大堆来保存最近的 k 个邻居
+  auto compare = [](const std::pair<Eigen::Vector3d, double>& a,
+                    const std::pair<Eigen::Vector3d, double>& b) {
+    return a.second < b.second;  // 最大堆：较大的距离优先级较高
+  };
+  std::priority_queue<std::pair<Eigen::Vector3d, double>,
+                      std::vector<std::pair<Eigen::Vector3d, double>>,
+                      decltype(compare)>
+      ordered_queue(compare);
+  std::mutex ordered_queue_mutex;
+  auto process_grid = [&](const auto& query) {
+    std::priority_queue<std::pair<Eigen::Vector3d, double>,
+                        std::vector<std::pair<Eigen::Vector3d, double>>,
+                        decltype(compare)>
+        local_ordered_queue(compare);
     auto search = map_.find(query);
-    // 也就是地图中有这个体素，那么久将这个体素中所有的点塞进去
     if (search != map_.end()) {
-      for (const auto& point : search->second.points_) {
-        points.emplace_back(point);
+      for (const auto& pt : search->second.points_) {
+        double distance = (pt - point).squaredNorm();
+        local_ordered_queue.emplace(pt, distance);
+        if (local_ordered_queue.size() > k_nums) {
+          local_ordered_queue.pop();  // 保持堆的大小不超过 k_nums
+        }
       }
     }
-  });
-  return points;
+    // 合并局部优先队列到全局优先队列
+    std::lock_guard<std::mutex> lock(ordered_queue_mutex);
+    while (!local_ordered_queue.empty()) {
+      ordered_queue.emplace(local_ordered_queue.top());
+      local_ordered_queue.pop();
+      while (ordered_queue.size() > k_nums) {
+        ordered_queue.pop();  // 保持全局堆的大小不超过 k_nums
+      }
+    }
+  };
+  // TODO, 这里是for循环，并不是并发处理！
+  for (const auto& grid : query_grids) {
+    process_grid(grid);
+  }
+  // 将结果从优先队列转移到 res
+  res->clear();
+  while (!ordered_queue.empty()) {
+    res->emplace_back(ordered_queue.top());
+    ordered_queue.pop();
+  }
+  // 因为 priority_queue 是最大堆，我们需要反转结果以得到最近邻的顺序
+  std::reverse(res->begin(), res->end());
+}
+
+void VoxelMap::GetNeighborVoxels(const Eigen::Vector3d& point,
+                                 std::vector<NDTVoxel>* const nearby_voxels) {
+  nearby_voxels->clear();
+  const auto& key = PointToVoxelIndex(point);
+  for (const auto& iter : nearby_grids_) {
+    auto keyoff = iter + key;
+    auto search = map_.find(keyoff);
+    if (search != map_.end()) {
+      nearby_voxels->emplace_back(search->second);
+    }
+  }
 }
 
 std::vector<Eigen::Vector3d> VoxelMap::Pointcloud() const {
   std::vector<Eigen::Vector3d> points;
-  points.reserve(max_points_per_voxel_ * map_.size());
+  points.reserve(max_pts_per_voxel_ * map_.size());
   for (const auto& [index, voxel] : map_) {
     (void)index;
     for (const auto& point : voxel.points_) {
@@ -127,34 +160,19 @@ void VoxelMap::Update(const std::vector<Eigen::Vector3d>& points, const Sophus::
   Update(points_transformed, origin);
 }
 
-void VoxelMap::AddPoints(const std::vector<Eigen::Vector3d>& points) {
-  std::for_each(points.cbegin(), points.cend(), [&](const auto& point) {
-    auto index = PointToVoxelIndex(point);
-    auto search = map_.find(index);
-    if (search != map_.end()) {
-      auto& voxel = search.value();
-      voxel.AddPoint(point);
-    } else {
-      map_.insert({index, Voxel(point, max_points_per_voxel_)});
-    }
-  });
-}
-
 // 采用自己写的点云结构
 void VoxelMap::AddPoints(const Common::Data::PointCloud& cloud_points) {
-  if (cloud_points.empty()) {
+  AddPoints(cloud_points.points());
+}
+
+void VoxelMap::AddPoints(const std::vector<Eigen::Vector3d>& points) {
+  if (points.empty()) {
     return;
   }
-  auto points = cloud_points.points();
   std::for_each(points.cbegin(), points.cend(), [&](const auto& point) {
     auto index = PointToVoxelIndex(point);
-    auto search = map_.find(index);
-    if (search != map_.end()) {
-      auto& voxel = search.value();
-      voxel.AddPoint(point);
-    } else {
-      map_.insert({index, Voxel(point, max_points_per_voxel_)});
-    }
+    map_[index].max_nums_ = max_pts_per_voxel_;
+    map_[index].AddPoint(point);
   });
 }
 
@@ -164,10 +182,20 @@ void VoxelMap::RemovePointsFarFromLocation(const Eigen::Vector3d& origin) {
     const auto& [index, voxel] = *it;
     const auto& pt = voxel.points_.front();
     // 这里说明这些已经存进去的点的坐标都应该是被transformed过的
-    if ((pt - origin).squaredNorm() >= (max_distance2)) {
+    if ((pt - origin).squaredNorm() >= max_distance2) {
       it = map_.erase(it);
     } else {
       ++it;
+    }
+  }
+}
+
+void VoxelMap::RemoveFewerPointsVoxel() {
+  for (auto it = map_.begin(); it != map_.end();) {
+    if (it->second.size_ > min_pts_per_voxel_) {
+      ++it;
+    } else {
+      it = map_.erase(it);
     }
   }
 }

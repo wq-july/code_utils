@@ -1,5 +1,8 @@
+#pragma once
+
 #include "optimizer/optimizer.h"
 
+// TODO, 这个类用来优化点云匹配，便于完善自定义的优化类框架
 namespace Optimizer {
 
 class CloudMatchOptimizer : public Optimizer::NonlinearOptimizer {

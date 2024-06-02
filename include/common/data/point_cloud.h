@@ -11,18 +11,20 @@
 
 #include "util/utils.h"
 
-// 后期有需要再用这个，因为这个没什么必要，其他算法中用到这个点的时候可能需要和Eigen::Vector3d进行转换，这个很耗时
+// TODO，后期有需要再用这个，因为这个没什么必要，其他算法中用到这个点的时候可能需要和Eigen::Vector3d进行转换，这个很耗时
 // 之后的代码都基于Eigen::Vector3d来进行
 // #include "common/data/point.h"
-#include "glog/logging.h"
-
 #include "common/data/point.h"
+#include "glog/logging.h"
 
 namespace Common {
 namespace Data {
 
+
+// TODO, 需要将一些成员函数转移到util工具类中，点云尽量保持纯粹
 class PointCloud {
   using PointXYZ = Eigen::Vector3d;
+
  public:
   // 默认构造函数
   PointCloud() = default;
@@ -76,8 +78,12 @@ class PointCloud {
   }
 
   // 插入点
-  void emplace_back(float x, float y, float z) {
+  void emplace_back(const float x, const float y, const float z) {
     points_.emplace_back(PointXYZ(x, y, z));
+  }
+
+  void emplace_back(const PointXYZ pt) {
+    points_.emplace_back(pt);
   }
 
   // 返回点的数量
@@ -120,10 +126,122 @@ class PointCloud {
     return points_;
   }
 
+  // 计算点云的中心
+  Eigen::Vector3d ComputeCentroid() const {
+    if (points_.empty()) {
+      LOG(FATAL) << "Point cloud is empty";
+      return Eigen::Vector3d::Zero();  // 返回一个零向量以避免编译错误
+    }
+    Eigen::Vector3d centroid(0.0, 0.0, 0.0);
+    for (const auto& point : points_) {
+      centroid += point;
+    }
+    centroid /= static_cast<double>(points_.size());
+    return centroid;
+  }
+
+  void DemeanPointCloud() {
+    Eigen::Vector3d centroid = this->ComputeCentroid();
+    for (auto& point : points_) {
+      point = point - centroid;
+    }
+  }
+
+  // 去中心化点云
+  void DemeanPointCloud(PointCloud* const target) {
+    CHECK_NOTNULL(target);
+    Eigen::Vector3d centroid = this->ComputeCentroid();
+    target->clear();
+    target->reserve(points_.size());
+    for (const auto& point : points_) {
+      Eigen::Vector3d demeaned_point = point - centroid;
+      target->emplace_back(demeaned_point.x(), demeaned_point.y(), demeaned_point.z());
+    }
+  }
+
+  // 这个会改变自身点云点的坐标
+  void TransformPointCloud(const Eigen::Matrix4d& transformation) {
+    Eigen::Matrix3d rotation = transformation.block<3, 3>(0, 0);
+    Eigen::Vector3d translation = transformation.block<3, 1>(0, 3);
+    for (auto& point : points_) {
+      point = rotation * point + translation;
+    }
+  }
+
+  // 用于将变换后的点云赋值给目标点云
+  void TransformPointCloud(const Eigen::Matrix4d& transformation, PointCloud* const target) {
+    CHECK_NOTNULL(target);
+    target->clear();
+    target->reserve(points_.size());
+
+    Eigen::Matrix3d rotation = transformation.block<3, 3>(0, 0);
+    Eigen::Vector3d translation = transformation.block<3, 1>(0, 3);
+
+    for (const auto& point : points_) {
+      Eigen::Vector3d transformed_point = rotation * point + translation;
+      target->emplace_back(transformed_point.x(), transformed_point.y(), transformed_point.z());
+    }
+  }
+
+  // 用于将变换后的点云赋值给目标点云
+  void TransformPointCloud(const Eigen::Matrix4d& transformation,
+                           const std::vector<uint32_t>& indexs,
+                           PointCloud* const target) {
+    CHECK_NOTNULL(target);
+    target->clear();
+    target->reserve(points_.size());
+    Eigen::Matrix3d rotation = transformation.block<3, 3>(0, 0);
+    Eigen::Vector3d translation = transformation.block<3, 1>(0, 3);
+    for (const auto& iter : indexs) {
+      Eigen::Vector3d transformed_point = rotation * points_.at(iter) + translation;
+      target->emplace_back(transformed_point.x(), transformed_point.y(), transformed_point.z());
+    }
+  }
+
+  // 转换点云为 Eigen::MatrixXd
+  // Eigen::MatrixXd ToMatrixXd() const {
+  //   Eigen::MatrixXd matrix(points_.size(), 3);
+  //   for (uint32_t i = 0; i < points_.size(); ++i) {
+  //     matrix(i, 0) = points_[i].x();
+  //     matrix(i, 1) = points_[i].y();
+  //     matrix(i, 2) = points_[i].z();
+  //   }
+  //   return matrix;
+  // }
+
+  Eigen::MatrixXd ToMatrixXd() const {
+    Eigen::MatrixXd matrix(points_.size(), 3);
+    std::for_each(std::execution::par,
+                  points_.begin(),
+                  points_.end(),
+                  [&matrix, idx = 0](const PointXYZ& point) mutable {
+                    matrix(idx, 0) = point.x();
+                    matrix(idx, 1) = point.y();
+                    matrix(idx, 2) = point.z();
+                    ++idx;
+                  });
+    return matrix;
+  }
+
+  pcl::PointCloud<pcl::PointXYZ>::Ptr ToPCLPointCloud() const {
+    auto pcl_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+    pcl_cloud->width = points_.size();
+    pcl_cloud->height = 1;  // Assuming unorganized point cloud
+    pcl_cloud->is_dense = false;
+    pcl_cloud->points.resize(points_.size());
+
+#pragma omp parallel for
+    for (uint32_t i = 0; i < points_.size(); ++i) {
+      pcl_cloud->points[i].x = points_[i].x();
+      pcl_cloud->points[i].y = points_[i].y();
+      pcl_cloud->points[i].z = points_[i].z();
+    }
+    return pcl_cloud;
+  }
+
  private:
   std::vector<PointXYZ> points_;
 };
-
 
 // 定义共享指针类型
 using PointCloudPtr = std::shared_ptr<PointCloud>;
