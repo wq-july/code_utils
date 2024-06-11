@@ -1,6 +1,12 @@
 #pragma once
 
+#include <omp.h>
+
+#include <algorithm>
+#include <execution>
 #include <memory>
+#include <mutex>
+#include <queue>
 #include <unordered_map>
 #include <vector>
 
@@ -20,15 +26,14 @@
 
 namespace Common {
 
-class VoxelMap {
- public:
-  enum class NearbyType {
-    CENTER,    // 只考虑中心（同一个Voxel）中元素
-    NEARBY6,   // 上下左右前后
-    NEARBY18,  // 各个角
-    NEARBY26   // 立方体
-  };
+enum class NearbyType {
+  CENTER,    // 只考虑中心（同一个Voxel）中元素
+  NEARBY6,   // 上下左右前后
+  NEARBY18,  // 各个角
+  NEARBY26   // 立方体
+};
 
+class VoxelMap {
  public:
   // 我觉得这个函数之后可以改写一下，把这些参数放到配置类中去
   explicit VoxelMap(const double voxel_size,
@@ -36,7 +41,7 @@ class VoxelMap {
                     const int32_t max_points_per_voxel)
       : voxel_size_(voxel_size),
         max_distance_(max_distance),
-        max_points_per_voxel_(max_points_per_voxel) {
+        max_pts_per_voxel_(max_points_per_voxel) {
     GenerateNearbyGrids(NearbyType::NEARBY6);
   }
 
@@ -64,27 +69,29 @@ class VoxelMap {
   // 用来移除距离目前位置比较远的地图点
   void RemovePointsFarFromLocation(const Eigen::Vector3d& origin);
 
+  void RemoveFewerPointsVoxel();
+
   std::vector<Eigen::Vector3d> Pointcloud() const;
 
-  std::vector<Eigen::Vector3d> GetPoints(const std::vector<Eigen::Vector3i>& query_voxels) const;
-
-  std::pair<Eigen::Vector3d, double> GetClosestNeighbor(const Eigen::Vector3d& point);
+  void GetClosestNeighbor(const Eigen::Vector3d& point,
+                          std::vector<std::pair<Eigen::Vector3d, double>>* const res,
+                          const uint32_t k_nums = 1);
+  void GetNeighborVoxels(const Eigen::Vector3d& point,
+                          std::vector<NDTVoxel>* const nearby_voxels);
 
  private:
   bool GenerateNearbyGrids(const NearbyType& type);
 
  private:
   std::vector<Eigen::Vector3i> nearby_grids_;
-  uint32_t voxel_size_ = 0u;
+  double voxel_size_ = 0;
   double max_distance_ = 0.0;
-  uint32_t max_points_per_voxel_ = 0u;
-  tsl::robin_map<Eigen::Vector3i, Voxel, Utils::KissIcpHash> map_;
+  int32_t max_pts_per_voxel_ = 0;
+  int32_t min_pts_per_voxel_ = 0;
+  tsl::robin_map<Eigen::Vector3i, NDTVoxel, Utils::KissIcpHash> map_;
 
   // [robin_map] vs [unordered_map]
   // std::unordered_map<Eigen::Vector3i, Voxel, Utils::KissIcpHash> map_;
-  
-  // map with lru
-  // Common::LRUCache<Eigen::Vector3i, Voxel> map_;
 };
 
 }  // namespace Common

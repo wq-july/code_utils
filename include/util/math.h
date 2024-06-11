@@ -9,14 +9,12 @@
 
 #include "Eigen/Core"
 #include "Eigen/Dense"
-
 #include "ceres/ceres.h"
 #include "glog/logging.h"
 
 namespace Utils {
 
 namespace Math {
-
 namespace ConstMath {
 constexpr double kGravity = -9.81;                   // 重力
 constexpr const double kDegreeToRad = M_PI / 180.0;  // 角度转为弧度
@@ -24,7 +22,6 @@ constexpr double kRadToDegree = 180.0 / M_PI;        // 弧度转角度
 // 非法定义
 constexpr uint32_t kINVALID = std::numeric_limits<uint32_t>::max();
 };  // namespace ConstMath
-
 
 template <typename ContainerType>
 void ComputeMeanAndVariance(const std::vector<uint32_t>& indices,
@@ -60,6 +57,47 @@ inline T NormalizeAngle(const T& angle_radians) {
   T two_pi(2.0 * ceres::constants::pi);
   return angle_radians - two_pi * ceres::floor((angle_radians + T(ceres::constants::pi)) / two_pi);
 }
+
+// SO(3)中的hat函数
+inline Eigen::Matrix3d So3Symmetric(const Eigen::Vector3d& v) {
+  Eigen::Matrix3d m;
+  m << 0, -v.z(), v.y(), v.z(), 0, -v.x(), -v.y(), v.x(), 0;
+  return m;
+}
+
+// SE(3)中的hat函数
+inline Eigen::Matrix4d Se3Symmetric(const Eigen::Matrix<double, 6, 1>& v) {
+  Eigen::Matrix4d m;
+  m.setZero();
+  m.block<3, 3>(0, 0) = So3Symmetric(v.head<3>());
+  m.block<3, 1>(0, 3) = v.tail<3>();
+  return m;
+}
+
+inline Eigen::Matrix3d Exp(const Eigen::Vector3d& omega) {
+  double theta = omega.norm();
+  Eigen::Matrix3d Omega_hat = So3Symmetric(omega);
+  if (theta < 1e-10) {
+    // 当theta接近0时，使用近似展开
+    return Eigen::Matrix3d::Identity() + Omega_hat;
+  } else {
+    // 使用罗德里格斯公式
+    Eigen::Matrix3d Omega_hat_squared = Omega_hat * Omega_hat;
+    return Eigen::Matrix3d::Identity() + (std::sin(theta) / theta) * Omega_hat +
+           ((1 - std::cos(theta)) / (theta * theta)) * Omega_hat_squared;
+  }
+}
+
+Eigen::Vector3d ComputeCentroid(const std::vector<Eigen::Vector3d>& points);
+
+bool PlaneFit(const std::vector<Eigen::Vector3d>& points,
+                     Eigen::Vector4d* const plane_coeffs,
+                     double eps = 1e-3);
+
+bool Line3DFit(std::vector<Eigen::Vector3d>& points,
+                      Eigen::Vector3d* const origin,
+                      Eigen::Vector3d* const dir,
+                      double eps = 0.1);
 
 }  // namespace Math
 

@@ -28,7 +28,7 @@ bool KdTree::BuildTree(const Common::Data::PointCloudPtr& cloud) {
   // 注意，这样写会默认的调用移动构造函数，需要理解区别
   // cloud_ = std::make_shared<Common::Data::PointCloud>(cloud);
   timer.StopTimer();
-  timer.PrintElapsedTime(Utils::Timer::Microseconds);
+  timer.PrintElapsedTime();
 
   // 清空数据，合理
   Clear();
@@ -88,7 +88,7 @@ void KdTree::Insert(const std::vector<uint32_t>& points, KdTreeNode* const node)
 }
 
 bool KdTree::GetClosestPoint(const Eigen::Vector3d& pt,
-                             std::vector<uint32_t>* const closest_index,
+                             std::vector<std::pair<uint32_t, double>>* const closest_index,
                              const uint32_t k_nums) {
   if (k_nums > size_) {
     LOG(ERROR) << "最近邻数量不能大于点云的数量！！";
@@ -97,13 +97,14 @@ bool KdTree::GetClosestPoint(const Eigen::Vector3d& pt,
   k_nums_ = k_nums;
   std::priority_queue<NodeAndDistance> knn_result;
   KnnSearch(pt, root_.get(), &knn_result);
-  // 排序并返回结果
-  closest_index->resize(knn_result.size());
-  for (uint32_t i = closest_index->size() - 1; i > 0; --i) {
-    // 倒序插入
-    closest_index->at(i) = knn_result.top().node_->point_index_;
+  closest_index->clear();
+  while (!knn_result.empty()) {
+    closest_index->emplace_back(
+        std::make_pair(knn_result.top().node_->point_index_, knn_result.top().distance_square_));
     knn_result.pop();
   }
+  // 因为 priority_queue 是最大堆，我们需要反转结果以得到最近邻的顺序
+  std::reverse(closest_index->begin(), closest_index->end());
   return true;
 }
 
@@ -111,7 +112,6 @@ bool KdTree::GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
                                std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                                const uint32_t k_nums) {
   matches->resize(cloud->size() * k_nums);
-
   // 索引
   std::vector<int> index(cloud->size());
   for (uint32_t i = 0; i < cloud->size(); ++i) {
@@ -122,12 +122,12 @@ bool KdTree::GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
                 index.begin(),
                 index.end(),
                 [this, &cloud, &matches, &k_nums](int idx) {
-                  std::vector<uint32_t> closest_idx;
+                  std::vector<std::pair<uint32_t, double>> closest_idx;
                   GetClosestPoint(cloud->points()[idx], &closest_idx, k_nums);
                   for (uint32_t i = 0; i < k_nums; ++i) {
                     (*matches)[idx * k_nums + i].second = idx;
                     if (i < closest_idx.size()) {
-                      (*matches)[idx * k_nums + i].first = closest_idx[i];
+                      (*matches)[idx * k_nums + i].first = closest_idx[i].first;
                     } else {
                       (*matches)[idx * k_nums + i].first = Utils::Math::ConstMath::kINVALID;
                     }
@@ -147,8 +147,8 @@ void KdTree::KnnSearch(const Eigen::Vector3d& pt,
   }
 
   // 不是叶子节点，那么考虑pt落在当前node的左子树还是右子树中
-  KdTreeNode* this_side = new KdTreeNode;
-  KdTreeNode* that_side = new KdTreeNode;
+  KdTreeNode* this_side = nullptr;
+  KdTreeNode* that_side = nullptr;
 
   // 比较pt中分隔轴所在的维度和分割阈值，确定点应该落在当前节点的左子树或者是右子树中
   if (pt[node->axis_index_] < node->splite_thresh_) {
@@ -197,6 +197,7 @@ void KdTree::ComputeDisForLeaf(const Eigen::Vector3d& pt,
                                std::priority_queue<NodeAndDistance>* const result) const {
   // 叶子节点中直接存储着点在点云中的索引，不在是中间节点中没有意义的序号
   double dis_square = DistanceSquare(pt, cloud_->points().at(node->point_index_));
+
   if (result->size() < k_nums_) {
     // 这个牛逼了，优先级队列中可以直接插入数据类型的构造函数入参就行
     result->emplace(node, dis_square);

@@ -1,0 +1,55 @@
+load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
+
+filegroup(
+    name = "headers",
+    srcs = glob([
+        "*.hpp",
+        "*.h",
+    ]),
+)
+
+pkg_files(
+    name = "pkg_headers_local",
+    srcs = [":headers"],
+)
+
+SUBMODULES = [
+    "//localization/matching/registration/vg_icp/{}".format(mod)
+    for mod in subpackages(include = ["**"])
+]
+
+pkg_filegroup(
+    name = "pkg_headers",
+    srcs = [":pkg_headers_local"] + ["{}:pkg_headers".format(mod) for mod in SUBMODULES],
+    prefix = "vg_icp",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "vg_icp",
+    srcs = glob(
+        include = ["*.cc"],
+        exclude = ["*_test.cc"]),
+    hdrs = [":headers"],
+    visibility = ["//visibility:public"],
+    deps = SUBMODULES + [
+        "//localization/matching/registration/common:common",
+        "//localization/matching/filter:filter",
+        "@zframework",
+    ],
+)
+
+cc_test(
+    name = "vg_icp_test",
+    srcs = ["vg_icp_test.cc"],
+    copts = ["-fopenmp"],
+    linkopts = [
+        "-lpcl_io",
+        "-fopenmp"
+    ],
+    data = ["//localization/test_data:test_data"],
+    deps = [
+        ":vg_icp",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

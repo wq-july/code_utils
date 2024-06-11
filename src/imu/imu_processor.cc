@@ -18,7 +18,7 @@ void ImuProcessor::Initialize(const Utils::ImuConfig& config) {
   pre_integrator_ = std::make_shared<IMUPreIntegration>(config.pre_integration_config_);
 }
 
-// TODO
+// TODO，未来会根据滤波方案和优化器方案添加相关的处理逻辑
 bool ImuProcessor::ProcessImu() { return true; }
 
 bool ImuProcessor::ReadData(const std::string& file_path, std::vector<IMUData>* const data_vec) {

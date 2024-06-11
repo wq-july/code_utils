@@ -35,6 +35,7 @@ function create_container {
     # 支持的cuda版本，然后修改对应的From img版本
     # -e NVIDIA_DISABLE_REQUIRE=1 \
     docker run \
+    -e NVIDIA_DISABLE_REQUIRE=1 \
     -e DISPLAY=$DISPLAY \
     -e QT_X11_NO_MITSHM=1 \
     -e XDG_RUNTIME_DIR=/tmp \

@@ -55,7 +55,9 @@ class NonlinearOptimizer {
     return jac_;
   }
 
-  Eigen::VectorXd Solver(const Eigen::MatrixXd& H, const Eigen::VectorXd& b, SolverType solverType);
+  static Eigen::VectorXd Solver(const Eigen::MatrixXd& H,
+                                const Eigen::VectorXd& b,
+                                SolverType solverType);
 
  public:
   bool initialized_ = false;

@@ -16,7 +16,6 @@
 
 #include "common/data/point_cloud.h"
 #include "util/math.h"
-
 #include "util/time.h"
 
 namespace Common {
@@ -58,13 +57,13 @@ class KdTree {
 
   // 获取k最近邻
   bool GetClosestPoint(const Eigen::Vector3d& pt,
-                       std::vector<uint32_t>* const closest_index,
-                       const uint32_t k_nums = 5);
+                       std::vector<std::pair<uint32_t, double>>* const closest_index,
+                       const uint32_t k_nums = 1);
 
   // 多线程并行为点云寻找最近邻
   bool GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
                          std::vector<std::pair<uint32_t, uint32_t>>* const matches,
-                         const uint32_t k_nums = 5);
+                         const uint32_t k_nums = 1);
 
   // 返回节点数量
   uint32_t Size() const {
@@ -82,8 +81,10 @@ class KdTree {
  public:
   // 这个被用于计算最近邻的倍数
   void SetEnableANN(bool use_ann = true, float alpha = 0.1) {
-    approximate_ = use_ann;
-    alpha_ = alpha;
+    if (use_ann) {
+      approximate_ = use_ann;
+      alpha_ = alpha;
+    }
   }
 
  private:
@@ -121,7 +122,7 @@ class KdTree {
 
   Common::Data::PointCloudPtr cloud_ = nullptr;
 
-  // 使用hash打法存储节点的索引和对应的节点指针？
+  // 使用hash存储节点的索引和对应的节点指针？
   std::unordered_map<uint32_t, KdTreeNode*> nodes_;
 
   uint32_t k_nums_ = 5;
@@ -130,7 +131,7 @@ class KdTree {
   uint32_t tree_node_id_ = 0;
 
   // 用于近似最近邻
-  bool approximate_ = true;
+  bool approximate_ = false;
   double alpha_ = 0.1;
 };
 

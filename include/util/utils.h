@@ -170,4 +170,8 @@ inline std::vector<Eigen::Vector3d> PclToVec3d(
   return eigen_points;
 }
 
+inline Eigen::Vector3d Matrix3dToEuler(const Eigen::Matrix3d& rotation) {
+  return rotation.eulerAngles(0, 1, 2);
+}
+
 }  // namespace Utils

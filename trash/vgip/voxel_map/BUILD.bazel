@@ -1,0 +1,29 @@
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+
+filegroup(
+    name = "headers",
+    srcs = glob([
+        "*.hpp",
+        "*.h",
+    ]),
+)
+
+pkg_files(
+    name = "pkg_headers",
+    srcs = [":headers"],
+    prefix = "voxel_map",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "voxel_map",
+    srcs = glob(["*.cc"]),
+    hdrs = [":headers"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//localization/matching/registration/common:common",
+        "//localization/matching/registration/proto:proto",
+        "//localization/matching/registration/vg_icp/common:common",
+        "@zframework",
+    ],
+)
