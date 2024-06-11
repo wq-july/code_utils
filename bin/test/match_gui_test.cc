@@ -11,8 +11,7 @@
 #include "pcl/registration/icp.h"
 
 #include "glog/logging.h"
-#include "lidar/classic_icp.h"
-#include "lidar/ndt.h"
+#include "lidar/match.h"
 #include "pangolin/display/display.h"
 #include "pangolin/display/view.h"
 #include "pangolin/gl/gldraw.h"
@@ -34,33 +33,24 @@ class ICPGUITest : public testing::Test {
     pcl::io::loadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path, *map_);
   }
 
-  // 执行ICP匹配的函数
-  Eigen::Matrix4f MyIcp(const PCLPointCloud::Ptr& source, const PCLPointCloud::Ptr& target) {
+  // 执行匹配的函数
+  Eigen::Matrix4f MyMatcher(const PCLPointCloud::Ptr& source, const PCLPointCloud::Ptr& target) {
     PointCloudPtr pointcloud_scan_(new PointCloud);
     PointCloudPtr pointcloud_map_(new PointCloud);
     pointcloud_scan_->GetPointsFromPCL<pcl::PointXYZ>(source);
     pointcloud_map_->GetPointsFromPCL<pcl::PointXYZ>(target);
     Eigen::Isometry3d final_transform = Eigen::Isometry3d::Identity();
-    Lidar::ClassicICP icp(0.6,
-                          100.0,
-                          20,
-                          Lidar::AlignMethod::POINT_TO_PLANE_ICP,
-                          Lidar::SearchMethod::VOXEL_MAP,
-                          30,
-                          1.0e-6,
-                          50);
-    icp.Align(Eigen::Isometry3d::Identity(), pointcloud_scan_, pointcloud_map_, &final_transform);
-    return final_transform.matrix().cast<float>();
-  }
-
-  Eigen::Matrix4f MyNdt(const PCLPointCloud::Ptr& source, const PCLPointCloud::Ptr& target) {
-    PointCloudPtr pointcloud_scan_(new PointCloud);
-    PointCloudPtr pointcloud_map_(new PointCloud);
-    pointcloud_scan_->GetPointsFromPCL<pcl::PointXYZ>(source);
-    pointcloud_map_->GetPointsFromPCL<pcl::PointXYZ>(target);
-    Eigen::Isometry3d final_transform = Eigen::Isometry3d::Identity();
-    Lidar::NDT my_ndt(1.0, 30, 1.0e-6, 50, false, 20, 30);
-    my_ndt.Align(
+    Lidar::Matcher matcher(0.6,
+                           100.0,
+                           50,
+                           Lidar::AlignMethod::NDT,
+                           Lidar::SearchMethod::VOXEL_MAP,
+                           50,
+                           1.0e-6,
+                           20.0,
+                           50,
+                           true);
+    matcher.Align(
         Eigen::Isometry3d::Identity(), pointcloud_scan_, pointcloud_map_, &final_transform);
     return final_transform.matrix().cast<float>();
   }
@@ -196,14 +186,7 @@ TEST_F(ICPGUITest, ICPGUITest) {
   pangolin::Var<std::function<void()>> btn_space("ui.ICP", [this, &scan_transform]() {
     PCLPointCloud::Ptr transformed_scan(new PCLPointCloud);
     pcl::transformPointCloud(*this->scan_, *transformed_scan, scan_transform);
-    Eigen::Matrix4f icp_transform = this->MyIcp(transformed_scan, this->map_);
-    scan_transform = icp_transform * scan_transform;
-  });
-
-  pangolin::Var<std::function<void()>> btn_n("ui.NDT", [this, &scan_transform]() {
-    PCLPointCloud::Ptr transformed_scan(new PCLPointCloud);
-    pcl::transformPointCloud(*this->scan_, *transformed_scan, scan_transform);
-    Eigen::Matrix4f icp_transform = this->MyNdt(transformed_scan, this->map_);
+    Eigen::Matrix4f icp_transform = this->MyMatcher(transformed_scan, this->map_);
     scan_transform = icp_transform * scan_transform;
   });
 
@@ -278,14 +261,7 @@ TEST_F(ICPGUITest, ICPGUITest) {
   pangolin::RegisterKeyPressCallback(' ', [this, &scan_transform]() {
     PCLPointCloud::Ptr transformed_scan(new PCLPointCloud);
     pcl::transformPointCloud(*this->scan_, *transformed_scan, scan_transform);
-    Eigen::Matrix4f icp_transform = this->MyIcp(transformed_scan, this->map_);
-    scan_transform = icp_transform * scan_transform;
-  });
-
-  pangolin::RegisterKeyPressCallback('n', [this, &scan_transform]() {
-    PCLPointCloud::Ptr transformed_scan(new PCLPointCloud);
-    pcl::transformPointCloud(*this->scan_, *transformed_scan, scan_transform);
-    Eigen::Matrix4f icp_transform = this->MyNdt(transformed_scan, this->map_);
+    Eigen::Matrix4f icp_transform = this->MyMatcher(transformed_scan, this->map_);
     scan_transform = icp_transform * scan_transform;
   });
 

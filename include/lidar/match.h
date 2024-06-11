@@ -9,9 +9,8 @@
 #include "common/data/point_cloud.h"
 #include "common/kdtree.h"
 #include "common/voxel_map.h"
-#include "optimizer/cloud_match_optimize.h"
-
 #include "lidar/filter.h"
+#include "optimizer/cloud_match_optimize.h"
 #include "sophus/se3.hpp"
 
 using namespace Common::Data;
@@ -19,28 +18,28 @@ using namespace Common::Data;
 namespace Lidar {
 
 enum class AlignMethod {
-  PCL_ICP,
-  SVD_ICP,
   POINT_TO_POINT_ICP,
   POINT_TO_LINE_ICP,
   POINT_TO_PLANE_ICP,
-  GENERAL_ICP
+  // GENERAL_ICP,
+  NDT,
 };
 
 enum class SearchMethod { KDTREE, VOXEL_MAP };
 
-class ClassicICP{
+class Matcher {
  public:
-  ClassicICP(const double voxel_size,
-      const double max_distance,
-      const int32_t max_num_per_voxel,
-      const AlignMethod method,
-      const SearchMethod search_method,
-      const int32_t max_iters,
-      const double break_dx,
-      const int32_t min_effect_points,
-      const bool use_downsample = false);
-  ~ClassicICP() = default;
+  Matcher(const double voxel_size,
+             const double max_distance,
+             const int32_t max_num_per_voxel,
+             const AlignMethod method,
+             const SearchMethod search_method,
+             const int32_t max_iters,
+             const double break_dx,
+             const double outlier_th,
+             const int32_t min_effect_points,
+             const bool use_downsample = false);
+  ~Matcher() = default;
   // 核心问题，通过最近邻方法找到对应关系，然后构建最小二乘问题，反复交替迭代
   bool Align(const Eigen::Isometry3d& pred_pose,
              const PointCloudPtr& source_cloud,
@@ -55,17 +54,12 @@ class ClassicICP{
 
   bool SetTargetCloud(const PointCloudPtr& target);
 
-  bool SvdIcp();
+  bool GeneralMatch(const AlignMethod icp_type);
 
-  bool PointToPointICP();
-
-  bool PointToLineICP();
-
-  bool PointToPlaneICP();
-
-  bool GeneralICP();
-
-  bool PclICP();
+  bool KnnSearch(const SearchMethod search_method,
+                 const Eigen::Vector3d& pt,
+                 const int32_t k_nums,
+                 std::vector<std::pair<Eigen::Vector3d, double>>* const res);
 
  private:
   AlignMethod align_method_;
@@ -90,6 +84,8 @@ class ClassicICP{
   double break_dx_ = 1.0e-6;
   int32_t min_effect_points_ = 50;
   bool use_downsample_ = true;
+  // err.transpose() * cov_inv_ * err
+  double outlier_th_ = 20.0;
 
   Sophus::SE3d pose_;
 
