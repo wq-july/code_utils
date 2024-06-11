@@ -77,7 +77,7 @@ class VoxelMap {
                           std::vector<std::pair<Eigen::Vector3d, double>>* const res,
                           const uint32_t k_nums = 1);
   void GetNeighborVoxels(const Eigen::Vector3d& point,
-                          std::vector<NDTVoxel>* const nearby_voxels);
+                          std::vector<GaussianVoxel>* const nearby_voxels);
 
  private:
   bool GenerateNearbyGrids(const NearbyType& type);
@@ -88,7 +88,7 @@ class VoxelMap {
   double max_distance_ = 0.0;
   int32_t max_pts_per_voxel_ = 0;
   int32_t min_pts_per_voxel_ = 0;
-  tsl::robin_map<Eigen::Vector3i, NDTVoxel, Utils::KissIcpHash> map_;
+  tsl::robin_map<Eigen::Vector3i, GaussianVoxel, Utils::KissIcpHash> map_;
 
   // [robin_map] vs [unordered_map]
   // std::unordered_map<Eigen::Vector3i, Voxel, Utils::KissIcpHash> map_;

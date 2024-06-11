@@ -19,6 +19,9 @@ bash ./scrips/docker.sh init
 # 之后直接使用脚本进入到容器中
 bash ./scripts/docker.sh
 
+# 脚本编译
+bash ./scripts/build.sh
+
 # 手动编译
 mkdir build \ 
 && cd build \
@@ -41,11 +44,11 @@ mkdir build \
   - [ ] 简单的EKF算法实现；
 
 ### lidar部分算法
-  - [ ] vicp；
-  - [ ] gicp；
-  - [ ] vgicp；
-  - [ ] ndt；
-  - [ ] 降采样算法；
+  - [x] vicp；
+  - [x] gicp；
+  - [] vgicp；
+  - [x] ndt；
+  - [x] 降采样算法；
 
 ### 视觉部分算法
 - 初始化相关

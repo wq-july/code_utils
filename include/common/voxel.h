@@ -29,19 +29,19 @@ struct Voxel {
   int32_t max_nums_ = std::numeric_limits<int32_t>::max();
 };
 
-struct NDTVoxel : public Voxel {
+struct GaussianVoxel : public Voxel {
  public:
-  NDTVoxel() = default;
-  NDTVoxel(const Eigen::Vector3d& point, const int32_t max_num) : Voxel(point, max_num){};
-  NDTVoxel(const int32_t max_num) : Voxel(max_num) {}
-  NDTVoxel(const NDTVoxel& other)
+  GaussianVoxel() = default;
+  GaussianVoxel(const Eigen::Vector3d& point, const int32_t max_num) : Voxel(point, max_num){};
+  GaussianVoxel(const int32_t max_num) : Voxel(max_num) {}
+  GaussianVoxel(const GaussianVoxel& other)
       : Voxel(other),
         size_(other.size_),
         mean_(other.mean_),
         cov_(other.cov_),
         inv_cov_(other.inv_cov_) {}
 
-  ~NDTVoxel() = default;
+  ~GaussianVoxel() = default;
 
   void AddPoint(const Eigen::Vector3d& point) override {
     int32_t size = points_.size();

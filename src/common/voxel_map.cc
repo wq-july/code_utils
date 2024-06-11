@@ -121,7 +121,7 @@ void VoxelMap::GetClosestNeighbor(const Eigen::Vector3d& point,
 }
 
 void VoxelMap::GetNeighborVoxels(const Eigen::Vector3d& point,
-                                 std::vector<NDTVoxel>* const nearby_voxels) {
+                                 std::vector<GaussianVoxel>* const nearby_voxels) {
   nearby_voxels->clear();
   const auto& key = PointToVoxelIndex(point);
   for (const auto& iter : nearby_grids_) {

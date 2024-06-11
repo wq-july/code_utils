@@ -20,7 +20,6 @@
 namespace Common {
 namespace Data {
 
-
 // TODO, 需要将一些成员函数转移到util工具类中，点云尽量保持纯粹
 class PointCloud {
   using PointXYZ = Eigen::Vector3d;

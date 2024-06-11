@@ -57,9 +57,8 @@ add_library(code_utils_libs
     src/optimizer/optimizer.cc
     src/optimizer/curve_fitter.cc
     src/optimizer/slam_data_struct.cc
-    src/lidar/classic_icp.cc
+    src/lidar/match.cc
     src/lidar/filter.cc
-    src/lidar/ndt.cc
 )
 
 target_link_libraries(code_utils_libs
@@ -106,11 +105,8 @@ if(BUILD_TESTS)
   add_executable(pangolin_test bin/test/pangolin_test.cc)
   target_link_libraries(pangolin_test code_utils_libs ${GTEST_LIBRARIES})
 
-  add_executable(icp_gui_test bin/test/icp_gui_test.cc)
-  target_link_libraries(icp_gui_test code_utils_libs ${GTEST_LIBRARIES})
-
-  add_executable(icp_test bin/test/icp_test.cc)
-  target_link_libraries(icp_test code_utils_libs ${GTEST_LIBRARIES})
+  add_executable(match_gui_test bin/test/match_gui_test.cc)
+  target_link_libraries(match_gui_test code_utils_libs ${GTEST_LIBRARIES})
   endif()
 
 add_executable(hello_world bin/hello_world.cc)
