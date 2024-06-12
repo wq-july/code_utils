@@ -14,7 +14,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(GTest REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.10.0 REQUIRED)
 find_package(PCL REQUIRED)
 #sophus need fmt
 find_package(fmt REQUIRED)
@@ -107,6 +107,9 @@ if(BUILD_TESTS)
 
   add_executable(match_gui_test bin/test/match_gui_test.cc)
   target_link_libraries(match_gui_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(cv_test bin/test/cv_test.cc)
+  target_link_libraries(cv_test code_utils_libs ${GTEST_LIBRARIES})
   endif()
 
 add_executable(hello_world bin/hello_world.cc)

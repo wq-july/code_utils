@@ -2,8 +2,10 @@
 # 获取今天的日期
 # TODAY=$(date +%Y-%m-%d)
 
+# docker login --username=aliyun2446412415 --password=******* registry.cn-hangzhou.aliyuncs.com
+
 # 定义镜像名称和容器名称
-IMAGE_NAME="qiangwangjuly/slam_practise_env:2024-06-01"
+IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-12"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数
