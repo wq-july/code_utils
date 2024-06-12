@@ -1,9 +1,9 @@
 #include "lidar/match.h"
 
+#include "glog/logging.h"
 #include "pcl/registration/icp.h"
 #include "pcl/registration/ndt.h"
 
-#include "glog/logging.h"
 #include "optimizer/optimizer.h"
 #include "util/math.h"
 namespace {
@@ -15,15 +15,15 @@ constexpr int32_t MaxIters = 100;
 namespace Lidar {
 
 Matcher::Matcher(const double voxel_size,
-                       const double max_map_distance,
-                       const int32_t max_num_per_voxel,
-                       const AlignMethod align_method,
-                       const SearchMethod search_method,
-                       const int32_t max_iters,
-                       const double break_dx,
-                       const double outlier_th,
-                       const int32_t min_effect_points,
-                       const bool use_downsample)
+                 const double max_map_distance,
+                 const int32_t max_num_per_voxel,
+                 const AlignMethod align_method,
+                 const SearchMethod search_method,
+                 const int32_t max_iters,
+                 const double break_dx,
+                 const double outlier_th,
+                 const int32_t min_effect_points,
+                 const bool use_downsample)
     : align_method_(align_method),
       search_method_(search_method),
       max_iters_(max_iters),
@@ -37,9 +37,9 @@ Matcher::Matcher(const double voxel_size,
 }
 
 bool Matcher::Align(const Eigen::Isometry3d& pred_pose,
-                       const PointCloudPtr& source_cloud,
-                       const PointCloudPtr& target_cloud,
-                       Eigen::Isometry3d* const final_pose) {
+                    const PointCloudPtr& source_cloud,
+                    const PointCloudPtr& target_cloud,
+                    Eigen::Isometry3d* const final_pose) {
   CHECK_NOTNULL(source_cloud);
   CHECK_NOTNULL(target_cloud);
   CHECK_NOTNULL(final_pose);
@@ -110,9 +110,9 @@ bool Matcher::SetTargetCloud(const PointCloudPtr& target) {
 }
 
 bool Matcher::KnnSearch(const SearchMethod search_method,
-                           const Eigen::Vector3d& pt,
-                           const int32_t k_nums,
-                           std::vector<std::pair<Eigen::Vector3d, double>>* const res) {
+                        const Eigen::Vector3d& pt,
+                        const int32_t k_nums,
+                        std::vector<std::pair<Eigen::Vector3d, double>>* const res) {
   CHECK_NOTNULL(res);
   std::vector<std::pair<uint32_t, double>> kdtree_res;
   switch (search_method_) {
@@ -139,7 +139,6 @@ bool Matcher::KnnSearch(const SearchMethod search_method,
 bool Matcher::GeneralMatch(const AlignMethod match_method) {
   CHECK_NOTNULL(source_cloud_);
   CHECK_NOTNULL(target_cloud_);
-  LOG(INFO) << "Processing Multi-threaded ICP";
 
   std::vector<int32_t> index(source_cloud_->size());
   for (uint32_t i = 0; i < index.size(); ++i) {
