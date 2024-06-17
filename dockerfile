@@ -203,10 +203,20 @@ RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.10.0.zip \
     && cd ../.. \
     && rm -rf opencv.zip opencv_contrib.zip opencv-4.10.0
 
+
+# Install TensorRT
+RUN wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.0.1/local_repo/nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb \
+    && dpkg -i nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb \
+    && cp /var/nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4/nv-tensorrt-local-4BE0C9B6-keyring.gpg /usr/share/keyrings/ \
+    && apt-get update \
+    && apt-get install tensorrt -y \
+    && rm -rf nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb
+
+
 # Install oh-my-zsh
 # Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github
 # Uses "git", "ssh-agent" and "history-substring-search" bundled plugins
-RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.0/zsh-in-docker.sh)" -- \
 -t ys \
 -p git \
 -p docker \

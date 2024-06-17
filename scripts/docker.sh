@@ -5,7 +5,7 @@
 # docker login --username=aliyun2446412415 --password=******* registry.cn-hangzhou.aliyuncs.com
 
 # 定义镜像名称和容器名称
-IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-13"
+IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-14"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数
