@@ -12,6 +12,7 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/source
 RUN apt-get update \
     && apt-get upgrade -y \ 
     && apt-get install -y \
+    apt-utils \
     build-essential \
     checkinstall \
     cmake \
@@ -73,6 +74,7 @@ RUN apt-get update \
     ninja-build \
     ocl-icd-libopencl1 \
     opencl-headers \
+    openssh-server \
     pkg-config \
     protobuf-compiler \
     python3-dev \
@@ -212,27 +214,50 @@ RUN wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorr
     && apt-get install tensorrt -y \
     && rm -rf nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb
 
+# Install Nvim
+RUN mkdir ~/.config \
+    && cd ~/.config \
+    && wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz \
+    && tar -zxvf nvim-linux64.tar.gz \
+    && rm -rf nvim-linux64.tar.gz \
+    && cd /usr/bin \
+    && ln -s ~/.config/nvim-linux64/bin/nvim nvim
 
-# Install oh-my-zsh
-# Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github
-# Uses "git", "ssh-agent" and "history-substring-search" bundled plugins
-RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.0/zsh-in-docker.sh)" -- \
--t ys \
--p git \
--p docker \
--p ssh-agent \
--p 'history-substring-search' \
--p https://github.com/zsh-users/zsh-autosuggestions \
--p https://github.com/zsh-users/zsh-completions \
--p https://github.com/zsh-users/zsh-syntax-highlighting \
--x
+# 安装neovide
+RUN cd ~/.config \
+    && wget https://github.com/neovide/neovide/releases/download/0.13.1/neovide-linux-x86_64.tar.gz \
+    && tar -zvxf neovide-linux-x86_64.tar.gz \
+    && rm -rf neovide-linux-x86_64.tar.gz \
+    && cd /usr/bin \
+    && ln -s ~/.config/neovide neovide \
+    && cd ~
 
+# 安装 Oh My Zsh 和插件
+RUN sh -c "$(curl -fsSL https://raw.kkgithub.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+    && git clone https://gitee.com/haohaogood/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
+    && git clone https://gitee.com/haohaogood/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
+    && git clone https://gitee.com/wangl-cc/zsh-history-substring-search.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search \
+    && git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# 配置 zsh 和插件
+RUN sed -i 's/^ZSH_THEME=".*"$/ZSH_THEME="fino"/' ~/.zshrc \
+    && echo 'plugins=( \
+    z \
+    zsh-history-substring-search \
+    git \
+    docker \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting \
+    )' >> ~/.zshrc \
+    && echo 'source $ZSH/oh-my-zsh.sh' >> ~/.zshrc
+
+# 更改默认 shell 为 zsh
 RUN chsh -s /bin/zsh
 
 # ROS-Noetic
 RUN rm -rf /etc/apt/sources.list.d/ros-latest.list \
     && sh -c 'echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
-    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - \
+    && curl -s http://packages.ros.org/ros.key | apt-key add - \
     && cd /var/lib/dpkg \
     && rm -rf info \
     && mkdir info \

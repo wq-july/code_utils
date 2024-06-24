@@ -1,8 +1,4 @@
 #!/bin/zsh
-# 获取今天的日期
-# TODAY=$(date +%Y-%m-%d)
-
-# docker login --username=aliyun2446412415 --password=******* registry.cn-hangzhou.aliyuncs.com
 
 # 定义镜像名称和容器名称
 IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-14"
@@ -33,9 +29,6 @@ function build_image {
 function create_container {
     echo "正在创建Docker容器..."
     xhost +local:docker
-    # 如果宿主机提示cuda版本不支持驱动，就把cuda禁用，暂时先不用好了，或者修改dockerfile，使用nvidia-smi查看最高
-    # 支持的cuda版本，然后修改对应的From img版本
-    # -e NVIDIA_DISABLE_REQUIRE=1 \
     docker run \
         --network host \
         -p 6666:6666 \
@@ -64,42 +57,30 @@ function enter_container {
         docker start $CONTAINER_NAME;
     fi
     echo "正在进入Docker容器..."
-    if [ -d "build" ]; then
-        docker exec -it $CONTAINER_NAME zsh -c "chsh -s /bin/zsh \
-        && service ssh start \
-        && git config --global --add safe.directory $(pwd) \
-        && git config --global user.email "wqjuly@qq.com" \
-        && git config --global user.name "wq"  \
-        && cd $(pwd) && ./build/hello_world && zsh"
-    else
-        docker exec -it $CONTAINER_NAME zsh -c "chsh -s /bin/zsh \
-        && service ssh start \
-        && git config --global --add safe.directory $(pwd) \
-        && git config --global user.email "wqjuly@qq.com" \
-        && git config --global user.name "wq"  \
-        && cd $(pwd) && zsh"
-    fi
+    docker exec -d $CONTAINER_NAME zsh -c "chsh -s /bin/zsh \
+    && service ssh start \
+    && git config --global --add safe.directory $(pwd) \
+    && git config --global user.email 'wqjuly@qq.com' \
+    && git config --global user.name 'wq' \
+    && cd $(pwd) && nvim --headless --listen localhost:6666"
     echo ' ' | sudo -S chmod -R 777 .
 }
 
-
-# 处理命令行参数
-if [ "$1" == "init" ]; then
-    if [ $(check_container_exists) ]; then
-        echo "正在删除现有的容器..."
-        docker rm -f $CONTAINER_NAME
-    fi
-
-    if [ ! $(check_image_exists) ]; then
-        echo "镜像不存在，创建镜像..."
-        build_image
-    fi
+if [ ! $(check_container_exists) ];then
+    echo "容器不存在，创建容器..."
     create_container
-    enter_container
-else
-   if [ ! $(check_container_exists) ]; then
-        echo "容器不存在，创建容器..."
-        create_container
-    fi
-    enter_container
 fi
+
+enter_container
+
+# 获取默认的 WSL2 发行版名称
+WSL_DISTRO=$(wsl.exe -l -v | awk '/\*/{print $2}' | tr -d '\r')
+
+# 检查是否成功获取到发行版名称
+if [ -z "$WSL_DISTRO" ]; then
+    echo "无法获取默认的 WSL2 发行版名称。"
+    exit 1
+fi
+
+# 在另一个 WSL2 终端中启动 Neovide
+wsl.exe -d "$WSL_DISTRO" -- neovide.exe --server=localhost:6666
