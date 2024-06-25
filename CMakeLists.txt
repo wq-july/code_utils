@@ -4,7 +4,7 @@ project(code_utils)
 set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 cmake_policy(SET CMP0028 NEW)
 
 # 添加这行来包含您的 FindGLog.cmake 文件

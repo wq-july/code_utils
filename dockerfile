@@ -87,6 +87,7 @@ RUN apt-get update \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-tk \
+    python3-venv \
     python3-wstool \
     qt5-qmake \
     qtdeclarative5-dev \
