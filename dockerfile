@@ -74,6 +74,7 @@ RUN apt-get update \
     luarocks \
     locales \
     ninja-build \
+    npm \
     ocl-icd-libopencl1 \
     opencl-headers \
     openssh-server \
