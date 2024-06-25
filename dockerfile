@@ -71,6 +71,8 @@ RUN apt-get update \
     libxine2-dev \
     libxkbcommon-dev \
     libxvidcore-dev \
+    luarocks \
+    locales \
     ninja-build \
     ocl-icd-libopencl1 \
     opencl-headers \
@@ -87,6 +89,7 @@ RUN apt-get update \
     python3-wstool \
     qt5-qmake \
     qtdeclarative5-dev \
+    ripgrep \
     ssh \
     unzip \
     vim \
@@ -278,8 +281,13 @@ RUN source ~/.zshrc \
     && rosdepc update
 
 # Clean up
-RUN apt-get clean \
+RUN locale-gen en_US.UTF-8 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# 设置 UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 # 设置 DISPLAY 环境变量
 ENV DISPLAY=:0

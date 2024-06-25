@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 定义镜像名称和容器名称
-IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-14"
+IMAGE_NAME="registry.cn-hangzhou.aliyuncs.com/slam_project/slam_practise_env:2024-06-24"
 CONTAINER_NAME="code_utils"
 
 # 检查镜像是否存在的函数
@@ -73,14 +73,5 @@ fi
 
 enter_container
 
-# 获取默认的 WSL2 发行版名称
-WSL_DISTRO=$(wsl.exe -l -v | awk '/\*/{print $2}' | tr -d '\r')
-
-# 检查是否成功获取到发行版名称
-if [ -z "$WSL_DISTRO" ]; then
-    echo "无法获取默认的 WSL2 发行版名称。"
-    exit 1
-fi
-
-# 在另一个 WSL2 终端中启动 Neovide
-wsl.exe -d "$WSL_DISTRO" -- neovide.exe --server=localhost:6666
+# 在 PowerShell 中启动 Neovide
+powershell.exe -Command "Start-Process 'neovide.exe' -ArgumentList '--remote-tcp=localhost:6666'"
