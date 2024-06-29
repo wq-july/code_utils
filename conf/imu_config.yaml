@@ -8,27 +8,27 @@ ImuConfig:
       y: 0.0
       z: 0.0
     rotation_euler:
-      x: 0.0          # roll 
-      y: 0.0          # pitch
-      z: 0.0          # yaw  
+      x: 0.0 # roll
+      y: 0.0 # pitch
+      z: 0.0 # yaw
   Transformation_i_l:
     translation:
       x: 1.0
       y: 0.0
       z: 0.0
     rotation_euler:
-      x: 0.0          # roll 
-      y: 0.0          # pitch
-      z: 0.0          # yaw  
+      x: 0.0 # roll
+      y: 0.0 # pitch
+      z: 0.0 # yaw
   Transformation_i_b:
     translation:
       x: 0.5
       y: 0.5
       z: 0.0
     rotation_euler:
-      x: 0.0          # roll 
-      y: 0.0          # pitch
-      z: 0.0          # yaw  
+      x: 0.0 # roll
+      y: 0.0 # pitch
+      z: 0.0 # yaw
 
   LoggerConfig:
     log_file_path: "../log/imu_log.txt"
@@ -55,3 +55,34 @@ ImuConfig:
       z: 0.0
     noise_acc: 0.0
     noise_gyr: 0.0
+
+superpoint:
+  model_dir: "../models/output"
+  max_keypoints: 500
+  keypoint_threshold: 0.004
+  remove_borders: 4
+  input_tensor_names:
+    - "input"
+  output_tensor_names:
+    - "scores"
+    - "descriptors"
+  onnx_file: "superpoint_v1_sim_int32.onnx"
+  engine_file: "superpoint_v1_sim_int32.engine"
+  dla_core: -1
+
+superglue:
+  model_dir: "../models/output"
+  image_width: 320
+  image_height: 240
+  input_tensor_names:
+    - "keypoints_0"
+    - "scores_0"
+    - "descriptors_0"
+    - "keypoints_1"
+    - "scores_1"
+    - "descriptors_1"
+  output_tensor_names:
+    - "scores"
+  onnx_file: "superglue_indoor_sim_int32.onnx"
+  engine_file: "superglue_indoor_sim_int32.engine"
+  dla_core: -1

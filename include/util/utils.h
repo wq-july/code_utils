@@ -1,5 +1,8 @@
 #pragma once
 
+#include <dirent.h>
+#include <sys/stat.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -15,11 +18,10 @@
 
 #include "Eigen/Core"
 #include "Eigen/Dense"
-#include "pcl/point_cloud.h"
-#include "pcl/point_types.h"
-
 #include "ceres/ceres.h"
 #include "glog/logging.h"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 
 namespace Utils {
 
@@ -37,12 +39,8 @@ struct VgIcpHash {
     const int64_t p3 = 83492791;
     return static_cast<int64_t>((x[0] * p1) ^ (x[1] * p2) ^ (x[2] * p3));
   }
-  static int64_t Hash(const Eigen::Vector3i& x) {
-    return VgIcpHash()(x);
-  }
-  static bool Equal(const Eigen::Vector3i& x1, const Eigen::Vector3i& x2) {
-    return x1 == x2;
-  }
+  static int64_t Hash(const Eigen::Vector3i& x) { return VgIcpHash()(x); }
+  static bool Equal(const Eigen::Vector3i& x1, const Eigen::Vector3i& x2) { return x1 == x2; }
 };
 
 // zelos
@@ -67,12 +65,9 @@ inline double ComputeDistance(const Eigen::Vector3d& p1, const Eigen::Vector3d& 
 
 void GenerateRandomCoefficientsAndData(
     const std::function<double(const Eigen::VectorXd&, const double)>& func,
-    const int32_t param_count,
-    const int32_t data_size,
-    const std::pair<double, double>& param_range,
-    const std::pair<double, double>& noise_range,
-    const std::string log_path,
-    Eigen::VectorXd* const parameters,
+    const int32_t param_count, const int32_t data_size,
+    const std::pair<double, double>& param_range, const std::pair<double, double>& noise_range,
+    const std::string log_path, Eigen::VectorXd* const parameters,
     std::vector<std::pair<double, double>>* const data);
 
 // 将yaw旋转角变换成2D矩阵
@@ -159,11 +154,8 @@ inline std::vector<Eigen::Vector3d> PclToVec3d(
     throw std::invalid_argument("Input cloud is empty!");
   }
   std::vector<Eigen::Vector3d> eigen_points(pcl_cloud_ptr->points.size());  // 预分配内存
-  std::transform(std::execution::par,
-                 pcl_cloud_ptr->points.begin(),
-                 pcl_cloud_ptr->points.end(),
-                 eigen_points.begin(),
-                 [](const PointType& point) -> Eigen::Vector3d {
+  std::transform(std::execution::par, pcl_cloud_ptr->points.begin(), pcl_cloud_ptr->points.end(),
+                 eigen_points.begin(), [](const PointType& point) -> Eigen::Vector3d {
                    return point.getArray3fMap().template cast<double>();
                  });
 
@@ -172,6 +164,47 @@ inline std::vector<Eigen::Vector3d> PclToVec3d(
 
 inline Eigen::Vector3d Matrix3dToEuler(const Eigen::Matrix3d& rotation) {
   return rotation.eulerAngles(0, 1, 2);
+}
+
+static bool GetFileNames(const std::string& path, std::vector<std::string>& filenames) {
+  DIR* pDir;
+  struct dirent* ptr;
+  if (!(pDir = opendir(path.c_str()))) {
+    std::cerr << "Current folder doesn't exist!" << std::endl;
+    return false;
+  }
+  while ((ptr = readdir(pDir)) != nullptr) {
+    if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0) {
+      filenames.push_back(path + "/" + ptr->d_name);
+    }
+  }
+  closedir(pDir);
+  std::sort(filenames.begin(), filenames.end());
+  return true;
+}
+
+static bool FileExists(const std::string& file) {
+  struct stat file_status {};
+  if (stat(file.c_str(), &file_status) == 0 && (file_status.st_mode & S_IFREG)) {
+    return true;
+  }
+  return false;
+}
+
+static void ConcatenateFolderAndFileNameBase(const std::string& folder,
+                                             const std::string& file_name, std::string* path) {
+  *path = folder;
+  if (path->back() != '/') {
+    *path += '/';
+  }
+  *path = *path + file_name;
+}
+
+static std::string ConcatenateFolderAndFileName(const std::string& folder,
+                                                const std::string& file_name) {
+  std::string path;
+  ConcatenateFolderAndFileNameBase(folder, file_name, &path);
+  return path;
 }
 
 }  // namespace Utils

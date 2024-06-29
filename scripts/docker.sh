@@ -61,7 +61,7 @@ function enter_container {
     echo "正在检查Docker容器状态..."
     if ! docker ps -f name=$CONTAINER_NAME --format '{{.Names}}' | grep -q $CONTAINER_NAME; then
         echo "容器未在运行中，正在启动容器..."
-        docker start $CONTAINER_NAME;
+        docker start $CONTAINER_NAME
     fi
     echo "正在进入Docker容器..."
     if [ -d "build" ]; then
@@ -82,7 +82,6 @@ function enter_container {
     echo ' ' | sudo -S chmod -R 777 .
 }
 
-
 # 处理命令行参数
 if [ "$1" == "init" ]; then
     if [ $(check_container_exists) ]; then
@@ -97,7 +96,7 @@ if [ "$1" == "init" ]; then
     create_container
     enter_container
 else
-   if [ ! $(check_container_exists) ]; then
+    if [ ! $(check_container_exists) ]; then
         echo "容器不存在，创建容器..."
         create_container
     fi

@@ -32,8 +32,8 @@ LRUCache<KeyType, ValueType, Hash, KeyEqual>::~LRUCache() {
 }
 
 template <typename KeyType, typename ValueType, typename Hash, typename KeyEqual>
-std::optional<std::reference_wrapper<ValueType>> LRUCache<KeyType, ValueType, Hash, KeyEqual>::GetData(
-    const KeyType& key) {
+std::optional<std::reference_wrapper<ValueType>>
+LRUCache<KeyType, ValueType, Hash, KeyEqual>::GetData(const KeyType& key) {
   auto it = cache_.find(key);
   if (it == cache_.end()) {
     return std::nullopt;
@@ -105,7 +105,8 @@ int32_t LRUCache<KeyType, ValueType, Hash, KeyEqual>::Capacity() const {
 }
 
 template <typename KeyType, typename ValueType, typename Hash, typename KeyEqual>
-void LRUCache<KeyType, ValueType, Hash, KeyEqual>::Refresh(DlistNode<KeyType, ValueType>* const node) {
+void LRUCache<KeyType, ValueType, Hash, KeyEqual>::Refresh(
+    DlistNode<KeyType, ValueType>* const node) {
   Remove(node);
   node->prev_node_ = head_;
   node->next_node_ = head_->next_node_;
@@ -114,7 +115,8 @@ void LRUCache<KeyType, ValueType, Hash, KeyEqual>::Refresh(DlistNode<KeyType, Va
 }
 
 template <typename KeyType, typename ValueType, typename Hash, typename KeyEqual>
-void LRUCache<KeyType, ValueType, Hash, KeyEqual>::Remove(DlistNode<KeyType, ValueType>* const node) {
+void LRUCache<KeyType, ValueType, Hash, KeyEqual>::Remove(
+    DlistNode<KeyType, ValueType>* const node) {
   if (node->next_node_ != nullptr) {
     node->prev_node_->next_node_ = node->next_node_;
     node->next_node_->prev_node_ = node->prev_node_;

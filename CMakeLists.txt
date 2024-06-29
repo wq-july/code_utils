@@ -6,6 +6,8 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 cmake_policy(SET CMP0028 NEW)
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/tensorrtbuffer)
+
 
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -26,6 +28,8 @@ find_package(Epoxy REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS EGL)
 find_package(Pangolin REQUIRED)
 
+find_package(CUDA REQUIRED)
+
 include_directories(
   ${EIGEN3_INCLUDE_DIR}
   ${CERES_INCLUDE_DIR}
@@ -37,6 +41,7 @@ include_directories(
   ${EPOXY_INCLUDE_DIRS}
   ${OPENGL_INCLUDE_DIRS}
   ${Pangolin_INCLUDE_DIRS}
+  ${CUDA_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/src
   "usr/local/include/tsl"
@@ -59,21 +64,27 @@ add_library(code_utils_libs
     src/optimizer/slam_data_struct.cc
     src/lidar/match.cc
     src/lidar/filter.cc
+    src/camera/super_point.cc
+    src/camera/super_glue.cc
+    src/camera/feature_extractor.cc
 )
 
 target_link_libraries(code_utils_libs
-  ${OpenCV_LIBS}
   ${CERES_LIBRARIES}
-  ${PCL_LIBRARIES}
-  ${SOPHUS_LIBRARIES}
   ${EPOXY_LIBRARIES}
+  ${OpenCV_LIBS}
+  ${PCL_LIBRARIES}
   ${Pangolin_LIBRARIES}
+  ${SOPHUS_LIBRARIES}
+  fmt
   glog
   gflags
-  yaml-cpp
-  tbb
-  fmt
+  nvinfer
+  nvonnxparser
   OpenGL::EGL
+  tbb
+  tensorrtbuffer
+  yaml-cpp
 )
 
 option(BUILD_TESTS "Build tests" ON)
@@ -110,6 +121,10 @@ if(BUILD_TESTS)
 
   add_executable(cv_test bin/test/cv_test.cc)
   target_link_libraries(cv_test code_utils_libs ${GTEST_LIBRARIES})
+
+  # 测试SuperPoint和SuperGlue
+  add_executable(featutre_extraction_test bin/test/featutre_extraction_test.cc)
+  target_link_libraries(featutre_extraction_test code_utils_libs ${GTEST_LIBRARIES})
   endif()
 
 add_executable(hello_world bin/hello_world.cc)

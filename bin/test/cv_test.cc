@@ -30,8 +30,10 @@ class CVTest : public testing::Test {
                                                             Camera::DescriptorType::BRISK);
   }
 
-  cv::Mat DrawMatches(const cv::Mat& img1, const std::vector<cv::KeyPoint>& keypoints1,
-                      const cv::Mat& img2, const std::vector<cv::KeyPoint>& keypoints2,
+  cv::Mat DrawMatches(const cv::Mat& img1,
+                      const std::vector<cv::KeyPoint>& keypoints1,
+                      const cv::Mat& img2,
+                      const std::vector<cv::KeyPoint>& keypoints2,
                       const std::vector<cv::DMatch>& matches) {
     cv::Mat img_matches;
     cv::hconcat(img1, img2, img_matches);
@@ -64,18 +66,14 @@ TEST_F(CVTest, MultiThreadFeatureExtractTest) {
   extractor_->ExtractFeatures(img1_, &keypoints1_, &descriptors1);
   extractor_->ExtractFeatures(img2_, &keypoints2_, &descriptors2);
 
-  // Matching descriptors using BFMatcher
-  // cv::BFMatcher matcher(cv::NORM_HAMMING, true);
-  // matcher.match(descriptors1, descriptors2, matches_);
-
   cv::BFMatcher matcher(cv::NORM_HAMMING, true);
   matcher.match(descriptors1, descriptors2, matches_);
 
   std::vector<cv::DMatch> good_matches;
   // Apply GMS algorithm
   std::vector<bool> inliers;
-  cv::xfeatures2d::matchGMS(img1_.size(), img2_.size(), keypoints1_, keypoints2_, matches_,
-                            good_matches, true, true);
+  cv::xfeatures2d::matchGMS(
+      img1_.size(), img2_.size(), keypoints1_, keypoints2_, matches_, good_matches, true, true);
 
   // Draw matches using OpenCV
   cv::Mat img_matches = DrawMatches(img1_, keypoints1_, img2_, keypoints2_, good_matches);
