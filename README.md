@@ -46,7 +46,7 @@ mkdir build \
 ### lidar部分算法
   - [x] vicp；
   - [x] gicp；
-  - [] vgicp；
+  - [ ] vgicp；
   - [x] ndt；
   - [x] 降采样算法；
 
@@ -56,8 +56,8 @@ mkdir build \
   - [ ] SFM算法；
 
 - 前端跟踪算法
-  - [ ] 实现特征点提取和的匹配的集成算法，基于opencv版本；
-  - [ ] 实现基于深度学习的特征提取和匹配算法；
+  - [x] 实现特征点提取和的匹配的集成算法，基于opencv版本；
+  - [x] SuperPoint, SuperGlue；
   - [ ] 异常值剔除算法；
   
 - 回环检测相关算法
