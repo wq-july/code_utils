@@ -183,6 +183,7 @@ default_config = {
     'keypoint_encoder': [32, 64, 128, 256],
     'GNN_layers': ['self', 'cross'] * 9,
     'sinkhorn_iterations': 100,
+    "match_threshold": 0.2,
 }
 
 

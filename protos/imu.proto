@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "utils.proto";  // 确保路径正确
+
+package IMUConfig;
+
+message Config {
+    string imu_file_path = 1;
+    string imu_topic = 2;
+    int32 frequency = 3;
+    Vector3d transformation_i_c = 4;
+    Vector3d rotation_i_c = 5;
+    Vector3d transformation_i_l = 6;
+    Vector3d rotation_i_l = 7;
+    Vector3d transformation_i_b = 8;
+    Vector3d rotation_i_b = 9;
+    PreIntegration preintegration = 10;
+    Utils.Config utils_config = 11;
+}
+
+message PreIntegration {
+    Vector3d init_ba = 1;
+    Vector3d init_bg = 2;
+    double noise_acc = 3;
+    double noise_gyr = 4;
+}
+
+message Vector3d {
+    double x = 1;
+    double y = 2;
+    double z = 3;
+}

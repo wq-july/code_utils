@@ -7,7 +7,9 @@
 
 #include "common/data/imu.h"
 #include "common/state.h"
-#include "util/config.h"
+// #include "util/config.h"
+
+#include "../protos/pb/imu.pb.h"
 
 using namespace Common;
 using namespace Common::Data;
@@ -33,7 +35,7 @@ class IMUPreIntegration {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  IMUPreIntegration(const ImuPreIntegrationConfig& config);
+  IMUPreIntegration(const IMUConfig::PreIntegration& config);
 
   void Update(const IMUData& imu);
 

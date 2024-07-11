@@ -6,7 +6,8 @@
 
 ## 使用
 
-提供了dockerfile文件可以手动构建镜像，提供了shell脚本快速的创建docker镜像以及进入容器；
+- docker: 提供了dockerfile文件可以手动构建镜像，提供了shell脚本快速的创建docker镜像以及进入容器；
+- 编译
 
 ``` bash
 # 由于dockerhub近期网络不稳定，镜像放在了阿里云服务器，先配置阿里云服务器，然后拉取镜像；
@@ -32,27 +33,38 @@ mkdir build \
 
 ```
 
+- 模型转换
+
+```bash
+python3 convert2onnx/convert_superpoint_to_onnx.py --weight_file superpoint_pth_file_path --output_dir superpoint_onnx_file_dir
+python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_file_path --output_dir superglue_onnx_file_dir
+
+```
 
 ## TODOs
 
 ### 基本算法
-  - [x] imu预积分；
-  - [x] kdtree搜索K邻近点；
-  - [x] 实现voxel版本的最近点搜索；
-  - [x] 实现非线性优化器；
-    - [x] 实现GN优化细节；
-    - [x] 实现LM优化细节；
-    - [ ] 实现Dog-Leg
-  - [ ] 简单的EKF算法实现；
+
+- [x] imu预积分；
+- [x] kdtree搜索K邻近点；
+- [x] 实现voxel版本的最近点搜索；
+- [x] 实现非线性优化器；
+  - [x] 实现GN优化细节；
+  - [x] 实现LM优化细节；
+  - [ ] 实现Dog-Leg
+- [ ] 简单的EKF算法实现；
 
 ### lidar部分算法
+
   - [x] vicp；
   - [x] gicp；
   - [ ] vgicp；
   - [x] ndt；
   - [x] 降采样算法；
 
+
 ### 视觉部分算法
+
 - 初始化相关
   - [ ] H矩阵和F矩阵求解和反解；
   - [ ] SFM算法；

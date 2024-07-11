@@ -1,8 +1,12 @@
-# Use the NVIDIA CUDA 12.1.0 base image with Ubuntu 20.04
-FROM registry.cn-hangzhou.aliyuncs.com/slam_project/cuda:12.3.2-cudnn9-runtime-ubuntu20.04
-
+# Use the NVIDIA CUDA 12.1.1 base image with Ubuntu 20.04
+FROM registry.cn-hangzhou.aliyuncs.com/slam_project/cuda:12.1.1-cudnn8-runtime-ubuntu20.04
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
+# 设置 UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+# 设置 DISPLAY 环境变量
+ENV DISPLAY=:0
 
 # 更换清华源
 RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
@@ -93,6 +97,7 @@ RUN apt-get update \
     qtdeclarative5-dev \
     ripgrep \
     ssh \
+    tree \
     unzip \
     vim \
     v4l-utils \
@@ -111,7 +116,7 @@ RUN mkdir -p ~/.pip && \
     echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> ~/.pip/pip.conf
 
 RUN pip3 install --upgrade pip \
-    && pip3 install numpy scipy matplotlib rosdepc
+    && pip3 install numpy scipy matplotlib rosdepc onnxruntime onnx torch
 
 # Install fmt v0.11.0 (required by Sophus)
 RUN git clone https://github.com/fmtlib/fmt.git \
@@ -173,44 +178,6 @@ RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
     && cd .. \
     && rm -rf Pangolin
 
-RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.10.0.zip \
-    && wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.10.0.zip \
-    && unzip opencv.zip \
-    && unzip opencv_contrib.zip \
-    && mv opencv_contrib-4.10.0 opencv-4.10.0 \
-    && cd opencv-4.10.0 \
-    && mkdir build \
-    && cd build \
-    && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-             -D INSTALL_PYTHON_EXAMPLES=OFF \
-             -D INSTALL_C_EXAMPLES=OFF \
-             -D WITH_TBB=ON \
-             -D WITH_CUDA=ON \
-             -D BUILD_opencv_cudacodec=OFF \
-             -D ENABLE_FAST_MATH=1 \
-             -D CUDA_FAST_MATH=1 \
-             -D WITH_CUBLAS=1 \
-             -D WITH_V4L=OFF \
-             -D WITH_LIBV4L=ON \
-             -D WITH_QT=OFF \
-             -D WITH_GTK=ON \
-             -D WITH_GTK_2_X=ON \
-             -D WITH_EIGEN=ON \
-             -D WITH_OPENGL=ON \
-             -D WITH_GSTREAMER=ON \
-             -D OPENCV_GENERATE_PKGCONFIG=ON \
-             -D OPENCV_PC_FILE_NAME=opencv.pc \
-             -D OPENCV_ENABLE_NONFREE=ON \
-             -D CUDA_nppicom_LIBRARY=stdc++ \
-             -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.10.0/modules \
-             -D BUILD_EXAMPLES=OFF .. \
-    && make -j$(nproc) \
-    && make install \
-    && ldconfig \
-    && cd ../.. \
-    && rm -rf opencv.zip opencv_contrib.zip opencv-4.10.0
-
-
 # Install TensorRT
 RUN wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.0.1/local_repo/nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb \
     && dpkg -i nv-tensorrt-local-repo-ubuntu2004-10.0.1-cuda-12.4_1.0-1_amd64.deb \
@@ -259,6 +226,47 @@ RUN sed -i 's/^ZSH_THEME=".*"$/ZSH_THEME="fino"/' ~/.zshrc \
 # 更改默认 shell 为 zsh
 RUN chsh -s /bin/zsh
 
+RUN echo 'export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:/usr/local/cuda/extras/CPUTI/lib64' \
+    && echo 'export CUDA_HOME=/usr/local/cuda-12.1/bin' \
+    && echo 'export PATH=$PATH:$LD_LIBRARY_PATH:$CUDA_HOME'
+
+RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.10.0.zip \
+    && wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.10.0.zip \
+    && unzip opencv.zip \
+    && unzip opencv_contrib.zip \
+    && mv opencv_contrib-4.10.0 opencv-4.10.0 \
+    && cd opencv-4.10.0 \
+    && mkdir build \
+    && cd build \
+    && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D INSTALL_PYTHON_EXAMPLES=OFF \
+    -D INSTALL_C_EXAMPLES=OFF \
+    -D WITH_TBB=ON \
+    -D WITH_CUDA=ON \
+    -D BUILD_opencv_cudacodec=OFF \
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1 \
+    -D WITH_CUBLAS=1 \
+    -D WITH_V4L=OFF \
+    -D WITH_LIBV4L=ON \
+    -D WITH_QT=OFF \
+    -D WITH_GTK=ON \
+    -D WITH_GTK_2_X=ON \
+    -D WITH_EIGEN=ON \
+    -D WITH_OPENGL=ON \
+    -D WITH_GSTREAMER=ON \
+    -D OPENCV_GENERATE_PKGCONFIG=ON \
+    -D OPENCV_PC_FILE_NAME=opencv.pc \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    -D CUDA_nppicom_LIBRARY=stdc++ \
+    -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.10.0/modules \
+    -D BUILD_EXAMPLES=OFF .. \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig \
+    && cd ../.. \
+    && rm -rf opencv.zip opencv_contrib.zip opencv-4.10.0
+
 # ROS-Noetic
 RUN rm -rf /etc/apt/sources.list.d/ros-latest.list \
     && sh -c 'echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
@@ -282,17 +290,31 @@ RUN source ~/.zshrc \
     && rosdepc init \
     && rosdepc update
 
+# MiniConda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/conda \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+
+# LibTorch
+RUN wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.3.1%2Bcu121.zip \
+    && unzip libtorch-cxx11-abi-shared-with-deps-2.3.1+cu121.zip -d /usr/local \
+    && rm -rf libtorch-cxx11-abi-shared-with-deps-2.3.1+cu121.zip
+
+# 设置Conda环境变量
+ENV PATH /usr/local/conda/bin:$PATH
+
+# 设置 libtorch 环境变量
+RUN echo 'export LIBTORCH=/usr/local/libtorch' >> ~/.zshrc \
+    && echo 'export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH' >> ~/.zshrc
+
+RUN echo 'export PATH=/usr/local/cuda-12.1/bin${PATH:+:${PATH}}' >> ~/.zshrc \
+    && echo 'export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.zshrc
+
+
 # Clean up
 RUN locale-gen en_US.UTF-8 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# 设置 UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-
-# 设置 DISPLAY 环境变量
-ENV DISPLAY=:0
 
 # Default command
 CMD ["zsh"]

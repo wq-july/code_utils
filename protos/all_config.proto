@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "utils.proto";
+import "imu.proto";
+import "camera.proto";
+
+package AllConfigs;
+
+message Config {
+  IMUConfig.Config imu_config = 1;
+  CameraConfig.Config camera_config = 2;
+}
+
+

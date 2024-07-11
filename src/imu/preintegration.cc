@@ -1,16 +1,15 @@
 #include "imu/preintegration.h"
 
 namespace IMU {
-
-IMUPreIntegration::IMUPreIntegration(const Utils::ImuPreIntegrationConfig &config) {
-  bg_ = config.init_bg_;
-  ba_ = config.init_ba_;
-  const float ng_square = config.noise_gyr_ * config.noise_gyr_;
-  const float na_square = config.noise_acc_ * config.noise_acc_;
+IMUPreIntegration::IMUPreIntegration(const IMUConfig::PreIntegration& config) {
+  bg_ = Eigen::Vector3d(config.init_bg().x(), config.init_bg().y(), config.init_bg().z());
+  ba_ = Eigen::Vector3d(config.init_ba().x(), config.init_ba().y(), config.init_ba().z());
+  const float ng_square = config.noise_gyr() * config.noise_gyr();
+  const float na_square = config.noise_acc() * config.noise_acc();
   gyr_acc_noise_.diagonal() << ng_square, ng_square, ng_square, na_square, na_square, na_square;
 }
 
-void IMUPreIntegration::Update(const IMUData &imu) {
+void IMUPreIntegration::Update(const IMUData& imu) {
   if (latest_time_ < 0.0) {
     latest_time_ = imu.timestamp_;
     return;
@@ -64,22 +63,21 @@ void IMUPreIntegration::Update(const IMUData &imu) {
   dt_ += dt;
 }
 
-Sophus::SO3d IMUPreIntegration::GetDeltaRotation(const Eigen::Vector3d &bg) {
+Sophus::SO3d IMUPreIntegration::GetDeltaRotation(const Eigen::Vector3d& bg) {
   return dq_ * Sophus::SO3d::exp(dr_dbg_ * (bg - bg_));
 }
 
-Eigen::Vector3d IMUPreIntegration::GetDeltaVelocity(const Eigen::Vector3d &bg,
-                                                    const Eigen::Vector3d &ba) {
+Eigen::Vector3d IMUPreIntegration::GetDeltaVelocity(const Eigen::Vector3d& bg,
+                                                    const Eigen::Vector3d& ba) {
   return dv_ + dv_dbg_ * (bg - bg_) + dv_dba_ * (ba - ba_);
 }
 
-Eigen::Vector3d IMUPreIntegration::GetDeltaPosition(const Eigen::Vector3d &bg,
-                                                    const Eigen::Vector3d &ba) {
+Eigen::Vector3d IMUPreIntegration::GetDeltaPosition(const Eigen::Vector3d& bg,
+                                                    const Eigen::Vector3d& ba) {
   return dp_ + dp_dbg_ * (bg - bg_) + dp_dba_ * (ba - ba_);
 }
 
-State IMUPreIntegration::Predict(const State &start,
-                                       const Eigen::Vector3d &gravity) const {
+State IMUPreIntegration::Predict(const State& start, const Eigen::Vector3d& gravity) const {
   Sophus::SO3d rot_j = start.rot_ * dq_;
   Eigen::Vector3d vel_j = start.rot_ * dv_ + start.vel_ + gravity * dt_;
   Eigen::Vector3d pos_j =

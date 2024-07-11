@@ -1,25 +1,14 @@
 #include "imu/imu_processor.h"
 
 namespace IMU {
-
-ImuProcessor::ImuProcessor(const Utils::ImuConfig& config) {
-  SetConfig(config);
-  Initialize(config);
-}
-
-void ImuProcessor::SetConfig(const Utils::ImuConfig& config) {
-  // 配置 Logger
-  logger_.EnableConsoleLog(config.logger_config_.enable_console_log_);  // 启用控制台日志
-  logger_.SetConsoleLevel("ALL");  // 设置控制台日志级别
-  logger_.Log(INFO) << "Initializing IMU sensor.";
-}
-
-void ImuProcessor::Initialize(const Utils::ImuConfig& config) {
-  pre_integrator_ = std::make_shared<IMUPreIntegration>(config.pre_integration_config_);
+ImuProcessor::ImuProcessor(const IMUConfig::Config& config) : config_(config) {
+  pre_integrator_ = std::make_shared<IMUPreIntegration>(config_.preintegration());
 }
 
 // TODO，未来会根据滤波方案和优化器方案添加相关的处理逻辑
-bool ImuProcessor::ProcessImu() { return true; }
+bool ImuProcessor::ProcessImu() {
+  return true;
+}
 
 bool ImuProcessor::ReadData(const std::string& file_path, std::vector<IMUData>* const data_vec) {
   if (file_path.empty()) {

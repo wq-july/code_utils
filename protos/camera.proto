@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "tensorRT.proto";
+
+package CameraConfig;
+
+message Config {
+  FeatureConfig feature_config = 1;
+  CameraModel camera_model = 2;
+}
+
+message FeatureConfig {
+  FeatureType feature_type = 1;
+  DescriptorType descriptor_type = 2;
+  SuperPoint super_point = 3;
+  SuperGlue super_glue = 4;
+  ORBSLAM orb_slam = 5;
+  MatcherType matcher_type = 6;
+}
+
+
+message SuperPoint {
+  int32 image_width = 1;
+  int32 image_height = 2;
+  int32 max_keypoints = 3;
+  double keypoint_threshold = 4;
+  int32 remove_borders = 5;
+  TensorRTConfig.Config tensor_config = 6;
+}
+
+message SuperGlue {
+  int32 image_width = 1;
+  int32 image_height = 2;
+  TensorRTConfig.Config tensor_config = 7;
+}
+
+enum FeatureType {
+  F_SIFT = 0;
+  F_SURF = 1;
+  F_ORB = 2;
+  F_BRISK = 3;
+  F_AKAZE = 4;
+  F_SUPERPOINT = 5;
+  // TEBLID,
+  // FAST_SIFT,
+};
+
+enum DescriptorType {
+  D_SIFT = 0;
+  D_SURF = 1;
+  D_ORB = 2;
+  D_BRISK = 3;
+  D_AKAZE = 4;
+  D_SUPERPOINT = 5;
+  // FREAK,
+  // TEBLID,
+};
+
+enum MatcherType {
+  HANMING = 0;
+  FLANN = 1;
+  SUPERGLUE = 2;
+};
+
+
+message ORBSLAM {
+
+}
+
+message CameraModel {
+}
