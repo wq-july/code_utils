@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Utils;
+
+message Config {
+    LoggerConfig logger_config = 1;
+    TimerConfig timer_config = 2;
+}
+
+message LoggerConfig {
+    string log_file_path = 1;
+    bool enable_console_log = 2;
+    repeated string console_log_levels = 3;
+}
+
+message TimerConfig {
+    string time_unit = 1;
+}

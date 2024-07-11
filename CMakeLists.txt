@@ -6,8 +6,6 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 cmake_policy(SET CMP0028 NEW)
-add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/tensorrtbuffer)
-
 
 # 添加这行来包含您的 FindGLog.cmake 文件
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -23,36 +21,67 @@ find_package(fmt REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(gflags REQUIRED)
 find_package(Glog REQUIRED)
-
 find_package(Epoxy REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS EGL)
 find_package(Pangolin REQUIRED)
-
 find_package(CUDA REQUIRED)
+find_package(Protobuf REQUIRED)
 
 include_directories(
-  ${EIGEN3_INCLUDE_DIR}
   ${CERES_INCLUDE_DIR}
+  ${CUDA_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+  ${EPOXY_INCLUDE_DIRS}
   ${GTEST_INCLUDE_DIRS}
-  ${PCL_INCLUDE_DIRS}
   ${GFLAGS_INCLUDE_DIRS}
   ${GLOG_INCLUDE_DIRS}
-  ${SOPHUS_INCLUDE_DIRS}
-  ${EPOXY_INCLUDE_DIRS}
   ${OPENGL_INCLUDE_DIRS}
   ${Pangolin_INCLUDE_DIRS}
-  ${CUDA_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+  ${Protobuf_INCLUDE_DIRS}
+  ${SOPHUS_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/src
   "usr/local/include/tsl"
 )
+
+# Specify proto files
+set(PROTO_FILES
+    ${CMAKE_SOURCE_DIR}/protos/all_config.proto
+    ${CMAKE_SOURCE_DIR}/protos/camera.proto
+    ${CMAKE_SOURCE_DIR}/protos/imu.proto
+    ${CMAKE_SOURCE_DIR}/protos/tensorRT.proto
+    ${CMAKE_SOURCE_DIR}/protos/utils.proto
+)
+
+# Output directory for generated files
+set(GENERATED_DIR ${CMAKE_SOURCE_DIR}/protos/pb)
+file(MAKE_DIRECTORY ${GENERATED_DIR})
+
+# Generate C++ files from proto files
+foreach(PROTO_FILE ${PROTO_FILES})
+    get_filename_component(PROTO_NAME ${PROTO_FILE} NAME_WE)
+    add_custom_command(
+        OUTPUT ${GENERATED_DIR}/${PROTO_NAME}.pb.cc ${GENERATED_DIR}/${PROTO_NAME}.pb.h
+        COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+        ARGS --cpp_out=${GENERATED_DIR} -I ${CMAKE_SOURCE_DIR}/protos ${PROTO_FILE}
+        DEPENDS ${PROTO_FILE}
+        COMMENT "Generating C++ source files from ${PROTO_FILE}"
+    )
+    list(APPEND GENERATED_SRCS ${GENERATED_DIR}/${PROTO_NAME}.pb.cc)
+    list(APPEND GENERATED_HDRS ${GENERATED_DIR}/${PROTO_NAME}.pb.h)
+endforeach()
+
+add_library(proto_files ${GENERATED_SRCS} ${GENERATED_HDRS})
+target_include_directories(proto_files PUBLIC ${GENERATED_DIR})
+target_link_libraries(proto_files ${Protobuf_LIBRARIES})
+
 
 add_library(code_utils_libs
     src/imu/imu_processor.cc
     src/imu/preintegration.cc
     src/util/logger.cc
     src/util/time.cc
-    src/util/config.cc
     src/util/math.cc
     src/util/utils.cc
     src/common/state.cc
@@ -64,17 +93,21 @@ add_library(code_utils_libs
     src/optimizer/slam_data_struct.cc
     src/lidar/match.cc
     src/lidar/filter.cc
+    src/camera/feature_manager.cc
     src/camera/super_point.cc
     src/camera/super_glue.cc
-    src/camera/feature_extractor.cc
+    src/tensorRT/generic.cc
+    src/tensorRT/logger.cc
 )
 
 target_link_libraries(code_utils_libs
   ${CERES_LIBRARIES}
+  ${CUDA_LIBRARIES}
   ${EPOXY_LIBRARIES}
   ${OpenCV_LIBS}
   ${PCL_LIBRARIES}
   ${Pangolin_LIBRARIES}
+  ${Protobuf_LIBRARIES}
   ${SOPHUS_LIBRARIES}
   fmt
   glog
@@ -82,8 +115,8 @@ target_link_libraries(code_utils_libs
   nvinfer
   nvonnxparser
   OpenGL::EGL
+  proto_files
   tbb
-  tensorrtbuffer
   yaml-cpp
 )
 
@@ -121,11 +154,7 @@ if(BUILD_TESTS)
 
   add_executable(cv_test bin/test/cv_test.cc)
   target_link_libraries(cv_test code_utils_libs ${GTEST_LIBRARIES})
-
-  # 测试SuperPoint和SuperGlue
-  add_executable(featutre_extraction_test bin/test/featutre_extraction_test.cc)
-  target_link_libraries(featutre_extraction_test code_utils_libs ${GTEST_LIBRARIES})
-  endif()
+endif()
 
 add_executable(hello_world bin/hello_world.cc)
 target_link_libraries(hello_world code_utils_libs)
