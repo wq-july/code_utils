@@ -5,14 +5,13 @@
 #include "Eigen/Core"
 #include "Eigen/Dense"
 
-#include "common/data/imu.h"
+#include "common/imu.h"
 #include "common/state.h"
 // #include "util/config.h"
 
 #include "../protos/pb/imu.pb.h"
 
 using namespace Common;
-using namespace Common::Data;
 using namespace Utils;
 
 namespace IMU {

@@ -22,7 +22,9 @@ struct DlistNode {
   DlistNode<KeyType, ValueType>* next_node_;
 };
 
-template <typename KeyType, typename ValueType, typename Hash = std::hash<KeyType>,
+template <typename KeyType,
+          typename ValueType,
+          typename Hash = std::hash<KeyType>,
           typename KeyEqual = std::equal_to<KeyType>>
 class LRUCache {
  public:
@@ -47,7 +49,7 @@ class LRUCache {
 
  private:
   // std::unordered_map<KeyType, DlistNode<KeyType, ValueType>*, Hash, KeyEqual> cache_;
-  
+
   tsl::robin_map<KeyType, DlistNode<KeyType, ValueType>*, Hash, KeyEqual> cache_;
 
   DlistNode<KeyType, ValueType>* head_;

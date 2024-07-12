@@ -4,7 +4,7 @@
 
 namespace Common {
 
-bool KdTree::BuildTree(const Common::Data::PointCloudPtr& cloud) {
+bool KdTree::BuildTree(const Common::PointCloudPtr& cloud) {
   Utils::Timer timer;
   // 基本的安全性检测判断
   if (cloud->empty()) {
@@ -24,9 +24,9 @@ bool KdTree::BuildTree(const Common::Data::PointCloudPtr& cloud) {
 
   timer.StartTimer("PointCloud Construction");
   // 注意这里显式的调用了复制构造函数而不是移动构造函数
-  cloud_ = std::make_shared<Common::Data::PointCloud>(*cloud);
+  cloud_ = std::make_shared<Common::PointCloud>(*cloud);
   // 注意，这样写会默认的调用移动构造函数，需要理解区别
-  // cloud_ = std::make_shared<Common::Data::PointCloud>(cloud);
+  // cloud_ = std::make_shared<Common::PointCloud>(cloud);
   timer.StopTimer();
   timer.PrintElapsedTime();
 
@@ -108,7 +108,7 @@ bool KdTree::GetClosestPoint(const Eigen::Vector3d& pt,
   return true;
 }
 
-bool KdTree::GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
+bool KdTree::GetClosestPointMT(const Common::PointCloudPtr& cloud,
                                std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                                const uint32_t k_nums) {
   matches->resize(cloud->size() * k_nums);

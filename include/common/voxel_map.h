@@ -10,18 +10,18 @@
 #include <unordered_map>
 #include <vector>
 
-#include "common/data/point_cloud.h"
 #include "common/lru.h"
+#include "common/point_cloud.h"
 #include "common/voxel.h"
 
 // tsl::robin_map据说性能可以达到std::unordered_map的十倍，具体需要进行测试，我们这里写两个map来对比一下
 #include "Eigen/Core"
+#include "glog/logging.h"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
-
-#include "glog/logging.h"
 #include "sophus/se3.hpp"
 #include "tsl/robin_map.h"
+
 #include "util/utils.h"
 
 namespace Common {
@@ -64,7 +64,7 @@ class VoxelMap {
   void AddPoints(const std::vector<Eigen::Vector3d>& points);
 
   // 采用自己写的点云结构
-  void AddPoints(const Common::Data::PointCloud& cloud_points);
+  void AddPoints(const Common::PointCloud& cloud_points);
 
   // 用来移除距离目前位置比较远的地图点
   void RemovePointsFarFromLocation(const Eigen::Vector3d& origin);
@@ -77,7 +77,7 @@ class VoxelMap {
                           std::vector<std::pair<Eigen::Vector3d, double>>* const res,
                           const uint32_t k_nums = 1);
   void GetNeighborVoxels(const Eigen::Vector3d& point,
-                          std::vector<GaussianVoxel>* const nearby_voxels);
+                         std::vector<GaussianVoxel>* const nearby_voxels);
 
  private:
   bool GenerateNearbyGrids(const NearbyType& type);

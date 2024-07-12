@@ -16,8 +16,8 @@ message FeatureConfig {
   SuperGlue super_glue = 4;
   ORBSLAM orb_slam = 5;
   MatcherType matcher_type = 6;
+  FeatureTrackerConfig tracker_config = 7;
 }
-
 
 message SuperPoint {
   int32 image_width = 1;
@@ -62,6 +62,25 @@ enum MatcherType {
   SUPERGLUE = 2;
 };
 
+message FeatureTrackerConfig {
+  TrackerMothod tracker_method = 1;
+  KLOpticalFlowConfig kloptical_flow_config = 2;
+  OpenStereoConfig open_stereo_config = 3;
+}
+
+enum TrackerMothod {
+  KLOPTICALFLOW = 0;
+}
+
+message KLOpticalFlowConfig {
+  bool reverse_check = 1;
+  double pt_err = 2;
+  int32 min_tracked_nums = 3;
+}
+
+message OpenStereoConfig {
+  TensorRTConfig.Config tensor_config = 1;
+}
 
 message ORBSLAM {
 

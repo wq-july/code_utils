@@ -1,4 +1,4 @@
-#include "common/data/point_cloud.h"
+#include "common/point_cloud.h"
 
 #include <gtest/gtest.h>
 #include <pcl/point_cloud.h>
@@ -7,7 +7,7 @@
 #include <Eigen/Core>
 #include <vector>
 
-using namespace Common::Data;
+using namespace Common;
 
 // 测试默认构造函数
 TEST(PointCloudTest, DefaultConstructor) {

@@ -161,7 +161,7 @@ void VoxelMap::Update(const std::vector<Eigen::Vector3d>& points, const Sophus::
 }
 
 // 采用自己写的点云结构
-void VoxelMap::AddPoints(const Common::Data::PointCloud& cloud_points) {
+void VoxelMap::AddPoints(const Common::PointCloud& cloud_points) {
   AddPoints(cloud_points.points());
 }
 

@@ -8,13 +8,12 @@
 #include <vector>
 
 #include "Eigen/Core"
-
 #include "glog/logging.h"
 
 // #include "pcl/point_cloud.h"
 // #include "pcl/point_types.h"
 
-#include "common/data/point_cloud.h"
+#include "common/point_cloud.h"
 #include "util/math.h"
 #include "util/time.h"
 
@@ -53,7 +52,7 @@ class KdTree {
     Clear();
   }
 
-  bool BuildTree(const Common::Data::PointCloudPtr& cloud);
+  bool BuildTree(const Common::PointCloudPtr& cloud);
 
   // 获取k最近邻
   bool GetClosestPoint(const Eigen::Vector3d& pt,
@@ -61,7 +60,7 @@ class KdTree {
                        const uint32_t k_nums = 1);
 
   // 多线程并行为点云寻找最近邻
-  bool GetClosestPointMT(const Common::Data::PointCloudPtr& cloud,
+  bool GetClosestPointMT(const Common::PointCloudPtr& cloud,
                          std::vector<std::pair<uint32_t, uint32_t>>* const matches,
                          const uint32_t k_nums = 1);
 
@@ -120,7 +119,7 @@ class KdTree {
   // 输入的点云，那这个点云能否进一步动态扩展呢？这样就成了一个动态的点云地图，变成ikdtree?
   // std::vector<Eigen::Vector3d> cloud_;
 
-  Common::Data::PointCloudPtr cloud_ = nullptr;
+  Common::PointCloudPtr cloud_ = nullptr;
 
   // 使用hash存储节点的索引和对应的节点指针？
   std::unordered_map<uint32_t, KdTreeNode*> nodes_;

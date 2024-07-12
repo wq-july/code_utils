@@ -5,7 +5,14 @@
 #include <thread>
 
 #include "gflags/gflags.h"
+#include "glog/logging.h"
 #include "gtest/gtest.h"
+#include "pangolin/display/display.h"
+#include "pangolin/display/view.h"
+#include "pangolin/gl/gldraw.h"
+#include "pangolin/handler/handler.h"
+#include "pangolin/pangolin.h"
+#include "pangolin/var/var.h"
 #include "pcl/filters/approximate_voxel_grid.h"
 #include "pcl/io/pcd_io.h"
 #include "pcl/point_types.h"
@@ -13,13 +20,6 @@
 
 #include "common/kdtree.h"
 #include "common/voxel_map.h"
-#include "glog/logging.h"
-#include "pangolin/display/display.h"
-#include "pangolin/display/view.h"
-#include "pangolin/gl/gldraw.h"
-#include "pangolin/handler/handler.h"
-#include "pangolin/pangolin.h"
-#include "pangolin/var/var.h"
 
 typedef pcl::PointCloud<pcl::PointXYZ> PCLPointCloud;
 
@@ -29,8 +29,8 @@ DEFINE_double(ann_alpha, 1.0, "AAN的比例因子");
 
 class SearchGuiTest : public testing::Test {
  public:
-  Common::Data::PointCloudPtr scan_ = nullptr;
-  Common::Data::PointCloudPtr map_ = nullptr;
+  Common::PointCloudPtr scan_ = nullptr;
+  Common::PointCloudPtr map_ = nullptr;
   PCLPointCloud::Ptr pcl_scan_ = nullptr;
   PCLPointCloud::Ptr pcl_map_ = nullptr;
   std::shared_ptr<Common::KdTree> kdtree_ = nullptr;
@@ -45,8 +45,8 @@ class SearchGuiTest : public testing::Test {
 
  public:
   void SetUp() override {
-    scan_ = std::make_shared<Common::Data::PointCloud>();
-    map_ = std::make_shared<Common::Data::PointCloud>();
+    scan_ = std::make_shared<Common::PointCloud>();
+    map_ = std::make_shared<Common::PointCloud>();
     scan_->LoadPCDFile<pcl::PointXYZ>(FLAGS_scan_pcd_path);
     map_->LoadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path);
     pcl_scan_.reset(new pcl::PointCloud<pcl::PointXYZ>());

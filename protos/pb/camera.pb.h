@@ -40,7 +40,7 @@ namespace protobuf_camera_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[6];
+  static const ::google::protobuf::internal::ParseTable schema[9];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -57,9 +57,18 @@ extern ConfigDefaultTypeInternal _Config_default_instance_;
 class FeatureConfig;
 class FeatureConfigDefaultTypeInternal;
 extern FeatureConfigDefaultTypeInternal _FeatureConfig_default_instance_;
+class FeatureTrackerConfig;
+class FeatureTrackerConfigDefaultTypeInternal;
+extern FeatureTrackerConfigDefaultTypeInternal _FeatureTrackerConfig_default_instance_;
+class KLOpticalFlowConfig;
+class KLOpticalFlowConfigDefaultTypeInternal;
+extern KLOpticalFlowConfigDefaultTypeInternal _KLOpticalFlowConfig_default_instance_;
 class ORBSLAM;
 class ORBSLAMDefaultTypeInternal;
 extern ORBSLAMDefaultTypeInternal _ORBSLAM_default_instance_;
+class OpenStereoConfig;
+class OpenStereoConfigDefaultTypeInternal;
+extern OpenStereoConfigDefaultTypeInternal _OpenStereoConfig_default_instance_;
 class SuperGlue;
 class SuperGlueDefaultTypeInternal;
 extern SuperGlueDefaultTypeInternal _SuperGlue_default_instance_;
@@ -72,7 +81,10 @@ namespace protobuf {
 template<> ::CameraConfig::CameraModel* Arena::CreateMaybeMessage<::CameraConfig::CameraModel>(Arena*);
 template<> ::CameraConfig::Config* Arena::CreateMaybeMessage<::CameraConfig::Config>(Arena*);
 template<> ::CameraConfig::FeatureConfig* Arena::CreateMaybeMessage<::CameraConfig::FeatureConfig>(Arena*);
+template<> ::CameraConfig::FeatureTrackerConfig* Arena::CreateMaybeMessage<::CameraConfig::FeatureTrackerConfig>(Arena*);
+template<> ::CameraConfig::KLOpticalFlowConfig* Arena::CreateMaybeMessage<::CameraConfig::KLOpticalFlowConfig>(Arena*);
 template<> ::CameraConfig::ORBSLAM* Arena::CreateMaybeMessage<::CameraConfig::ORBSLAM>(Arena*);
+template<> ::CameraConfig::OpenStereoConfig* Arena::CreateMaybeMessage<::CameraConfig::OpenStereoConfig>(Arena*);
 template<> ::CameraConfig::SuperGlue* Arena::CreateMaybeMessage<::CameraConfig::SuperGlue>(Arena*);
 template<> ::CameraConfig::SuperPoint* Arena::CreateMaybeMessage<::CameraConfig::SuperPoint>(Arena*);
 }  // namespace protobuf
@@ -150,6 +162,26 @@ inline bool MatcherType_Parse(
     const ::std::string& name, MatcherType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<MatcherType>(
     MatcherType_descriptor(), name, value);
+}
+enum TrackerMothod {
+  KLOPTICALFLOW = 0,
+  TrackerMothod_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  TrackerMothod_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool TrackerMothod_IsValid(int value);
+const TrackerMothod TrackerMothod_MIN = KLOPTICALFLOW;
+const TrackerMothod TrackerMothod_MAX = KLOPTICALFLOW;
+const int TrackerMothod_ARRAYSIZE = TrackerMothod_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* TrackerMothod_descriptor();
+inline const ::std::string& TrackerMothod_Name(TrackerMothod value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    TrackerMothod_descriptor(), value);
+}
+inline bool TrackerMothod_Parse(
+    const ::std::string& name, TrackerMothod* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<TrackerMothod>(
+    TrackerMothod_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -398,6 +430,18 @@ class FeatureConfig : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::CameraConfig::ORBSLAM* mutable_orb_slam();
   void set_allocated_orb_slam(::CameraConfig::ORBSLAM* orb_slam);
 
+  // .CameraConfig.FeatureTrackerConfig tracker_config = 7;
+  bool has_tracker_config() const;
+  void clear_tracker_config();
+  static const int kTrackerConfigFieldNumber = 7;
+  private:
+  const ::CameraConfig::FeatureTrackerConfig& _internal_tracker_config() const;
+  public:
+  const ::CameraConfig::FeatureTrackerConfig& tracker_config() const;
+  ::CameraConfig::FeatureTrackerConfig* release_tracker_config();
+  ::CameraConfig::FeatureTrackerConfig* mutable_tracker_config();
+  void set_allocated_tracker_config(::CameraConfig::FeatureTrackerConfig* tracker_config);
+
   // .CameraConfig.FeatureType feature_type = 1;
   void clear_feature_type();
   static const int kFeatureTypeFieldNumber = 1;
@@ -423,6 +467,7 @@ class FeatureConfig : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::CameraConfig::SuperPoint* super_point_;
   ::CameraConfig::SuperGlue* super_glue_;
   ::CameraConfig::ORBSLAM* orb_slam_;
+  ::CameraConfig::FeatureTrackerConfig* tracker_config_;
   int feature_type_;
   int descriptor_type_;
   int matcher_type_;
@@ -698,6 +743,361 @@ class SuperGlue : public ::google::protobuf::Message /* @@protoc_insertion_point
 };
 // -------------------------------------------------------------------
 
+class FeatureTrackerConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.FeatureTrackerConfig) */ {
+ public:
+  FeatureTrackerConfig();
+  virtual ~FeatureTrackerConfig();
+
+  FeatureTrackerConfig(const FeatureTrackerConfig& from);
+
+  inline FeatureTrackerConfig& operator=(const FeatureTrackerConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  FeatureTrackerConfig(FeatureTrackerConfig&& from) noexcept
+    : FeatureTrackerConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline FeatureTrackerConfig& operator=(FeatureTrackerConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FeatureTrackerConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const FeatureTrackerConfig* internal_default_instance() {
+    return reinterpret_cast<const FeatureTrackerConfig*>(
+               &_FeatureTrackerConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  void Swap(FeatureTrackerConfig* other);
+  friend void swap(FeatureTrackerConfig& a, FeatureTrackerConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline FeatureTrackerConfig* New() const final {
+    return CreateMaybeMessage<FeatureTrackerConfig>(NULL);
+  }
+
+  FeatureTrackerConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<FeatureTrackerConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const FeatureTrackerConfig& from);
+  void MergeFrom(const FeatureTrackerConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FeatureTrackerConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // .CameraConfig.KLOpticalFlowConfig kloptical_flow_config = 2;
+  bool has_kloptical_flow_config() const;
+  void clear_kloptical_flow_config();
+  static const int kKlopticalFlowConfigFieldNumber = 2;
+  private:
+  const ::CameraConfig::KLOpticalFlowConfig& _internal_kloptical_flow_config() const;
+  public:
+  const ::CameraConfig::KLOpticalFlowConfig& kloptical_flow_config() const;
+  ::CameraConfig::KLOpticalFlowConfig* release_kloptical_flow_config();
+  ::CameraConfig::KLOpticalFlowConfig* mutable_kloptical_flow_config();
+  void set_allocated_kloptical_flow_config(::CameraConfig::KLOpticalFlowConfig* kloptical_flow_config);
+
+  // .CameraConfig.OpenStereoConfig open_stereo_config = 3;
+  bool has_open_stereo_config() const;
+  void clear_open_stereo_config();
+  static const int kOpenStereoConfigFieldNumber = 3;
+  private:
+  const ::CameraConfig::OpenStereoConfig& _internal_open_stereo_config() const;
+  public:
+  const ::CameraConfig::OpenStereoConfig& open_stereo_config() const;
+  ::CameraConfig::OpenStereoConfig* release_open_stereo_config();
+  ::CameraConfig::OpenStereoConfig* mutable_open_stereo_config();
+  void set_allocated_open_stereo_config(::CameraConfig::OpenStereoConfig* open_stereo_config);
+
+  // .CameraConfig.TrackerMothod tracker_method = 1;
+  void clear_tracker_method();
+  static const int kTrackerMethodFieldNumber = 1;
+  ::CameraConfig::TrackerMothod tracker_method() const;
+  void set_tracker_method(::CameraConfig::TrackerMothod value);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.FeatureTrackerConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::CameraConfig::KLOpticalFlowConfig* kloptical_flow_config_;
+  ::CameraConfig::OpenStereoConfig* open_stereo_config_;
+  int tracker_method_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class KLOpticalFlowConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.KLOpticalFlowConfig) */ {
+ public:
+  KLOpticalFlowConfig();
+  virtual ~KLOpticalFlowConfig();
+
+  KLOpticalFlowConfig(const KLOpticalFlowConfig& from);
+
+  inline KLOpticalFlowConfig& operator=(const KLOpticalFlowConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  KLOpticalFlowConfig(KLOpticalFlowConfig&& from) noexcept
+    : KLOpticalFlowConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline KLOpticalFlowConfig& operator=(KLOpticalFlowConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KLOpticalFlowConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const KLOpticalFlowConfig* internal_default_instance() {
+    return reinterpret_cast<const KLOpticalFlowConfig*>(
+               &_KLOpticalFlowConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  void Swap(KLOpticalFlowConfig* other);
+  friend void swap(KLOpticalFlowConfig& a, KLOpticalFlowConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline KLOpticalFlowConfig* New() const final {
+    return CreateMaybeMessage<KLOpticalFlowConfig>(NULL);
+  }
+
+  KLOpticalFlowConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<KLOpticalFlowConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const KLOpticalFlowConfig& from);
+  void MergeFrom(const KLOpticalFlowConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(KLOpticalFlowConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // double pt_err = 2;
+  void clear_pt_err();
+  static const int kPtErrFieldNumber = 2;
+  double pt_err() const;
+  void set_pt_err(double value);
+
+  // bool reverse_check = 1;
+  void clear_reverse_check();
+  static const int kReverseCheckFieldNumber = 1;
+  bool reverse_check() const;
+  void set_reverse_check(bool value);
+
+  // int32 min_tracked_nums = 3;
+  void clear_min_tracked_nums();
+  static const int kMinTrackedNumsFieldNumber = 3;
+  ::google::protobuf::int32 min_tracked_nums() const;
+  void set_min_tracked_nums(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.KLOpticalFlowConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  double pt_err_;
+  bool reverse_check_;
+  ::google::protobuf::int32 min_tracked_nums_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class OpenStereoConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.OpenStereoConfig) */ {
+ public:
+  OpenStereoConfig();
+  virtual ~OpenStereoConfig();
+
+  OpenStereoConfig(const OpenStereoConfig& from);
+
+  inline OpenStereoConfig& operator=(const OpenStereoConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  OpenStereoConfig(OpenStereoConfig&& from) noexcept
+    : OpenStereoConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline OpenStereoConfig& operator=(OpenStereoConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const OpenStereoConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const OpenStereoConfig* internal_default_instance() {
+    return reinterpret_cast<const OpenStereoConfig*>(
+               &_OpenStereoConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  void Swap(OpenStereoConfig* other);
+  friend void swap(OpenStereoConfig& a, OpenStereoConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OpenStereoConfig* New() const final {
+    return CreateMaybeMessage<OpenStereoConfig>(NULL);
+  }
+
+  OpenStereoConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<OpenStereoConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const OpenStereoConfig& from);
+  void MergeFrom(const OpenStereoConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OpenStereoConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // .TensorRTConfig.Config tensor_config = 1;
+  bool has_tensor_config() const;
+  void clear_tensor_config();
+  static const int kTensorConfigFieldNumber = 1;
+  private:
+  const ::TensorRTConfig::Config& _internal_tensor_config() const;
+  public:
+  const ::TensorRTConfig::Config& tensor_config() const;
+  ::TensorRTConfig::Config* release_tensor_config();
+  ::TensorRTConfig::Config* mutable_tensor_config();
+  void set_allocated_tensor_config(::TensorRTConfig::Config* tensor_config);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.OpenStereoConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::TensorRTConfig::Config* tensor_config_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class ORBSLAM : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.ORBSLAM) */ {
  public:
   ORBSLAM();
@@ -733,7 +1133,7 @@ class ORBSLAM : public ::google::protobuf::Message /* @@protoc_insertion_point(c
                &_ORBSLAM_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    7;
 
   void Swap(ORBSLAM* other);
   friend void swap(ORBSLAM& a, ORBSLAM& b) {
@@ -829,7 +1229,7 @@ class CameraModel : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_CameraModel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    8;
 
   void Swap(CameraModel* other);
   friend void swap(CameraModel& a, CameraModel& b) {
@@ -1215,6 +1615,60 @@ inline void FeatureConfig::set_matcher_type(::CameraConfig::MatcherType value) {
   // @@protoc_insertion_point(field_set:CameraConfig.FeatureConfig.matcher_type)
 }
 
+// .CameraConfig.FeatureTrackerConfig tracker_config = 7;
+inline bool FeatureConfig::has_tracker_config() const {
+  return this != internal_default_instance() && tracker_config_ != NULL;
+}
+inline void FeatureConfig::clear_tracker_config() {
+  if (GetArenaNoVirtual() == NULL && tracker_config_ != NULL) {
+    delete tracker_config_;
+  }
+  tracker_config_ = NULL;
+}
+inline const ::CameraConfig::FeatureTrackerConfig& FeatureConfig::_internal_tracker_config() const {
+  return *tracker_config_;
+}
+inline const ::CameraConfig::FeatureTrackerConfig& FeatureConfig::tracker_config() const {
+  const ::CameraConfig::FeatureTrackerConfig* p = tracker_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.FeatureConfig.tracker_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::CameraConfig::FeatureTrackerConfig*>(
+      &::CameraConfig::_FeatureTrackerConfig_default_instance_);
+}
+inline ::CameraConfig::FeatureTrackerConfig* FeatureConfig::release_tracker_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.FeatureConfig.tracker_config)
+  
+  ::CameraConfig::FeatureTrackerConfig* temp = tracker_config_;
+  tracker_config_ = NULL;
+  return temp;
+}
+inline ::CameraConfig::FeatureTrackerConfig* FeatureConfig::mutable_tracker_config() {
+  
+  if (tracker_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::CameraConfig::FeatureTrackerConfig>(GetArenaNoVirtual());
+    tracker_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.FeatureConfig.tracker_config)
+  return tracker_config_;
+}
+inline void FeatureConfig::set_allocated_tracker_config(::CameraConfig::FeatureTrackerConfig* tracker_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete tracker_config_;
+  }
+  if (tracker_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      tracker_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, tracker_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  tracker_config_ = tracker_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.FeatureConfig.tracker_config)
+}
+
 // -------------------------------------------------------------------
 
 // SuperPoint
@@ -1419,6 +1873,230 @@ inline void SuperGlue::set_allocated_tensor_config(::TensorRTConfig::Config* ten
 
 // -------------------------------------------------------------------
 
+// FeatureTrackerConfig
+
+// .CameraConfig.TrackerMothod tracker_method = 1;
+inline void FeatureTrackerConfig::clear_tracker_method() {
+  tracker_method_ = 0;
+}
+inline ::CameraConfig::TrackerMothod FeatureTrackerConfig::tracker_method() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FeatureTrackerConfig.tracker_method)
+  return static_cast< ::CameraConfig::TrackerMothod >(tracker_method_);
+}
+inline void FeatureTrackerConfig::set_tracker_method(::CameraConfig::TrackerMothod value) {
+  
+  tracker_method_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FeatureTrackerConfig.tracker_method)
+}
+
+// .CameraConfig.KLOpticalFlowConfig kloptical_flow_config = 2;
+inline bool FeatureTrackerConfig::has_kloptical_flow_config() const {
+  return this != internal_default_instance() && kloptical_flow_config_ != NULL;
+}
+inline void FeatureTrackerConfig::clear_kloptical_flow_config() {
+  if (GetArenaNoVirtual() == NULL && kloptical_flow_config_ != NULL) {
+    delete kloptical_flow_config_;
+  }
+  kloptical_flow_config_ = NULL;
+}
+inline const ::CameraConfig::KLOpticalFlowConfig& FeatureTrackerConfig::_internal_kloptical_flow_config() const {
+  return *kloptical_flow_config_;
+}
+inline const ::CameraConfig::KLOpticalFlowConfig& FeatureTrackerConfig::kloptical_flow_config() const {
+  const ::CameraConfig::KLOpticalFlowConfig* p = kloptical_flow_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.FeatureTrackerConfig.kloptical_flow_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::CameraConfig::KLOpticalFlowConfig*>(
+      &::CameraConfig::_KLOpticalFlowConfig_default_instance_);
+}
+inline ::CameraConfig::KLOpticalFlowConfig* FeatureTrackerConfig::release_kloptical_flow_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.FeatureTrackerConfig.kloptical_flow_config)
+  
+  ::CameraConfig::KLOpticalFlowConfig* temp = kloptical_flow_config_;
+  kloptical_flow_config_ = NULL;
+  return temp;
+}
+inline ::CameraConfig::KLOpticalFlowConfig* FeatureTrackerConfig::mutable_kloptical_flow_config() {
+  
+  if (kloptical_flow_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::CameraConfig::KLOpticalFlowConfig>(GetArenaNoVirtual());
+    kloptical_flow_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.FeatureTrackerConfig.kloptical_flow_config)
+  return kloptical_flow_config_;
+}
+inline void FeatureTrackerConfig::set_allocated_kloptical_flow_config(::CameraConfig::KLOpticalFlowConfig* kloptical_flow_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete kloptical_flow_config_;
+  }
+  if (kloptical_flow_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      kloptical_flow_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, kloptical_flow_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  kloptical_flow_config_ = kloptical_flow_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.FeatureTrackerConfig.kloptical_flow_config)
+}
+
+// .CameraConfig.OpenStereoConfig open_stereo_config = 3;
+inline bool FeatureTrackerConfig::has_open_stereo_config() const {
+  return this != internal_default_instance() && open_stereo_config_ != NULL;
+}
+inline void FeatureTrackerConfig::clear_open_stereo_config() {
+  if (GetArenaNoVirtual() == NULL && open_stereo_config_ != NULL) {
+    delete open_stereo_config_;
+  }
+  open_stereo_config_ = NULL;
+}
+inline const ::CameraConfig::OpenStereoConfig& FeatureTrackerConfig::_internal_open_stereo_config() const {
+  return *open_stereo_config_;
+}
+inline const ::CameraConfig::OpenStereoConfig& FeatureTrackerConfig::open_stereo_config() const {
+  const ::CameraConfig::OpenStereoConfig* p = open_stereo_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.FeatureTrackerConfig.open_stereo_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::CameraConfig::OpenStereoConfig*>(
+      &::CameraConfig::_OpenStereoConfig_default_instance_);
+}
+inline ::CameraConfig::OpenStereoConfig* FeatureTrackerConfig::release_open_stereo_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.FeatureTrackerConfig.open_stereo_config)
+  
+  ::CameraConfig::OpenStereoConfig* temp = open_stereo_config_;
+  open_stereo_config_ = NULL;
+  return temp;
+}
+inline ::CameraConfig::OpenStereoConfig* FeatureTrackerConfig::mutable_open_stereo_config() {
+  
+  if (open_stereo_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::CameraConfig::OpenStereoConfig>(GetArenaNoVirtual());
+    open_stereo_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.FeatureTrackerConfig.open_stereo_config)
+  return open_stereo_config_;
+}
+inline void FeatureTrackerConfig::set_allocated_open_stereo_config(::CameraConfig::OpenStereoConfig* open_stereo_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete open_stereo_config_;
+  }
+  if (open_stereo_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      open_stereo_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, open_stereo_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  open_stereo_config_ = open_stereo_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.FeatureTrackerConfig.open_stereo_config)
+}
+
+// -------------------------------------------------------------------
+
+// KLOpticalFlowConfig
+
+// bool reverse_check = 1;
+inline void KLOpticalFlowConfig::clear_reverse_check() {
+  reverse_check_ = false;
+}
+inline bool KLOpticalFlowConfig::reverse_check() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.reverse_check)
+  return reverse_check_;
+}
+inline void KLOpticalFlowConfig::set_reverse_check(bool value) {
+  
+  reverse_check_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.reverse_check)
+}
+
+// double pt_err = 2;
+inline void KLOpticalFlowConfig::clear_pt_err() {
+  pt_err_ = 0;
+}
+inline double KLOpticalFlowConfig::pt_err() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.pt_err)
+  return pt_err_;
+}
+inline void KLOpticalFlowConfig::set_pt_err(double value) {
+  
+  pt_err_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.pt_err)
+}
+
+// int32 min_tracked_nums = 3;
+inline void KLOpticalFlowConfig::clear_min_tracked_nums() {
+  min_tracked_nums_ = 0;
+}
+inline ::google::protobuf::int32 KLOpticalFlowConfig::min_tracked_nums() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
+  return min_tracked_nums_;
+}
+inline void KLOpticalFlowConfig::set_min_tracked_nums(::google::protobuf::int32 value) {
+  
+  min_tracked_nums_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
+}
+
+// -------------------------------------------------------------------
+
+// OpenStereoConfig
+
+// .TensorRTConfig.Config tensor_config = 1;
+inline bool OpenStereoConfig::has_tensor_config() const {
+  return this != internal_default_instance() && tensor_config_ != NULL;
+}
+inline const ::TensorRTConfig::Config& OpenStereoConfig::_internal_tensor_config() const {
+  return *tensor_config_;
+}
+inline const ::TensorRTConfig::Config& OpenStereoConfig::tensor_config() const {
+  const ::TensorRTConfig::Config* p = tensor_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.OpenStereoConfig.tensor_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::TensorRTConfig::Config*>(
+      &::TensorRTConfig::_Config_default_instance_);
+}
+inline ::TensorRTConfig::Config* OpenStereoConfig::release_tensor_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.OpenStereoConfig.tensor_config)
+  
+  ::TensorRTConfig::Config* temp = tensor_config_;
+  tensor_config_ = NULL;
+  return temp;
+}
+inline ::TensorRTConfig::Config* OpenStereoConfig::mutable_tensor_config() {
+  
+  if (tensor_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::TensorRTConfig::Config>(GetArenaNoVirtual());
+    tensor_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.OpenStereoConfig.tensor_config)
+  return tensor_config_;
+}
+inline void OpenStereoConfig::set_allocated_tensor_config(::TensorRTConfig::Config* tensor_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete reinterpret_cast< ::google::protobuf::MessageLite*>(tensor_config_);
+  }
+  if (tensor_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      tensor_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, tensor_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  tensor_config_ = tensor_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.OpenStereoConfig.tensor_config)
+}
+
+// -------------------------------------------------------------------
+
 // ORBSLAM
 
 // -------------------------------------------------------------------
@@ -1428,6 +2106,12 @@ inline void SuperGlue::set_allocated_tensor_config(::TensorRTConfig::Config* ten
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1460,6 +2144,11 @@ template <> struct is_proto_enum< ::CameraConfig::MatcherType> : ::std::true_typ
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::MatcherType>() {
   return ::CameraConfig::MatcherType_descriptor();
+}
+template <> struct is_proto_enum< ::CameraConfig::TrackerMothod> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::TrackerMothod>() {
+  return ::CameraConfig::TrackerMothod_descriptor();
 }
 
 }  // namespace protobuf
