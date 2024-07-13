@@ -1,4 +1,4 @@
-#include "common/data/imu.h"
+#include "common/imu.h"
 
 #include <vector>
 
@@ -31,7 +31,7 @@ TEST_F(IMUTest, ReadDataTest) {
   if (!enable_test_) {
     return;
   }
-  std::vector<Common::Data::IMUData> data_vec;
+  std::vector<Common::IMUData> data_vec;
   imu_processer_->ReadData(FLAGS_ms1_path, &data_vec);
   EXPECT_GT(data_vec.size(), 0);  // Expecting at least one data point
 }
@@ -41,11 +41,11 @@ TEST_F(IMUTest, PreIntegrationTest) {
   if (!enable_test_) {
     return;
   }
-  std::vector<Common::Data::IMUData> data_vec;
+  std::vector<Common::IMUData> data_vec;
   imu_processer_->ReadData(FLAGS_mg35_path, &data_vec);
   Common::State start_status(data_vec.front().timestamp_);
   for (int i = 0; i < 100; ++i) {
-    Common::Data::IMUData imu_data = data_vec[i];
+    Common::IMUData imu_data = data_vec[i];
     imu_processer_->pre_integrator_->Update(imu_data);
   }
   auto this_status =

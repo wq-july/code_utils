@@ -56,12 +56,11 @@ python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_fi
 
 ### lidar部分算法
 
-  - [x] vicp；
-  - [x] gicp；
-  - [ ] vgicp；
-  - [x] ndt；
-  - [x] 降采样算法；
-
+- [x] vicp；
+- [x] gicp；
+- [ ] vgicp；
+- [x] ndt；
+- [x] 降采样算法；
 
 ### 视觉部分算法
 
@@ -72,7 +71,9 @@ python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_fi
 - 前端跟踪算法
   - [x] 实现特征点提取和的匹配的集成算法，基于opencv版本；
   - [x] SuperPoint, SuperGlue；
-  - [ ] 异常值剔除算法；
+  - [ ] RANSAC异常值剔除算法；
+  - [ ] 特征点KL光流跟踪；
+  - [ ] 基于直接法和半直接法的跟踪算法；
   
 - 回环检测相关算法
   - [ ] dbow3，fbow基于词袋传统的算法；
@@ -80,3 +81,8 @@ python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_fi
   
 - 边缘化相关算法
   - [ ] 实现一个简单的边缘化demo算法；
+
+- 基本类
+  - [ ] 图像去畸变；
+  - [ ] 在线标定类，和imu进行标定；
+  - [ ] 相机模型类；

@@ -6,14 +6,14 @@
 
 #include "Eigen/Geometry"
 
-#include "common/data/point_cloud.h"
+#include "common/point_cloud.h"
 #include "common/kdtree.h"
 #include "common/voxel_map.h"
 #include "lidar/filter.h"
 #include "optimizer/cloud_match_optimize.h"
 #include "sophus/se3.hpp"
 
-using namespace Common::Data;
+using namespace Common;
 
 namespace Lidar {
 
@@ -65,8 +65,8 @@ class Matcher {
   AlignMethod align_method_;
   SearchMethod search_method_;
 
-  Common::Data::PointCloudPtr source_cloud_ = nullptr;
-  Common::Data::PointCloudPtr target_cloud_ = nullptr;
+  Common::PointCloudPtr source_cloud_ = nullptr;
+  Common::PointCloudPtr target_cloud_ = nullptr;
 
   Eigen::Vector3d source_center_ = Eigen::Vector3d::Zero();
   Eigen::Vector3d target_center_ = Eigen::Vector3d::Zero();

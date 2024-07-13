@@ -96,6 +96,8 @@ add_library(code_utils_libs
     src/camera/feature_manager.cc
     src/camera/super_point.cc
     src/camera/super_glue.cc
+    src/camera/inference.cc
+    src/camera/transforms.cc
     src/tensorRT/generic.cc
     src/tensorRT/logger.cc
 )
@@ -158,3 +160,6 @@ endif()
 
 add_executable(hello_world bin/hello_world.cc)
 target_link_libraries(hello_world code_utils_libs)
+
+add_executable(open_stereo bin/open_stereo.cc)
+target_link_libraries(open_stereo code_utils_libs)

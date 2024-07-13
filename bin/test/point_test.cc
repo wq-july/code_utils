@@ -1,8 +1,8 @@
-#include "common/data/point.h"
+#include "common/point.h"
 
 #include "gtest/gtest.h"
 
-using namespace Common::Data;
+using namespace Common;
 
 // Test fixture for PointXYZ struct
 class PointXYZTest : public ::testing::Test {
@@ -40,7 +40,7 @@ TEST_F(PointXYZTest, TestConstructorAndMemberFunctions) {
   EXPECT_DOUBLE_EQ(point3.y, 2.0);
   EXPECT_DOUBLE_EQ(point3.z, 3.0);
 
-  Eigen::Vector3d vec2 = point2.toVector3d();
+  Eigen::Vector3d vec2 = point2.ToVector3d();
   EXPECT_DOUBLE_EQ(vec2[0], 4.0);
   EXPECT_DOUBLE_EQ(vec2[1], 5.0);
   EXPECT_DOUBLE_EQ(vec2[2], 6.0);

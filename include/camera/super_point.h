@@ -18,6 +18,7 @@ class SuperPoint : public TensorRT::GenericInference, public cv::Feature2D {
 
   CV_WRAP static cv::Ptr<cv::Feature2D> create(const CameraConfig::SuperPoint& config);
 
+  // TODO 进一步适配
   // void detect(cv::InputArray image,
   //             CV_OUT std::vector<cv::KeyPoint>& keypoints,
   //             cv::InputArray mask = cv::noArray()) override;
@@ -27,7 +28,7 @@ class SuperPoint : public TensorRT::GenericInference, public cv::Feature2D {
                         CV_OUT std::vector<cv::KeyPoint>& keypoints,
                         cv::OutputArray descriptors,
                         bool useProvidedKeypoints = false) override;
-
+  // TODO 进一步适配
   // void compute(cv::InputArray image,
   //              CV_OUT CV_IN_OUT std::vector<cv::KeyPoint>& keypoints,
   //              cv::OutputArray descriptors) override;

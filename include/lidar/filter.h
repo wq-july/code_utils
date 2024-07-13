@@ -6,10 +6,10 @@
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
+#include "common/point_cloud.h"
 #include "lidar/filter.h"
-#include "common/data/point_cloud.h"
 
-using namespace Common::Data;
+using namespace Common;
 
 namespace Lidar {
 class PointCloudFilter {

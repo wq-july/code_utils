@@ -21,6 +21,7 @@
 #include "ceres/ceres.h"
 #include "glog/logging.h"
 #include "google/protobuf/text_format.h"
+#include "opencv2/core.hpp"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
@@ -66,6 +67,21 @@ struct KissIcpHash {
 
 inline double ComputeDistance(const Eigen::Vector3d& p1, const Eigen::Vector3d& p2) {
   return (p1 - p2).norm();
+}
+
+inline double ComputeDistance(const cv::Point2f& pt1, const cv::Point2f& pt2) {
+  double dx = pt1.x - pt2.x;
+  double dy = pt1.y - pt2.y;
+  return sqrt(dx * dx + dy * dy);
+}
+
+// From vins-fusion
+inline bool IsInBorder(const cv::Mat& img, const cv::Point2f& pt) {
+  const int BORDER_SIZE = 1;
+  int img_x = cvRound(pt.x);
+  int img_y = cvRound(pt.y);
+  return BORDER_SIZE <= img_x && img_x < img.cols - BORDER_SIZE && BORDER_SIZE <= img_y &&
+         img_y < img.rows - BORDER_SIZE;
 }
 
 void GenerateRandomCoefficientsAndData(

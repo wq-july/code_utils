@@ -22,8 +22,8 @@ typedef pcl::PointCloud<pcl::PointXYZ> PCLPointCloud;
 class SearchTest : public testing::Test {
  public:
   void SetUp() override {
-    scan_ = std::make_shared<Common::Data::PointCloud>();
-    map_ = std::make_shared<Common::Data::PointCloud>();
+    scan_ = std::make_shared<Common::PointCloud>();
+    map_ = std::make_shared<Common::PointCloud>();
     scan_->LoadPCDFile<pcl::PointXYZ>(FLAGS_scan_pcd_path);
     map_->LoadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path);
 
@@ -33,8 +33,8 @@ class SearchTest : public testing::Test {
     pcl::io::loadPCDFile<pcl::PointXYZ>(FLAGS_map_pcd_path, *pcl_map_);
   }
 
-  Common::Data::PointCloudPtr scan_ = nullptr;
-  Common::Data::PointCloudPtr map_ = nullptr;
+  Common::PointCloudPtr scan_ = nullptr;
+  Common::PointCloudPtr map_ = nullptr;
 
   PCLPointCloud::Ptr pcl_scan_ = nullptr;
   PCLPointCloud::Ptr pcl_map_ = nullptr;

@@ -14,8 +14,8 @@
 #define private public
 #include "camera/feature_manager.h"
 
-DEFINE_string(img1, "../bin/data/images/tum/image0.png", "第一张测试图像");
-DEFINE_string(img2, "../bin/data/images/tum/image1.png", "第二张测试图像");
+DEFINE_string(img1, "../bin/data/images/stereo/euroc/left.png", "第一张测试图像");
+DEFINE_string(img2, "../bin/data/images/stereo/euroc/right.png", "第二张测试图像");
 DEFINE_string(config, "../bin/test/conf/feature_config.conf", "配置文件路径");
 DEFINE_string(features_0, "../bin/test/conf/features_0.txt", "图像0的提取点");
 DEFINE_string(features_1, "../bin/test/conf/features_1.txt", "图像1的提取点");
@@ -31,7 +31,7 @@ class CVTest : public testing::Test {
     }
     CameraConfig::FeatureConfig config;
     Utils::LoadProtoConfig(FLAGS_config, &config);
-    feature_manager_ = std::make_shared<Camera::FeatureManger>(config);
+    feature_manager_ = std::make_shared<Camera::FeatureManager>(config);
   }
 
   cv::Mat DrawMatches(const cv::Mat& img1,
@@ -50,16 +50,29 @@ class CVTest : public testing::Test {
       cv::Point2f pt1 = kp1.pt;
       cv::Point2f pt2 = kp2.pt + cv::Point2f(static_cast<float>(img1.cols), 0);
 
-      // 绘制关键点
-      cv::circle(img_matches, pt1, 4, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);  // 红色圆圈，抗锯齿
-      cv::circle(img_matches, pt2, 4, cv::Scalar(255, 0, 0), 1, cv::LINE_AA);  // 红色圆圈，抗锯齿
+      // 绘制关键点的方形框和中间的圆圈
+      cv::rectangle(img_matches,
+                    cv::Point(pt1.x - 5, pt1.y - 5),
+                    cv::Point(pt1.x + 5, pt1.y + 5),
+                    cv::Scalar(255, 0, 0),
+                    1,
+                    cv::LINE_AA);
+      cv::circle(img_matches, pt1, 3, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
+
+      cv::rectangle(img_matches,
+                    cv::Point(pt2.x - 5, pt2.y - 5),
+                    cv::Point(pt2.x + 5, pt2.y + 5),
+                    cv::Scalar(255, 0, 0),
+                    1,
+                    cv::LINE_AA);
+      cv::circle(img_matches, pt2, 3, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
 
       // 绘制匹配线
       cv::line(img_matches,
                pt1,
                pt2,
                cv::Scalar(0, 255, 0),
-               2,
+               1,
                cv::LINE_AA);  // 绿色线条，宽度为2，抗锯齿
     }
 
@@ -141,9 +154,38 @@ class CVTest : public testing::Test {
     }
   }
 
+  void KeypointsToPoints2f(const std::vector<cv::KeyPoint>& keypoints,
+                           std::vector<cv::Point2f>* const points) {
+    points->clear();
+    points->reserve(keypoints.size());
+    for (const auto& kp : keypoints) {
+      points->emplace_back(kp.pt);
+    }
+  }
+
+  void Points2fToKeypoints(const std::vector<cv::Point2f>& points2f,
+                           std::vector<cv::KeyPoint>* const keypoints) {
+    keypoints->clear();
+    keypoints->reserve(points2f.size());
+    for (const auto& kp : points2f) {
+      cv::KeyPoint point;
+      point.pt = kp;
+      keypoints->emplace_back(point);
+    }
+  }
+
+  void StatusToDMatches(const std::vector<uchar>& status, std::vector<cv::DMatch>* const matches) {
+    matches->clear();
+    for (size_t i = 0; i < status.size(); ++i) {
+      if (status[i] == 1) {
+        matches->emplace_back(cv::DMatch(i, i, 0));  // 这里的距离设为0，因为我们只是生成匹配对
+      }
+    }
+  }
+
   cv::Mat img1_;
   cv::Mat img2_;
-  std::shared_ptr<Camera::FeatureManger> feature_manager_ = nullptr;
+  std::shared_ptr<Camera::FeatureManager> feature_manager_ = nullptr;
   std::vector<cv::KeyPoint> keypoints1_;
   std::vector<cv::KeyPoint> keypoints2_;
   std::vector<cv::DMatch> matches_;
@@ -174,7 +216,7 @@ TEST_F(CVTest, LegancyFeatureExtractAndMatchTest) {
 }
 
 TEST_F(CVTest, SuperPointAndGlueTest) {
-  if (!enable_test_) {
+  if (true) {
     return;
   }
 
@@ -202,6 +244,38 @@ TEST_F(CVTest, SuperPointAndGlueTest) {
   // LOG(INFO) << "good matches size is " << good_matches.size();
 
   cv::Mat img_matches = DrawMatches(img1_, keypoints1_, img2_, keypoints2_, matches_);
+
+  PangolinShow(img_matches);
+}
+
+TEST_F(CVTest, StereoMatchTest) {
+  if (!enable_test_) {
+    return;
+  }
+
+  cv::Mat descriptors1, descriptors2;
+  feature_manager_->ExtractFeatures(img1_, &keypoints1_, &descriptors1);
+  // feature_manager_->ExtractFeatures(img2_, &keypoints2_, &descriptors2);
+
+  RevertPoints(&keypoints1_);
+  // RevertPoints(&keypoints2_);
+
+  std::vector<cv::Point2f> left_points;
+  KeypointsToPoints2f(keypoints1_, &left_points);
+
+  std::vector<cv::Point2f> right_points;
+  std::vector<uchar> status;
+
+  feature_manager_->KLOpticalFlowTrack(img1_, img2_, left_points, &right_points, &status);
+
+  Points2fToKeypoints(right_points, &keypoints2_);
+
+  std::vector<cv::DMatch> good_matches;
+  StatusToDMatches(status, &good_matches);
+
+  LOG(INFO) << "good matches size is " << good_matches.size();
+
+  cv::Mat img_matches = DrawMatches(img1_, keypoints1_, img2_, keypoints2_, good_matches);
 
   PangolinShow(img_matches);
 }

@@ -3,14 +3,14 @@
 #include "opencv2/core/eigen.hpp"
 namespace Camera {
 
-FeatureManger::FeatureManger(const CameraConfig::FeatureConfig& config) : config_(config) {
+FeatureManager::FeatureManager(const CameraConfig::FeatureConfig& config) : config_(config) {
   std::cout << "Initializing FeatureManager... \n";
   CreateFeatureDetector();
   CreateDescriptorExtractor();
   CreateMatcher();
 }
 
-void FeatureManger::CreateFeatureDetector() {
+void FeatureManager::CreateFeatureDetector() {
   switch (config_.feature_type()) {
     case CameraConfig::FeatureType::F_SIFT:
       detector_ = cv::SIFT::create();
@@ -36,7 +36,7 @@ void FeatureManger::CreateFeatureDetector() {
   }
 }
 
-void FeatureManger::CreateDescriptorExtractor() {
+void FeatureManager::CreateDescriptorExtractor() {
   switch (config_.descriptor_type()) {
     case CameraConfig::DescriptorType::D_SIFT:
       descriptor_ = cv::SIFT::create();
@@ -61,7 +61,7 @@ void FeatureManger::CreateDescriptorExtractor() {
   }
 }
 
-void FeatureManger::CreateMatcher() {
+void FeatureManager::CreateMatcher() {
   switch (config_.matcher_type()) {
     case CameraConfig::MatcherType::SUPERGLUE:
       matcher_ = Camera::SuperGlue::create(config_.super_glue());
@@ -77,9 +77,9 @@ void FeatureManger::CreateMatcher() {
       break;
   }
 }
-void FeatureManger::ExtractFeatures(const cv::Mat& image,
-                                    std::vector<cv::KeyPoint>* const keypoints,
-                                    cv::Mat* const descriptors) {
+void FeatureManager::ExtractFeatures(const cv::Mat& image,
+                                     std::vector<cv::KeyPoint>* const keypoints,
+                                     cv::Mat* const descriptors) {
   // if (!detector_ || !descriptor_) {
   //   LOG(FATAL) << "Feature detector or descriptor extractor is not initialized.";
   //   return;
@@ -92,9 +92,9 @@ void FeatureManger::ExtractFeatures(const cv::Mat& image,
   timer_.PrintElapsedTime();
 }
 
-void FeatureManger::Match(const cv::Mat& descriptors0,
-                          const cv::Mat& descriptors1,
-                          std::vector<cv::DMatch>& matches) {
+void FeatureManager::Match(const cv::Mat& descriptors0,
+                           const cv::Mat& descriptors1,
+                           std::vector<cv::DMatch>& matches) {
   switch (config_.matcher_type()) {
     case CameraConfig::MatcherType::SUPERGLUE: {
       Eigen::MatrixXd des0;
@@ -114,6 +114,80 @@ void FeatureManger::Match(const cv::Mat& descriptors0,
       std::cerr << "Unknown matcher type." << std::endl;
       break;
   }
+}
+
+// TODO, 跟踪到的特征点应该使用自定义的feature类型，因为还需要进一步的确定拓扑关系
+bool FeatureManager::KLOpticalFlowTrack(const cv::Mat& left_img,
+                                        const cv::Mat& right_img,
+                                        const std::vector<cv::Point2f>& left_img_keypoints,
+                                        std::vector<cv::Point2f>* const right_img_keypoints,
+                                        std::vector<uchar>* const status) const {
+  CHECK(left_img.data) << "Left image is null !";
+  CHECK(right_img.data) << "Right Image is null !";
+  CHECK(!left_img_keypoints.empty()) << "Keypoints is empty !";
+
+  const auto config = config_.tracker_config().kloptical_flow_config();
+
+  // TODO，这里是调用的OpenCV的光流跟踪方法，以后可能会添加其他的方法：https://github.com/VladyslavUsenko/basalt-mirror/blob/master/src/optical_flow/optical_flow.cpp
+  std::vector<float> err;
+  // cur left ---- cur right
+  cv::calcOpticalFlowPyrLK(
+      left_img,
+      right_img,
+      left_img_keypoints,  // 注意这里只能用cv::Point2f格式！
+      *right_img_keypoints,  // 注意这个得到的结果size和输入的点是一致的，status会标记是否成功跟踪
+      *status,
+      err,
+      cv::Size(21, 21),
+      3);
+
+  // reverse check cur right ---- cur left
+  std::vector<cv::Point2f> reverse_left_img_keypoints;
+  std::vector<uchar> reverse_status;
+  if (config.reverse_check()) {
+    cv::calcOpticalFlowPyrLK(right_img,
+                             left_img,
+                             *right_img_keypoints,
+                             reverse_left_img_keypoints,
+                             reverse_status,
+                             err,
+                             cv::Size(21, 21),
+                             3);
+    for (uint32_t i = 0; i < status->size(); ++i) {
+      if (status->at(i) && reverse_status.at(i) &&
+          Utils::IsInBorder(right_img, right_img_keypoints->at(i)) &&
+          Utils::ComputeDistance(left_img_keypoints.at(i), reverse_left_img_keypoints.at(i)) <=
+              config.pt_err()) {
+        status->at(i) = 1;
+      } else {
+        status->at(i) = 0;
+      }
+    }
+  }
+  int32_t count = std::accumulate(status->begin(), status->end(), 0);
+  if (count < config.min_tracked_nums()) {
+    return false;
+  }
+  return true;
+}
+
+// 基于SVD分解计算对极几何约束计算点的深度值
+bool FeatureManager::TriangulatePoint(const Eigen::Matrix<double, 3, 4>& pose_0,
+                                      const Eigen::Matrix<double, 3, 4>& pose_1,
+                                      const Eigen::Vector2d& point0,
+                                      const Eigen::Vector2d& point1,
+                                      Eigen::Vector3d* const point_3d) const {
+  Eigen::Matrix4d design_matrix = Eigen::Matrix4d::Zero();
+  design_matrix.row(0) = point0[0] * pose_0.row(2) - pose_0.row(0);
+  design_matrix.row(1) = point0[1] * pose_0.row(2) - pose_0.row(1);
+  design_matrix.row(2) = point1[0] * pose_1.row(2) - pose_1.row(0);
+  design_matrix.row(3) = point1[1] * pose_1.row(2) - pose_1.row(1);
+  Eigen::Vector4d triangulated_point;
+  triangulated_point = design_matrix.jacobiSvd(Eigen::ComputeFullV).matrixV().rightCols<1>();
+  point_3d->x() = triangulated_point(0) / triangulated_point(3);
+  point_3d->y() = triangulated_point(1) / triangulated_point(3);
+  point_3d->z() = triangulated_point(2) / triangulated_point(3);
+  return true;
 }
 
 }  // namespace Camera
