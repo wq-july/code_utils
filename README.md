@@ -65,11 +65,11 @@ python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_fi
 ### 视觉部分算法
 
 - 初始化相关
-  - [ ] H矩阵和F矩阵求解和反解；
-  - [ ] SFM算法；
+  - [x] H矩阵和F矩阵求解和反解；
+  - [x] SFM；
 
 - 前端跟踪算法
-  - [x] 实现特征点提取和的匹配的集成算法，基于opencv版本；
+  - [x] 实现特征点提取和的匹配的集成算法；
   - [x] SuperPoint, SuperGlue；
   - [ ] RANSAC异常值剔除算法；
   - [ ] 特征点KL光流跟踪；
@@ -83,6 +83,5 @@ python3 convert2onnx/convert_superglue_to_onnx.py --weight_file superglue_pth_fi
   - [ ] 实现一个简单的边缘化demo算法；
 
 - 基本类
-  - [ ] 图像去畸变；
-  - [ ] 在线标定类，和imu进行标定；
-  - [ ] 相机模型类；
+  - [x] 图像去畸变；
+  - [x] 相机模型类；
