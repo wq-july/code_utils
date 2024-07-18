@@ -95,7 +95,7 @@ void FeatureManager::ExtractFeatures(const cv::Mat& image,
 
 void FeatureManager::Match(const cv::Mat& descriptors0,
                            const cv::Mat& descriptors1,
-                           std::vector<cv::DMatch>& matches) {
+                           std::vector<cv::DMatch>& matches) const {
   switch (config_.matcher_type()) {
     case CameraConfig::MatcherType::SUPERGLUE: {
       Eigen::MatrixXd des0;

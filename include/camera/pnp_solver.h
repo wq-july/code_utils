@@ -29,9 +29,9 @@ class PnpSolver {
                 const std::vector<Eigen::Vector2d>& pt2s,
                 Sophus::SE3d* const relative_pose) const;
 
-  bool P3PSolve(const std::vector<Eigen::Vector3d>& p3ds,
-                const std::vector<Eigen::Vector2d>& pt2s,
-                Sophus::SE3d* const relative_pose) const;
+  bool BAGaussNewtonSolve(const std::vector<Eigen::Vector3d>& p3ds,
+                          const std::vector<Eigen::Vector2d>& pt2s,
+                          Sophus::SE3d* const relative_pose) const;
 
   bool EPNPSolve(const std::vector<Eigen::Vector3d>& p3ds,
                  const std::vector<Eigen::Vector2d>& pt2s,

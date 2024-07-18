@@ -7,21 +7,19 @@ Pinhole::Pinhole(const CameraConfig::PinholeConfig& config) : config_(config) {
   K_(1, 1) = config_.fy();
   K_(0, 2) = config_.cx();
   K_(1, 2) = config_.cy();
+  focal_length_ = config_.focal_length();
   CHECK(K_.determinant() != 0.0) << "Maybe Empty intrinsic matrix, please check !";
 
   inv_fx_ = 1.0 / K_(0, 0);
   inv_fy_ = 1.0 / K_(1, 1);
 
   dist_coef_ = Eigen::Vector4d(config_.k1(), config_.k2(), config_.p1(), config_.p2());
-
-  // K_mat_ =
-  //     cv::Mat_<double>(3, 3) << (K_(0, 0), 0.0, K_(1, 1), 0.0, K_(0, 2), K_(1, 2), 0.0,
-  //     0.0, 1.0);
-
-  // dist_coef_mat_.at<double>(0) = dist_coef_(0);
-  // dist_coef_mat_.at<double>(1) = dist_coef_(1);
-  // dist_coef_mat_.at<double>(2) = dist_coef_(2);
-  // dist_coef_mat_.at<double>(3) = dist_coef_(3);
+  K_mat_ =
+      cv::Mat_<double>(3, 3) << (K_(0, 0), 0.0, K_(1, 1), 0.0, K_(0, 2), K_(1, 2), 0.0, 0.0, 1.0);
+  dist_coef_mat_.at<double>(0) = dist_coef_(0);
+  dist_coef_mat_.at<double>(1) = dist_coef_(1);
+  dist_coef_mat_.at<double>(2) = dist_coef_(2);
+  dist_coef_mat_.at<double>(3) = dist_coef_(3);
 }
 
 std::vector<Eigen::Vector3d> Pinhole::DistPixToCameraP3d(
@@ -39,50 +37,43 @@ std::vector<Eigen::Vector3d> Pinhole::DistPixToCameraP3d(
     return dist_points;
   }
 
-  switch (config_.distort_method()) {
-    case CameraConfig::DistortMethod::OpenCV: {
-      // 函数reshape(int cn,int rows=0) 其中cn为更改后的通道数，rows=0表示这个行将保持原来的参数不变
-      // 为了能够直接调用opencv的函数来去畸变，需要先将矩阵调整为2通道（对应坐标x,y）
-      // cv::undistortPoints最后一个矩阵为空矩阵时，得到的点为归一化坐标点
-      cv::Mat points_mat(points_nums, 2, CV_64F);
-      for (int32_t i = 0; i < points_nums; ++i) {
-        points_mat.at<double>(i, 0) = points[i].x();
-        points_mat.at<double>(i, 1) = points[i].y();
-      }
-      points_mat = points_mat.reshape(2);
-      cv::undistortPoints(points_mat, points_mat, K_mat_, dist_coef_mat_, cv::Mat(), K_mat_);
-      points_mat = points_mat.reshape(1);
+  if (config_.enable_cv_undistort()) {
+    // 函数reshape(int cn,int rows=0) 其中cn为更改后的通道数，rows=0表示这个行将保持原来的参数不变
+    // 为了能够直接调用opencv的函数来去畸变，需要先将矩阵调整为2通道（对应坐标x,y）
+    // cv::undistortPoints最后一个矩阵为空矩阵时，得到的点为归一化坐标点
+    cv::Mat points_mat(points_nums, 2, CV_64F);
+    for (int32_t i = 0; i < points_nums; ++i) {
+      points_mat.at<double>(i, 0) = points[i].x();
+      points_mat.at<double>(i, 1) = points[i].y();
+    }
+    points_mat = points_mat.reshape(2);
+    cv::undistortPoints(points_mat, points_mat, K_mat_, dist_coef_mat_, cv::Mat(), K_mat_);
+    points_mat = points_mat.reshape(1);
 
-      for (int i = 0; i < points_nums; ++i) {
-        Eigen::Vector2d pt = Eigen::Vector2d::Zero();
-        pt.x() = points_mat.at<double>(i, 0);
-        pt.y() = points_mat.at<double>(i, 1);
-        dist_points.emplace_back(PixToCameraP3d(pt));
-      }
-      break;
+    for (int i = 0; i < points_nums; ++i) {
+      Eigen::Vector2d pt = Eigen::Vector2d::Zero();
+      pt.x() = points_mat.at<double>(i, 0);
+      pt.y() = points_mat.at<double>(i, 1);
+      dist_points.emplace_back(PixToCameraP3d(pt));
     }
+
+  } else {
     // VINS中更为高效的迭代方式去畸变， 将原始图像中的点投影到没有畸变的3D点
-    case CameraConfig::DistortMethod::VINSMONO: {
-      int iter_times = config_.iter_times();
-      Eigen::Vector2d camera_p3d = Eigen::Vector2d::Zero();
-      Eigen::Vector2d d_u = Eigen::Vector2d::Zero();
-      for (const auto& pt : points) {
-        camera_p3d = PixToCameraP3d(pt).head<2>();
-        d_u = Eigen::Vector2d::Zero();
-        for (int i = 0; i < iter_times; ++i) {
-          // 此时的camera_p3d - d_u相当于被更新了一次的点A_1
-          // 上面已经迭代了1次，for循环中迭代7次
-          Distortion(camera_p3d - d_u, &d_u);
-        }
-        auto p2d = camera_p3d - d_u;
-        dist_points.emplace_back(Eigen::Vector3d(p2d.x(), p2d.y(), 1.0));
+    int iter_times = config_.iter_times();
+    Eigen::Vector2d camera_p3d = Eigen::Vector2d::Zero();
+    Eigen::Vector2d d_u = Eigen::Vector2d::Zero();
+    for (const auto& pt : points) {
+      camera_p3d = PixToCameraP3d(pt).head<2>();
+      d_u = Eigen::Vector2d::Zero();
+      for (int i = 0; i < iter_times; ++i) {
+        // 此时的camera_p3d - d_u相当于被更新了一次的点A_1
+        Distortion(camera_p3d - d_u, &d_u);
       }
-      break;
+      auto p2d = camera_p3d - d_u;
+      dist_points.emplace_back(Eigen::Vector3d(p2d.x(), p2d.y(), 1.0));
     }
-    default:
-      LOG(ERROR) << "Unknown distort method !";
-      break;
   }
+
   return dist_points;
 }
 
