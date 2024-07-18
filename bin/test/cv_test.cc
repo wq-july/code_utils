@@ -52,27 +52,27 @@ class CVTest : public testing::Test {
 
       // 绘制关键点的方形框和中间的圆圈
       cv::rectangle(img_matches,
-                    cv::Point(pt1.x - 5, pt1.y - 5),
-                    cv::Point(pt1.x + 5, pt1.y + 5),
+                    cv::Point(pt1.x - 3, pt1.y - 3),
+                    cv::Point(pt1.x + 3, pt1.y + 3),
                     cv::Scalar(255, 0, 0),
                     1,
                     cv::LINE_AA);
-      cv::circle(img_matches, pt1, 3, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
+      cv::circle(img_matches, pt1, 2, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
 
       cv::rectangle(img_matches,
-                    cv::Point(pt2.x - 5, pt2.y - 5),
-                    cv::Point(pt2.x + 5, pt2.y + 5),
+                    cv::Point(pt2.x - 3, pt2.y - 3),
+                    cv::Point(pt2.x + 3, pt2.y + 3),
                     cv::Scalar(255, 0, 0),
                     1,
                     cv::LINE_AA);
-      cv::circle(img_matches, pt2, 3, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
+      cv::circle(img_matches, pt2, 2, cv::Scalar(255, 0, 0), cv::FILLED, cv::LINE_AA);
 
       // 绘制匹配线
       cv::line(img_matches,
                pt1,
                pt2,
                cv::Scalar(0, 255, 0),
-               1,
+               2,
                cv::LINE_AA);  // 绿色线条，宽度为2，抗锯齿
     }
 

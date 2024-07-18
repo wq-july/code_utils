@@ -93,11 +93,14 @@ add_library(code_utils_libs
     src/optimizer/slam_data_struct.cc
     src/lidar/match.cc
     src/lidar/filter.cc
+    src/camera/camera_model/fisheye.cc
+    src/camera/camera_model/pinhole.cc
     src/camera/feature_manager.cc
     src/camera/super_point.cc
     src/camera/super_glue.cc
-    src/camera/inference.cc
-    src/camera/transforms.cc
+    src/camera/open_stereo/inference.cc
+    src/camera/open_stereo/transforms.cc
+    src/camera/pnp_solver.cc
     src/tensorRT/generic.cc
     src/tensorRT/logger.cc
 )
