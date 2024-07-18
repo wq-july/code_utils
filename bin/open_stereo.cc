@@ -3,9 +3,9 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 
-#include "camera/inference.h"
-#include "camera/transforms.h"
-#include "camera/utils.h"
+#include "camera/open_stereo/inference.h"
+#include "camera/open_stereo/transforms.h"
+#include "camera/open_stereo/utils.h"
 
 // Global variables for options
 bool VERBOSE = 0;

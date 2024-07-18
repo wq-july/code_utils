@@ -10,8 +10,9 @@
 #include "opencv2/xfeatures2d/nonfree.hpp"
 
 #include "../protos/pb/camera.pb.h"
-#include "camera/features.h"
-#include "camera/frame.h"
+#include "camera/camera_model/camera_model.h"
+#include "camera/common/features.h"
+#include "camera/common/frame.h"
 #include "camera/super_glue.h"
 #include "camera/super_point.h"
 #include "util/time.h"
@@ -19,9 +20,12 @@
 
 namespace Camera {
 
+class KeyFrame;
+
 class FeatureManager {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+ public:
   FeatureManager(const CameraConfig::FeatureConfig& config);
   void ExtractFeatures(const cv::Mat& image,
                        std::vector<cv::KeyPoint>* const keypoints,
@@ -42,13 +46,8 @@ class FeatureManager {
   // 基于TensorRT，https://github.com/XiandaGuo/OpenStereo/blob/v2/deploy/cpp/main.cpp
   bool OpenStereoMatch();
 
-  bool TriangulatePoint(const Eigen::Matrix<double, 3, 4>& Pose0,
-                        const Eigen::Matrix<double, 3, 4>& Pose1,
-                        const Eigen::Vector2d& point0,
-                        const Eigen::Vector2d& point1,
-                        Eigen::Vector3d* const point_3d) const;
-
  private:
+  void Initialize();
   void CreateFeatureDetector();
   void CreateDescriptorExtractor();
   void CreateMatcher();
@@ -58,6 +57,7 @@ class FeatureManager {
   cv::Ptr<cv::Feature2D> detector_ = nullptr;
   cv::Ptr<cv::Feature2D> descriptor_ = nullptr;
   cv::Ptr<cv::DescriptorMatcher> matcher_ = nullptr;
+  std::shared_ptr<CameraBase> camera_model_ = nullptr;
   Utils::Timer timer_;
 };
 }  // namespace Camera

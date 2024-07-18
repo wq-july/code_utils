@@ -5,12 +5,11 @@ namespace Camera {
 
 FeatureManager::FeatureManager(const CameraConfig::FeatureConfig& config) : config_(config) {
   std::cout << "Initializing FeatureManager... \n";
-  CreateFeatureDetector();
-  CreateDescriptorExtractor();
-  CreateMatcher();
+  Initialize();
 }
 
-void FeatureManager::CreateFeatureDetector() {
+void FeatureManager::Initialize() {
+  // 创建特征点提取器
   switch (config_.feature_type()) {
     case CameraConfig::FeatureType::F_SIFT:
       detector_ = cv::SIFT::create();
@@ -34,9 +33,8 @@ void FeatureManager::CreateFeatureDetector() {
       std::cerr << "Unknown feature type." << std::endl;
       break;
   }
-}
 
-void FeatureManager::CreateDescriptorExtractor() {
+  // 创建描述符提取器
   switch (config_.descriptor_type()) {
     case CameraConfig::DescriptorType::D_SIFT:
       descriptor_ = cv::SIFT::create();
@@ -59,9 +57,8 @@ void FeatureManager::CreateDescriptorExtractor() {
       std::cerr << "Unknown descriptor type." << std::endl;
       break;
   }
-}
 
-void FeatureManager::CreateMatcher() {
+  // 创建特征点匹配器
   switch (config_.matcher_type()) {
     case CameraConfig::MatcherType::SUPERGLUE:
       matcher_ = Camera::SuperGlue::create(config_.super_glue());
@@ -76,7 +73,11 @@ void FeatureManager::CreateMatcher() {
       std::cerr << "Unknown matcher type." << std::endl;
       break;
   }
+
+  // 初始化其他指针成员变量
+  // .....
 }
+
 void FeatureManager::ExtractFeatures(const cv::Mat& image,
                                      std::vector<cv::KeyPoint>* const keypoints,
                                      cv::Mat* const descriptors) {
@@ -168,25 +169,6 @@ bool FeatureManager::KLOpticalFlowTrack(const cv::Mat& left_img,
   if (count < config.min_tracked_nums()) {
     return false;
   }
-  return true;
-}
-
-// 基于SVD分解计算对极几何约束计算点的深度值
-bool FeatureManager::TriangulatePoint(const Eigen::Matrix<double, 3, 4>& pose_0,
-                                      const Eigen::Matrix<double, 3, 4>& pose_1,
-                                      const Eigen::Vector2d& point0,
-                                      const Eigen::Vector2d& point1,
-                                      Eigen::Vector3d* const point_3d) const {
-  Eigen::Matrix4d design_matrix = Eigen::Matrix4d::Zero();
-  design_matrix.row(0) = point0[0] * pose_0.row(2) - pose_0.row(0);
-  design_matrix.row(1) = point0[1] * pose_0.row(2) - pose_0.row(1);
-  design_matrix.row(2) = point1[0] * pose_1.row(2) - pose_1.row(0);
-  design_matrix.row(3) = point1[1] * pose_1.row(2) - pose_1.row(1);
-  Eigen::Vector4d triangulated_point;
-  triangulated_point = design_matrix.jacobiSvd(Eigen::ComputeFullV).matrixV().rightCols<1>();
-  point_3d->x() = triangulated_point(0) / triangulated_point(3);
-  point_3d->y() = triangulated_point(1) / triangulated_point(3);
-  point_3d->z() = triangulated_point(2) / triangulated_point(3);
   return true;
 }
 

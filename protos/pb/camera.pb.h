@@ -40,7 +40,7 @@ namespace protobuf_camera_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[9];
+  static const ::google::protobuf::internal::ParseTable schema[13];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -60,6 +60,9 @@ extern FeatureConfigDefaultTypeInternal _FeatureConfig_default_instance_;
 class FeatureTrackerConfig;
 class FeatureTrackerConfigDefaultTypeInternal;
 extern FeatureTrackerConfigDefaultTypeInternal _FeatureTrackerConfig_default_instance_;
+class FishEyeConfig;
+class FishEyeConfigDefaultTypeInternal;
+extern FishEyeConfigDefaultTypeInternal _FishEyeConfig_default_instance_;
 class KLOpticalFlowConfig;
 class KLOpticalFlowConfigDefaultTypeInternal;
 extern KLOpticalFlowConfigDefaultTypeInternal _KLOpticalFlowConfig_default_instance_;
@@ -69,6 +72,15 @@ extern ORBSLAMDefaultTypeInternal _ORBSLAM_default_instance_;
 class OpenStereoConfig;
 class OpenStereoConfigDefaultTypeInternal;
 extern OpenStereoConfigDefaultTypeInternal _OpenStereoConfig_default_instance_;
+class PinholeConfig;
+class PinholeConfigDefaultTypeInternal;
+extern PinholeConfigDefaultTypeInternal _PinholeConfig_default_instance_;
+class PnpSolverConfig;
+class PnpSolverConfigDefaultTypeInternal;
+extern PnpSolverConfigDefaultTypeInternal _PnpSolverConfig_default_instance_;
+class SFM;
+class SFMDefaultTypeInternal;
+extern SFMDefaultTypeInternal _SFM_default_instance_;
 class SuperGlue;
 class SuperGlueDefaultTypeInternal;
 extern SuperGlueDefaultTypeInternal _SuperGlue_default_instance_;
@@ -82,15 +94,115 @@ template<> ::CameraConfig::CameraModel* Arena::CreateMaybeMessage<::CameraConfig
 template<> ::CameraConfig::Config* Arena::CreateMaybeMessage<::CameraConfig::Config>(Arena*);
 template<> ::CameraConfig::FeatureConfig* Arena::CreateMaybeMessage<::CameraConfig::FeatureConfig>(Arena*);
 template<> ::CameraConfig::FeatureTrackerConfig* Arena::CreateMaybeMessage<::CameraConfig::FeatureTrackerConfig>(Arena*);
+template<> ::CameraConfig::FishEyeConfig* Arena::CreateMaybeMessage<::CameraConfig::FishEyeConfig>(Arena*);
 template<> ::CameraConfig::KLOpticalFlowConfig* Arena::CreateMaybeMessage<::CameraConfig::KLOpticalFlowConfig>(Arena*);
 template<> ::CameraConfig::ORBSLAM* Arena::CreateMaybeMessage<::CameraConfig::ORBSLAM>(Arena*);
 template<> ::CameraConfig::OpenStereoConfig* Arena::CreateMaybeMessage<::CameraConfig::OpenStereoConfig>(Arena*);
+template<> ::CameraConfig::PinholeConfig* Arena::CreateMaybeMessage<::CameraConfig::PinholeConfig>(Arena*);
+template<> ::CameraConfig::PnpSolverConfig* Arena::CreateMaybeMessage<::CameraConfig::PnpSolverConfig>(Arena*);
+template<> ::CameraConfig::SFM* Arena::CreateMaybeMessage<::CameraConfig::SFM>(Arena*);
 template<> ::CameraConfig::SuperGlue* Arena::CreateMaybeMessage<::CameraConfig::SuperGlue>(Arena*);
 template<> ::CameraConfig::SuperPoint* Arena::CreateMaybeMessage<::CameraConfig::SuperPoint>(Arena*);
 }  // namespace protobuf
 }  // namespace google
 namespace CameraConfig {
 
+enum FeatureTrackerConfig_TrackerMothod {
+  FeatureTrackerConfig_TrackerMothod_KLOPTICALFLOW = 0,
+  FeatureTrackerConfig_TrackerMothod_FEATUREMATCH = 1,
+  FeatureTrackerConfig_TrackerMothod_FeatureTrackerConfig_TrackerMothod_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  FeatureTrackerConfig_TrackerMothod_FeatureTrackerConfig_TrackerMothod_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool FeatureTrackerConfig_TrackerMothod_IsValid(int value);
+const FeatureTrackerConfig_TrackerMothod FeatureTrackerConfig_TrackerMothod_TrackerMothod_MIN = FeatureTrackerConfig_TrackerMothod_KLOPTICALFLOW;
+const FeatureTrackerConfig_TrackerMothod FeatureTrackerConfig_TrackerMothod_TrackerMothod_MAX = FeatureTrackerConfig_TrackerMothod_FEATUREMATCH;
+const int FeatureTrackerConfig_TrackerMothod_TrackerMothod_ARRAYSIZE = FeatureTrackerConfig_TrackerMothod_TrackerMothod_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* FeatureTrackerConfig_TrackerMothod_descriptor();
+inline const ::std::string& FeatureTrackerConfig_TrackerMothod_Name(FeatureTrackerConfig_TrackerMothod value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    FeatureTrackerConfig_TrackerMothod_descriptor(), value);
+}
+inline bool FeatureTrackerConfig_TrackerMothod_Parse(
+    const ::std::string& name, FeatureTrackerConfig_TrackerMothod* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<FeatureTrackerConfig_TrackerMothod>(
+    FeatureTrackerConfig_TrackerMothod_descriptor(), name, value);
+}
+enum CameraModel_CameraType {
+  CameraModel_CameraType_PINHOLE = 0,
+  CameraModel_CameraType_FISHEYE = 1,
+  CameraModel_CameraType_CameraModel_CameraType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  CameraModel_CameraType_CameraModel_CameraType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool CameraModel_CameraType_IsValid(int value);
+const CameraModel_CameraType CameraModel_CameraType_CameraType_MIN = CameraModel_CameraType_PINHOLE;
+const CameraModel_CameraType CameraModel_CameraType_CameraType_MAX = CameraModel_CameraType_FISHEYE;
+const int CameraModel_CameraType_CameraType_ARRAYSIZE = CameraModel_CameraType_CameraType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* CameraModel_CameraType_descriptor();
+inline const ::std::string& CameraModel_CameraType_Name(CameraModel_CameraType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    CameraModel_CameraType_descriptor(), value);
+}
+inline bool CameraModel_CameraType_Parse(
+    const ::std::string& name, CameraModel_CameraType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<CameraModel_CameraType>(
+    CameraModel_CameraType_descriptor(), name, value);
+}
+enum PnpSolverConfig_PnpSolveMethod {
+  PnpSolverConfig_PnpSolveMethod_DLT = 0,
+  PnpSolverConfig_PnpSolveMethod_P3P = 1,
+  PnpSolverConfig_PnpSolveMethod_EPNP = 2,
+  PnpSolverConfig_PnpSolveMethod_MLPNP = 3,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_ITERATIVE = 4,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_EPNP = 5,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_P3P = 6,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_DLS = 7,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_UPNP = 8,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_AP3P = 9,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE = 10,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE_SQUARE = 11,
+  PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_SQPNP = 12,
+  PnpSolverConfig_PnpSolveMethod_PnpSolverConfig_PnpSolveMethod_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  PnpSolverConfig_PnpSolveMethod_PnpSolverConfig_PnpSolveMethod_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool PnpSolverConfig_PnpSolveMethod_IsValid(int value);
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_MIN = PnpSolverConfig_PnpSolveMethod_DLT;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_MAX = PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_SQPNP;
+const int PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_ARRAYSIZE = PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* PnpSolverConfig_PnpSolveMethod_descriptor();
+inline const ::std::string& PnpSolverConfig_PnpSolveMethod_Name(PnpSolverConfig_PnpSolveMethod value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    PnpSolverConfig_PnpSolveMethod_descriptor(), value);
+}
+inline bool PnpSolverConfig_PnpSolveMethod_Parse(
+    const ::std::string& name, PnpSolverConfig_PnpSolveMethod* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<PnpSolverConfig_PnpSolveMethod>(
+    PnpSolverConfig_PnpSolveMethod_descriptor(), name, value);
+}
+enum MatcherType {
+  HANMING = 0,
+  FLANN = 1,
+  SUPERGLUE = 2,
+  MatcherType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  MatcherType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool MatcherType_IsValid(int value);
+const MatcherType MatcherType_MIN = HANMING;
+const MatcherType MatcherType_MAX = SUPERGLUE;
+const int MatcherType_ARRAYSIZE = MatcherType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* MatcherType_descriptor();
+inline const ::std::string& MatcherType_Name(MatcherType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    MatcherType_descriptor(), value);
+}
+inline bool MatcherType_Parse(
+    const ::std::string& name, MatcherType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MatcherType>(
+    MatcherType_descriptor(), name, value);
+}
 enum FeatureType {
   F_SIFT = 0,
   F_SURF = 1,
@@ -141,47 +253,26 @@ inline bool DescriptorType_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<DescriptorType>(
     DescriptorType_descriptor(), name, value);
 }
-enum MatcherType {
-  HANMING = 0,
-  FLANN = 1,
-  SUPERGLUE = 2,
-  MatcherType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
-  MatcherType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+enum DistortMethod {
+  OpenCV = 0,
+  VINSMONO = 1,
+  DistortMethod_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  DistortMethod_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
-bool MatcherType_IsValid(int value);
-const MatcherType MatcherType_MIN = HANMING;
-const MatcherType MatcherType_MAX = SUPERGLUE;
-const int MatcherType_ARRAYSIZE = MatcherType_MAX + 1;
+bool DistortMethod_IsValid(int value);
+const DistortMethod DistortMethod_MIN = OpenCV;
+const DistortMethod DistortMethod_MAX = VINSMONO;
+const int DistortMethod_ARRAYSIZE = DistortMethod_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* MatcherType_descriptor();
-inline const ::std::string& MatcherType_Name(MatcherType value) {
+const ::google::protobuf::EnumDescriptor* DistortMethod_descriptor();
+inline const ::std::string& DistortMethod_Name(DistortMethod value) {
   return ::google::protobuf::internal::NameOfEnum(
-    MatcherType_descriptor(), value);
+    DistortMethod_descriptor(), value);
 }
-inline bool MatcherType_Parse(
-    const ::std::string& name, MatcherType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<MatcherType>(
-    MatcherType_descriptor(), name, value);
-}
-enum TrackerMothod {
-  KLOPTICALFLOW = 0,
-  TrackerMothod_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
-  TrackerMothod_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
-};
-bool TrackerMothod_IsValid(int value);
-const TrackerMothod TrackerMothod_MIN = KLOPTICALFLOW;
-const TrackerMothod TrackerMothod_MAX = KLOPTICALFLOW;
-const int TrackerMothod_ARRAYSIZE = TrackerMothod_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* TrackerMothod_descriptor();
-inline const ::std::string& TrackerMothod_Name(TrackerMothod value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    TrackerMothod_descriptor(), value);
-}
-inline bool TrackerMothod_Parse(
-    const ::std::string& name, TrackerMothod* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<TrackerMothod>(
-    TrackerMothod_descriptor(), name, value);
+inline bool DistortMethod_Parse(
+    const ::std::string& name, DistortMethod* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DistortMethod>(
+    DistortMethod_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -828,6 +919,32 @@ class FeatureTrackerConfig : public ::google::protobuf::Message /* @@protoc_inse
 
   // nested types ----------------------------------------------------
 
+  typedef FeatureTrackerConfig_TrackerMothod TrackerMothod;
+  static const TrackerMothod KLOPTICALFLOW =
+    FeatureTrackerConfig_TrackerMothod_KLOPTICALFLOW;
+  static const TrackerMothod FEATUREMATCH =
+    FeatureTrackerConfig_TrackerMothod_FEATUREMATCH;
+  static inline bool TrackerMothod_IsValid(int value) {
+    return FeatureTrackerConfig_TrackerMothod_IsValid(value);
+  }
+  static const TrackerMothod TrackerMothod_MIN =
+    FeatureTrackerConfig_TrackerMothod_TrackerMothod_MIN;
+  static const TrackerMothod TrackerMothod_MAX =
+    FeatureTrackerConfig_TrackerMothod_TrackerMothod_MAX;
+  static const int TrackerMothod_ARRAYSIZE =
+    FeatureTrackerConfig_TrackerMothod_TrackerMothod_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  TrackerMothod_descriptor() {
+    return FeatureTrackerConfig_TrackerMothod_descriptor();
+  }
+  static inline const ::std::string& TrackerMothod_Name(TrackerMothod value) {
+    return FeatureTrackerConfig_TrackerMothod_Name(value);
+  }
+  static inline bool TrackerMothod_Parse(const ::std::string& name,
+      TrackerMothod* value) {
+    return FeatureTrackerConfig_TrackerMothod_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // .CameraConfig.KLOpticalFlowConfig kloptical_flow_config = 2;
@@ -854,11 +971,11 @@ class FeatureTrackerConfig : public ::google::protobuf::Message /* @@protoc_inse
   ::CameraConfig::OpenStereoConfig* mutable_open_stereo_config();
   void set_allocated_open_stereo_config(::CameraConfig::OpenStereoConfig* open_stereo_config);
 
-  // .CameraConfig.TrackerMothod tracker_method = 1;
+  // .CameraConfig.FeatureTrackerConfig.TrackerMothod tracker_method = 1;
   void clear_tracker_method();
   static const int kTrackerMethodFieldNumber = 1;
-  ::CameraConfig::TrackerMothod tracker_method() const;
-  void set_tracker_method(::CameraConfig::TrackerMothod value);
+  ::CameraConfig::FeatureTrackerConfig_TrackerMothod tracker_method() const;
+  void set_tracker_method(::CameraConfig::FeatureTrackerConfig_TrackerMothod value);
 
   // @@protoc_insertion_point(class_scope:CameraConfig.FeatureTrackerConfig)
  private:
@@ -867,6 +984,115 @@ class FeatureTrackerConfig : public ::google::protobuf::Message /* @@protoc_inse
   ::CameraConfig::KLOpticalFlowConfig* kloptical_flow_config_;
   ::CameraConfig::OpenStereoConfig* open_stereo_config_;
   int tracker_method_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class OpenStereoConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.OpenStereoConfig) */ {
+ public:
+  OpenStereoConfig();
+  virtual ~OpenStereoConfig();
+
+  OpenStereoConfig(const OpenStereoConfig& from);
+
+  inline OpenStereoConfig& operator=(const OpenStereoConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  OpenStereoConfig(OpenStereoConfig&& from) noexcept
+    : OpenStereoConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline OpenStereoConfig& operator=(OpenStereoConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const OpenStereoConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const OpenStereoConfig* internal_default_instance() {
+    return reinterpret_cast<const OpenStereoConfig*>(
+               &_OpenStereoConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  void Swap(OpenStereoConfig* other);
+  friend void swap(OpenStereoConfig& a, OpenStereoConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OpenStereoConfig* New() const final {
+    return CreateMaybeMessage<OpenStereoConfig>(NULL);
+  }
+
+  OpenStereoConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<OpenStereoConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const OpenStereoConfig& from);
+  void MergeFrom(const OpenStereoConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OpenStereoConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // .TensorRTConfig.Config tensor_config = 1;
+  bool has_tensor_config() const;
+  void clear_tensor_config();
+  static const int kTensorConfigFieldNumber = 1;
+  private:
+  const ::TensorRTConfig::Config& _internal_tensor_config() const;
+  public:
+  const ::TensorRTConfig::Config& tensor_config() const;
+  ::TensorRTConfig::Config* release_tensor_config();
+  ::TensorRTConfig::Config* mutable_tensor_config();
+  void set_allocated_tensor_config(::TensorRTConfig::Config* tensor_config);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.OpenStereoConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::TensorRTConfig::Config* tensor_config_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_camera_2eproto::TableStruct;
 };
@@ -907,7 +1133,7 @@ class KLOpticalFlowConfig : public ::google::protobuf::Message /* @@protoc_inser
                &_KLOpticalFlowConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(KLOpticalFlowConfig* other);
   friend void swap(KLOpticalFlowConfig& a, KLOpticalFlowConfig& b) {
@@ -984,115 +1210,6 @@ class KLOpticalFlowConfig : public ::google::protobuf::Message /* @@protoc_inser
   double pt_err_;
   bool reverse_check_;
   ::google::protobuf::int32 min_tracked_nums_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  friend struct ::protobuf_camera_2eproto::TableStruct;
-};
-// -------------------------------------------------------------------
-
-class OpenStereoConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.OpenStereoConfig) */ {
- public:
-  OpenStereoConfig();
-  virtual ~OpenStereoConfig();
-
-  OpenStereoConfig(const OpenStereoConfig& from);
-
-  inline OpenStereoConfig& operator=(const OpenStereoConfig& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  #if LANG_CXX11
-  OpenStereoConfig(OpenStereoConfig&& from) noexcept
-    : OpenStereoConfig() {
-    *this = ::std::move(from);
-  }
-
-  inline OpenStereoConfig& operator=(OpenStereoConfig&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-  #endif
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const OpenStereoConfig& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const OpenStereoConfig* internal_default_instance() {
-    return reinterpret_cast<const OpenStereoConfig*>(
-               &_OpenStereoConfig_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    6;
-
-  void Swap(OpenStereoConfig* other);
-  friend void swap(OpenStereoConfig& a, OpenStereoConfig& b) {
-    a.Swap(&b);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline OpenStereoConfig* New() const final {
-    return CreateMaybeMessage<OpenStereoConfig>(NULL);
-  }
-
-  OpenStereoConfig* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<OpenStereoConfig>(arena);
-  }
-  void CopyFrom(const ::google::protobuf::Message& from) final;
-  void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const OpenStereoConfig& from);
-  void MergeFrom(const OpenStereoConfig& from);
-  void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) final;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const final;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(OpenStereoConfig* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // .TensorRTConfig.Config tensor_config = 1;
-  bool has_tensor_config() const;
-  void clear_tensor_config();
-  static const int kTensorConfigFieldNumber = 1;
-  private:
-  const ::TensorRTConfig::Config& _internal_tensor_config() const;
-  public:
-  const ::TensorRTConfig::Config& tensor_config() const;
-  ::TensorRTConfig::Config* release_tensor_config();
-  ::TensorRTConfig::Config* mutable_tensor_config();
-  void set_allocated_tensor_config(::TensorRTConfig::Config* tensor_config);
-
-  // @@protoc_insertion_point(class_scope:CameraConfig.OpenStereoConfig)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::TensorRTConfig::Config* tensor_config_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_camera_2eproto::TableStruct;
 };
@@ -1194,6 +1311,331 @@ class ORBSLAM : public ::google::protobuf::Message /* @@protoc_insertion_point(c
 };
 // -------------------------------------------------------------------
 
+class PinholeConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.PinholeConfig) */ {
+ public:
+  PinholeConfig();
+  virtual ~PinholeConfig();
+
+  PinholeConfig(const PinholeConfig& from);
+
+  inline PinholeConfig& operator=(const PinholeConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PinholeConfig(PinholeConfig&& from) noexcept
+    : PinholeConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline PinholeConfig& operator=(PinholeConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PinholeConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PinholeConfig* internal_default_instance() {
+    return reinterpret_cast<const PinholeConfig*>(
+               &_PinholeConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  void Swap(PinholeConfig* other);
+  friend void swap(PinholeConfig& a, PinholeConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PinholeConfig* New() const final {
+    return CreateMaybeMessage<PinholeConfig>(NULL);
+  }
+
+  PinholeConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PinholeConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PinholeConfig& from);
+  void MergeFrom(const PinholeConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PinholeConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // double fx = 1;
+  void clear_fx();
+  static const int kFxFieldNumber = 1;
+  double fx() const;
+  void set_fx(double value);
+
+  // double fy = 2;
+  void clear_fy();
+  static const int kFyFieldNumber = 2;
+  double fy() const;
+  void set_fy(double value);
+
+  // double cx = 3;
+  void clear_cx();
+  static const int kCxFieldNumber = 3;
+  double cx() const;
+  void set_cx(double value);
+
+  // double cy = 4;
+  void clear_cy();
+  static const int kCyFieldNumber = 4;
+  double cy() const;
+  void set_cy(double value);
+
+  // double k1 = 5;
+  void clear_k1();
+  static const int kK1FieldNumber = 5;
+  double k1() const;
+  void set_k1(double value);
+
+  // double k2 = 6;
+  void clear_k2();
+  static const int kK2FieldNumber = 6;
+  double k2() const;
+  void set_k2(double value);
+
+  // double p1 = 7;
+  void clear_p1();
+  static const int kP1FieldNumber = 7;
+  double p1() const;
+  void set_p1(double value);
+
+  // double p2 = 8;
+  void clear_p2();
+  static const int kP2FieldNumber = 8;
+  double p2() const;
+  void set_p2(double value);
+
+  // int32 iter_times = 9;
+  void clear_iter_times();
+  static const int kIterTimesFieldNumber = 9;
+  ::google::protobuf::int32 iter_times() const;
+  void set_iter_times(::google::protobuf::int32 value);
+
+  // .CameraConfig.DistortMethod distort_method = 10;
+  void clear_distort_method();
+  static const int kDistortMethodFieldNumber = 10;
+  ::CameraConfig::DistortMethod distort_method() const;
+  void set_distort_method(::CameraConfig::DistortMethod value);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.PinholeConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  double fx_;
+  double fy_;
+  double cx_;
+  double cy_;
+  double k1_;
+  double k2_;
+  double p1_;
+  double p2_;
+  ::google::protobuf::int32 iter_times_;
+  int distort_method_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class FishEyeConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.FishEyeConfig) */ {
+ public:
+  FishEyeConfig();
+  virtual ~FishEyeConfig();
+
+  FishEyeConfig(const FishEyeConfig& from);
+
+  inline FishEyeConfig& operator=(const FishEyeConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  FishEyeConfig(FishEyeConfig&& from) noexcept
+    : FishEyeConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline FishEyeConfig& operator=(FishEyeConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FishEyeConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const FishEyeConfig* internal_default_instance() {
+    return reinterpret_cast<const FishEyeConfig*>(
+               &_FishEyeConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  void Swap(FishEyeConfig* other);
+  friend void swap(FishEyeConfig& a, FishEyeConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline FishEyeConfig* New() const final {
+    return CreateMaybeMessage<FishEyeConfig>(NULL);
+  }
+
+  FishEyeConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<FishEyeConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const FishEyeConfig& from);
+  void MergeFrom(const FishEyeConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FishEyeConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // double fx = 1;
+  void clear_fx();
+  static const int kFxFieldNumber = 1;
+  double fx() const;
+  void set_fx(double value);
+
+  // double fy = 2;
+  void clear_fy();
+  static const int kFyFieldNumber = 2;
+  double fy() const;
+  void set_fy(double value);
+
+  // double cx = 3;
+  void clear_cx();
+  static const int kCxFieldNumber = 3;
+  double cx() const;
+  void set_cx(double value);
+
+  // double cy = 4;
+  void clear_cy();
+  static const int kCyFieldNumber = 4;
+  double cy() const;
+  void set_cy(double value);
+
+  // double k1 = 5;
+  void clear_k1();
+  static const int kK1FieldNumber = 5;
+  double k1() const;
+  void set_k1(double value);
+
+  // double k2 = 6;
+  void clear_k2();
+  static const int kK2FieldNumber = 6;
+  double k2() const;
+  void set_k2(double value);
+
+  // double k3 = 7;
+  void clear_k3();
+  static const int kK3FieldNumber = 7;
+  double k3() const;
+  void set_k3(double value);
+
+  // double k4 = 8;
+  void clear_k4();
+  static const int kK4FieldNumber = 8;
+  double k4() const;
+  void set_k4(double value);
+
+  // int32 iter_times = 9;
+  void clear_iter_times();
+  static const int kIterTimesFieldNumber = 9;
+  ::google::protobuf::int32 iter_times() const;
+  void set_iter_times(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.FishEyeConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  double fx_;
+  double fy_;
+  double cx_;
+  double cy_;
+  double k1_;
+  double k2_;
+  double k3_;
+  double k4_;
+  ::google::protobuf::int32 iter_times_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class CameraModel : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.CameraModel) */ {
  public:
   CameraModel();
@@ -1229,7 +1671,7 @@ class CameraModel : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_CameraModel_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   void Swap(CameraModel* other);
   friend void swap(CameraModel& a, CameraModel& b) {
@@ -1279,12 +1721,318 @@ class CameraModel : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // nested types ----------------------------------------------------
 
+  typedef CameraModel_CameraType CameraType;
+  static const CameraType PINHOLE =
+    CameraModel_CameraType_PINHOLE;
+  static const CameraType FISHEYE =
+    CameraModel_CameraType_FISHEYE;
+  static inline bool CameraType_IsValid(int value) {
+    return CameraModel_CameraType_IsValid(value);
+  }
+  static const CameraType CameraType_MIN =
+    CameraModel_CameraType_CameraType_MIN;
+  static const CameraType CameraType_MAX =
+    CameraModel_CameraType_CameraType_MAX;
+  static const int CameraType_ARRAYSIZE =
+    CameraModel_CameraType_CameraType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  CameraType_descriptor() {
+    return CameraModel_CameraType_descriptor();
+  }
+  static inline const ::std::string& CameraType_Name(CameraType value) {
+    return CameraModel_CameraType_Name(value);
+  }
+  static inline bool CameraType_Parse(const ::std::string& name,
+      CameraType* value) {
+    return CameraModel_CameraType_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
+
+  // .CameraConfig.PinholeConfig pinhole_config = 2;
+  bool has_pinhole_config() const;
+  void clear_pinhole_config();
+  static const int kPinholeConfigFieldNumber = 2;
+  private:
+  const ::CameraConfig::PinholeConfig& _internal_pinhole_config() const;
+  public:
+  const ::CameraConfig::PinholeConfig& pinhole_config() const;
+  ::CameraConfig::PinholeConfig* release_pinhole_config();
+  ::CameraConfig::PinholeConfig* mutable_pinhole_config();
+  void set_allocated_pinhole_config(::CameraConfig::PinholeConfig* pinhole_config);
+
+  // .CameraConfig.FishEyeConfig fish_eye_config = 3;
+  bool has_fish_eye_config() const;
+  void clear_fish_eye_config();
+  static const int kFishEyeConfigFieldNumber = 3;
+  private:
+  const ::CameraConfig::FishEyeConfig& _internal_fish_eye_config() const;
+  public:
+  const ::CameraConfig::FishEyeConfig& fish_eye_config() const;
+  ::CameraConfig::FishEyeConfig* release_fish_eye_config();
+  ::CameraConfig::FishEyeConfig* mutable_fish_eye_config();
+  void set_allocated_fish_eye_config(::CameraConfig::FishEyeConfig* fish_eye_config);
+
+  // .CameraConfig.CameraModel.CameraType type = 1;
+  void clear_type();
+  static const int kTypeFieldNumber = 1;
+  ::CameraConfig::CameraModel_CameraType type() const;
+  void set_type(::CameraConfig::CameraModel_CameraType value);
 
   // @@protoc_insertion_point(class_scope:CameraConfig.CameraModel)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::CameraConfig::PinholeConfig* pinhole_config_;
+  ::CameraConfig::FishEyeConfig* fish_eye_config_;
+  int type_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class SFM : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.SFM) */ {
+ public:
+  SFM();
+  virtual ~SFM();
+
+  SFM(const SFM& from);
+
+  inline SFM& operator=(const SFM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SFM(SFM&& from) noexcept
+    : SFM() {
+    *this = ::std::move(from);
+  }
+
+  inline SFM& operator=(SFM&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SFM& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SFM* internal_default_instance() {
+    return reinterpret_cast<const SFM*>(
+               &_SFM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    11;
+
+  void Swap(SFM* other);
+  friend void swap(SFM& a, SFM& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SFM* New() const final {
+    return CreateMaybeMessage<SFM>(NULL);
+  }
+
+  SFM* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SFM>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SFM& from);
+  void MergeFrom(const SFM& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SFM* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.SFM)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_camera_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class PnpSolverConfig : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CameraConfig.PnpSolverConfig) */ {
+ public:
+  PnpSolverConfig();
+  virtual ~PnpSolverConfig();
+
+  PnpSolverConfig(const PnpSolverConfig& from);
+
+  inline PnpSolverConfig& operator=(const PnpSolverConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PnpSolverConfig(PnpSolverConfig&& from) noexcept
+    : PnpSolverConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline PnpSolverConfig& operator=(PnpSolverConfig&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PnpSolverConfig& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PnpSolverConfig* internal_default_instance() {
+    return reinterpret_cast<const PnpSolverConfig*>(
+               &_PnpSolverConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    12;
+
+  void Swap(PnpSolverConfig* other);
+  friend void swap(PnpSolverConfig& a, PnpSolverConfig& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PnpSolverConfig* New() const final {
+    return CreateMaybeMessage<PnpSolverConfig>(NULL);
+  }
+
+  PnpSolverConfig* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PnpSolverConfig>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PnpSolverConfig& from);
+  void MergeFrom(const PnpSolverConfig& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PnpSolverConfig* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef PnpSolverConfig_PnpSolveMethod PnpSolveMethod;
+  static const PnpSolveMethod DLT =
+    PnpSolverConfig_PnpSolveMethod_DLT;
+  static const PnpSolveMethod P3P =
+    PnpSolverConfig_PnpSolveMethod_P3P;
+  static const PnpSolveMethod EPNP =
+    PnpSolverConfig_PnpSolveMethod_EPNP;
+  static const PnpSolveMethod MLPNP =
+    PnpSolverConfig_PnpSolveMethod_MLPNP;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_ITERATIVE =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_ITERATIVE;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_EPNP =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_EPNP;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_P3P =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_P3P;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_DLS =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_DLS;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_UPNP =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_UPNP;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_AP3P =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_AP3P;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_IPPE =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_IPPE_SQUARE =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE_SQUARE;
+  static const PnpSolveMethod OpenCV_SOLVEPNP_SQPNP =
+    PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_SQPNP;
+  static inline bool PnpSolveMethod_IsValid(int value) {
+    return PnpSolverConfig_PnpSolveMethod_IsValid(value);
+  }
+  static const PnpSolveMethod PnpSolveMethod_MIN =
+    PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_MIN;
+  static const PnpSolveMethod PnpSolveMethod_MAX =
+    PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_MAX;
+  static const int PnpSolveMethod_ARRAYSIZE =
+    PnpSolverConfig_PnpSolveMethod_PnpSolveMethod_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  PnpSolveMethod_descriptor() {
+    return PnpSolverConfig_PnpSolveMethod_descriptor();
+  }
+  static inline const ::std::string& PnpSolveMethod_Name(PnpSolveMethod value) {
+    return PnpSolverConfig_PnpSolveMethod_Name(value);
+  }
+  static inline bool PnpSolveMethod_Parse(const ::std::string& name,
+      PnpSolveMethod* value) {
+    return PnpSolverConfig_PnpSolveMethod_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+  void clear_pnp_solve_method();
+  static const int kPnpSolveMethodFieldNumber = 1;
+  ::CameraConfig::PnpSolverConfig_PnpSolveMethod pnp_solve_method() const;
+  void set_pnp_solve_method(::CameraConfig::PnpSolverConfig_PnpSolveMethod value);
+
+  // @@protoc_insertion_point(class_scope:CameraConfig.PnpSolverConfig)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  int pnp_solve_method_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_camera_2eproto::TableStruct;
 };
@@ -1875,15 +2623,15 @@ inline void SuperGlue::set_allocated_tensor_config(::TensorRTConfig::Config* ten
 
 // FeatureTrackerConfig
 
-// .CameraConfig.TrackerMothod tracker_method = 1;
+// .CameraConfig.FeatureTrackerConfig.TrackerMothod tracker_method = 1;
 inline void FeatureTrackerConfig::clear_tracker_method() {
   tracker_method_ = 0;
 }
-inline ::CameraConfig::TrackerMothod FeatureTrackerConfig::tracker_method() const {
+inline ::CameraConfig::FeatureTrackerConfig_TrackerMothod FeatureTrackerConfig::tracker_method() const {
   // @@protoc_insertion_point(field_get:CameraConfig.FeatureTrackerConfig.tracker_method)
-  return static_cast< ::CameraConfig::TrackerMothod >(tracker_method_);
+  return static_cast< ::CameraConfig::FeatureTrackerConfig_TrackerMothod >(tracker_method_);
 }
-inline void FeatureTrackerConfig::set_tracker_method(::CameraConfig::TrackerMothod value) {
+inline void FeatureTrackerConfig::set_tracker_method(::CameraConfig::FeatureTrackerConfig_TrackerMothod value) {
   
   tracker_method_ = value;
   // @@protoc_insertion_point(field_set:CameraConfig.FeatureTrackerConfig.tracker_method)
@@ -1999,52 +2747,6 @@ inline void FeatureTrackerConfig::set_allocated_open_stereo_config(::CameraConfi
 
 // -------------------------------------------------------------------
 
-// KLOpticalFlowConfig
-
-// bool reverse_check = 1;
-inline void KLOpticalFlowConfig::clear_reverse_check() {
-  reverse_check_ = false;
-}
-inline bool KLOpticalFlowConfig::reverse_check() const {
-  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.reverse_check)
-  return reverse_check_;
-}
-inline void KLOpticalFlowConfig::set_reverse_check(bool value) {
-  
-  reverse_check_ = value;
-  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.reverse_check)
-}
-
-// double pt_err = 2;
-inline void KLOpticalFlowConfig::clear_pt_err() {
-  pt_err_ = 0;
-}
-inline double KLOpticalFlowConfig::pt_err() const {
-  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.pt_err)
-  return pt_err_;
-}
-inline void KLOpticalFlowConfig::set_pt_err(double value) {
-  
-  pt_err_ = value;
-  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.pt_err)
-}
-
-// int32 min_tracked_nums = 3;
-inline void KLOpticalFlowConfig::clear_min_tracked_nums() {
-  min_tracked_nums_ = 0;
-}
-inline ::google::protobuf::int32 KLOpticalFlowConfig::min_tracked_nums() const {
-  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
-  return min_tracked_nums_;
-}
-inline void KLOpticalFlowConfig::set_min_tracked_nums(::google::protobuf::int32 value) {
-  
-  min_tracked_nums_ = value;
-  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
-}
-
-// -------------------------------------------------------------------
-
 // OpenStereoConfig
 
 // .TensorRTConfig.Config tensor_config = 1;
@@ -2097,15 +2799,487 @@ inline void OpenStereoConfig::set_allocated_tensor_config(::TensorRTConfig::Conf
 
 // -------------------------------------------------------------------
 
+// KLOpticalFlowConfig
+
+// bool reverse_check = 1;
+inline void KLOpticalFlowConfig::clear_reverse_check() {
+  reverse_check_ = false;
+}
+inline bool KLOpticalFlowConfig::reverse_check() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.reverse_check)
+  return reverse_check_;
+}
+inline void KLOpticalFlowConfig::set_reverse_check(bool value) {
+  
+  reverse_check_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.reverse_check)
+}
+
+// double pt_err = 2;
+inline void KLOpticalFlowConfig::clear_pt_err() {
+  pt_err_ = 0;
+}
+inline double KLOpticalFlowConfig::pt_err() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.pt_err)
+  return pt_err_;
+}
+inline void KLOpticalFlowConfig::set_pt_err(double value) {
+  
+  pt_err_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.pt_err)
+}
+
+// int32 min_tracked_nums = 3;
+inline void KLOpticalFlowConfig::clear_min_tracked_nums() {
+  min_tracked_nums_ = 0;
+}
+inline ::google::protobuf::int32 KLOpticalFlowConfig::min_tracked_nums() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
+  return min_tracked_nums_;
+}
+inline void KLOpticalFlowConfig::set_min_tracked_nums(::google::protobuf::int32 value) {
+  
+  min_tracked_nums_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.KLOpticalFlowConfig.min_tracked_nums)
+}
+
+// -------------------------------------------------------------------
+
 // ORBSLAM
+
+// -------------------------------------------------------------------
+
+// PinholeConfig
+
+// double fx = 1;
+inline void PinholeConfig::clear_fx() {
+  fx_ = 0;
+}
+inline double PinholeConfig::fx() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.fx)
+  return fx_;
+}
+inline void PinholeConfig::set_fx(double value) {
+  
+  fx_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.fx)
+}
+
+// double fy = 2;
+inline void PinholeConfig::clear_fy() {
+  fy_ = 0;
+}
+inline double PinholeConfig::fy() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.fy)
+  return fy_;
+}
+inline void PinholeConfig::set_fy(double value) {
+  
+  fy_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.fy)
+}
+
+// double cx = 3;
+inline void PinholeConfig::clear_cx() {
+  cx_ = 0;
+}
+inline double PinholeConfig::cx() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.cx)
+  return cx_;
+}
+inline void PinholeConfig::set_cx(double value) {
+  
+  cx_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.cx)
+}
+
+// double cy = 4;
+inline void PinholeConfig::clear_cy() {
+  cy_ = 0;
+}
+inline double PinholeConfig::cy() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.cy)
+  return cy_;
+}
+inline void PinholeConfig::set_cy(double value) {
+  
+  cy_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.cy)
+}
+
+// double k1 = 5;
+inline void PinholeConfig::clear_k1() {
+  k1_ = 0;
+}
+inline double PinholeConfig::k1() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.k1)
+  return k1_;
+}
+inline void PinholeConfig::set_k1(double value) {
+  
+  k1_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.k1)
+}
+
+// double k2 = 6;
+inline void PinholeConfig::clear_k2() {
+  k2_ = 0;
+}
+inline double PinholeConfig::k2() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.k2)
+  return k2_;
+}
+inline void PinholeConfig::set_k2(double value) {
+  
+  k2_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.k2)
+}
+
+// double p1 = 7;
+inline void PinholeConfig::clear_p1() {
+  p1_ = 0;
+}
+inline double PinholeConfig::p1() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.p1)
+  return p1_;
+}
+inline void PinholeConfig::set_p1(double value) {
+  
+  p1_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.p1)
+}
+
+// double p2 = 8;
+inline void PinholeConfig::clear_p2() {
+  p2_ = 0;
+}
+inline double PinholeConfig::p2() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.p2)
+  return p2_;
+}
+inline void PinholeConfig::set_p2(double value) {
+  
+  p2_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.p2)
+}
+
+// int32 iter_times = 9;
+inline void PinholeConfig::clear_iter_times() {
+  iter_times_ = 0;
+}
+inline ::google::protobuf::int32 PinholeConfig::iter_times() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.iter_times)
+  return iter_times_;
+}
+inline void PinholeConfig::set_iter_times(::google::protobuf::int32 value) {
+  
+  iter_times_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.iter_times)
+}
+
+// .CameraConfig.DistortMethod distort_method = 10;
+inline void PinholeConfig::clear_distort_method() {
+  distort_method_ = 0;
+}
+inline ::CameraConfig::DistortMethod PinholeConfig::distort_method() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PinholeConfig.distort_method)
+  return static_cast< ::CameraConfig::DistortMethod >(distort_method_);
+}
+inline void PinholeConfig::set_distort_method(::CameraConfig::DistortMethod value) {
+  
+  distort_method_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PinholeConfig.distort_method)
+}
+
+// -------------------------------------------------------------------
+
+// FishEyeConfig
+
+// double fx = 1;
+inline void FishEyeConfig::clear_fx() {
+  fx_ = 0;
+}
+inline double FishEyeConfig::fx() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.fx)
+  return fx_;
+}
+inline void FishEyeConfig::set_fx(double value) {
+  
+  fx_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.fx)
+}
+
+// double fy = 2;
+inline void FishEyeConfig::clear_fy() {
+  fy_ = 0;
+}
+inline double FishEyeConfig::fy() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.fy)
+  return fy_;
+}
+inline void FishEyeConfig::set_fy(double value) {
+  
+  fy_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.fy)
+}
+
+// double cx = 3;
+inline void FishEyeConfig::clear_cx() {
+  cx_ = 0;
+}
+inline double FishEyeConfig::cx() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.cx)
+  return cx_;
+}
+inline void FishEyeConfig::set_cx(double value) {
+  
+  cx_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.cx)
+}
+
+// double cy = 4;
+inline void FishEyeConfig::clear_cy() {
+  cy_ = 0;
+}
+inline double FishEyeConfig::cy() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.cy)
+  return cy_;
+}
+inline void FishEyeConfig::set_cy(double value) {
+  
+  cy_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.cy)
+}
+
+// double k1 = 5;
+inline void FishEyeConfig::clear_k1() {
+  k1_ = 0;
+}
+inline double FishEyeConfig::k1() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.k1)
+  return k1_;
+}
+inline void FishEyeConfig::set_k1(double value) {
+  
+  k1_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.k1)
+}
+
+// double k2 = 6;
+inline void FishEyeConfig::clear_k2() {
+  k2_ = 0;
+}
+inline double FishEyeConfig::k2() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.k2)
+  return k2_;
+}
+inline void FishEyeConfig::set_k2(double value) {
+  
+  k2_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.k2)
+}
+
+// double k3 = 7;
+inline void FishEyeConfig::clear_k3() {
+  k3_ = 0;
+}
+inline double FishEyeConfig::k3() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.k3)
+  return k3_;
+}
+inline void FishEyeConfig::set_k3(double value) {
+  
+  k3_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.k3)
+}
+
+// double k4 = 8;
+inline void FishEyeConfig::clear_k4() {
+  k4_ = 0;
+}
+inline double FishEyeConfig::k4() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.k4)
+  return k4_;
+}
+inline void FishEyeConfig::set_k4(double value) {
+  
+  k4_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.k4)
+}
+
+// int32 iter_times = 9;
+inline void FishEyeConfig::clear_iter_times() {
+  iter_times_ = 0;
+}
+inline ::google::protobuf::int32 FishEyeConfig::iter_times() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.FishEyeConfig.iter_times)
+  return iter_times_;
+}
+inline void FishEyeConfig::set_iter_times(::google::protobuf::int32 value) {
+  
+  iter_times_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.FishEyeConfig.iter_times)
+}
 
 // -------------------------------------------------------------------
 
 // CameraModel
 
+// .CameraConfig.CameraModel.CameraType type = 1;
+inline void CameraModel::clear_type() {
+  type_ = 0;
+}
+inline ::CameraConfig::CameraModel_CameraType CameraModel::type() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.CameraModel.type)
+  return static_cast< ::CameraConfig::CameraModel_CameraType >(type_);
+}
+inline void CameraModel::set_type(::CameraConfig::CameraModel_CameraType value) {
+  
+  type_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.CameraModel.type)
+}
+
+// .CameraConfig.PinholeConfig pinhole_config = 2;
+inline bool CameraModel::has_pinhole_config() const {
+  return this != internal_default_instance() && pinhole_config_ != NULL;
+}
+inline void CameraModel::clear_pinhole_config() {
+  if (GetArenaNoVirtual() == NULL && pinhole_config_ != NULL) {
+    delete pinhole_config_;
+  }
+  pinhole_config_ = NULL;
+}
+inline const ::CameraConfig::PinholeConfig& CameraModel::_internal_pinhole_config() const {
+  return *pinhole_config_;
+}
+inline const ::CameraConfig::PinholeConfig& CameraModel::pinhole_config() const {
+  const ::CameraConfig::PinholeConfig* p = pinhole_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.CameraModel.pinhole_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::CameraConfig::PinholeConfig*>(
+      &::CameraConfig::_PinholeConfig_default_instance_);
+}
+inline ::CameraConfig::PinholeConfig* CameraModel::release_pinhole_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.CameraModel.pinhole_config)
+  
+  ::CameraConfig::PinholeConfig* temp = pinhole_config_;
+  pinhole_config_ = NULL;
+  return temp;
+}
+inline ::CameraConfig::PinholeConfig* CameraModel::mutable_pinhole_config() {
+  
+  if (pinhole_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::CameraConfig::PinholeConfig>(GetArenaNoVirtual());
+    pinhole_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.CameraModel.pinhole_config)
+  return pinhole_config_;
+}
+inline void CameraModel::set_allocated_pinhole_config(::CameraConfig::PinholeConfig* pinhole_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete pinhole_config_;
+  }
+  if (pinhole_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      pinhole_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, pinhole_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  pinhole_config_ = pinhole_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.CameraModel.pinhole_config)
+}
+
+// .CameraConfig.FishEyeConfig fish_eye_config = 3;
+inline bool CameraModel::has_fish_eye_config() const {
+  return this != internal_default_instance() && fish_eye_config_ != NULL;
+}
+inline void CameraModel::clear_fish_eye_config() {
+  if (GetArenaNoVirtual() == NULL && fish_eye_config_ != NULL) {
+    delete fish_eye_config_;
+  }
+  fish_eye_config_ = NULL;
+}
+inline const ::CameraConfig::FishEyeConfig& CameraModel::_internal_fish_eye_config() const {
+  return *fish_eye_config_;
+}
+inline const ::CameraConfig::FishEyeConfig& CameraModel::fish_eye_config() const {
+  const ::CameraConfig::FishEyeConfig* p = fish_eye_config_;
+  // @@protoc_insertion_point(field_get:CameraConfig.CameraModel.fish_eye_config)
+  return p != NULL ? *p : *reinterpret_cast<const ::CameraConfig::FishEyeConfig*>(
+      &::CameraConfig::_FishEyeConfig_default_instance_);
+}
+inline ::CameraConfig::FishEyeConfig* CameraModel::release_fish_eye_config() {
+  // @@protoc_insertion_point(field_release:CameraConfig.CameraModel.fish_eye_config)
+  
+  ::CameraConfig::FishEyeConfig* temp = fish_eye_config_;
+  fish_eye_config_ = NULL;
+  return temp;
+}
+inline ::CameraConfig::FishEyeConfig* CameraModel::mutable_fish_eye_config() {
+  
+  if (fish_eye_config_ == NULL) {
+    auto* p = CreateMaybeMessage<::CameraConfig::FishEyeConfig>(GetArenaNoVirtual());
+    fish_eye_config_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:CameraConfig.CameraModel.fish_eye_config)
+  return fish_eye_config_;
+}
+inline void CameraModel::set_allocated_fish_eye_config(::CameraConfig::FishEyeConfig* fish_eye_config) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete fish_eye_config_;
+  }
+  if (fish_eye_config) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      fish_eye_config = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, fish_eye_config, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  fish_eye_config_ = fish_eye_config;
+  // @@protoc_insertion_point(field_set_allocated:CameraConfig.CameraModel.fish_eye_config)
+}
+
+// -------------------------------------------------------------------
+
+// SFM
+
+// -------------------------------------------------------------------
+
+// PnpSolverConfig
+
+// .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+inline void PnpSolverConfig::clear_pnp_solve_method() {
+  pnp_solve_method_ = 0;
+}
+inline ::CameraConfig::PnpSolverConfig_PnpSolveMethod PnpSolverConfig::pnp_solve_method() const {
+  // @@protoc_insertion_point(field_get:CameraConfig.PnpSolverConfig.pnp_solve_method)
+  return static_cast< ::CameraConfig::PnpSolverConfig_PnpSolveMethod >(pnp_solve_method_);
+}
+inline void PnpSolverConfig::set_pnp_solve_method(::CameraConfig::PnpSolverConfig_PnpSolveMethod value) {
+  
+  pnp_solve_method_ = value;
+  // @@protoc_insertion_point(field_set:CameraConfig.PnpSolverConfig.pnp_solve_method)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -2130,6 +3304,26 @@ inline void OpenStereoConfig::set_allocated_tensor_config(::TensorRTConfig::Conf
 namespace google {
 namespace protobuf {
 
+template <> struct is_proto_enum< ::CameraConfig::FeatureTrackerConfig_TrackerMothod> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::FeatureTrackerConfig_TrackerMothod>() {
+  return ::CameraConfig::FeatureTrackerConfig_TrackerMothod_descriptor();
+}
+template <> struct is_proto_enum< ::CameraConfig::CameraModel_CameraType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::CameraModel_CameraType>() {
+  return ::CameraConfig::CameraModel_CameraType_descriptor();
+}
+template <> struct is_proto_enum< ::CameraConfig::PnpSolverConfig_PnpSolveMethod> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::PnpSolverConfig_PnpSolveMethod>() {
+  return ::CameraConfig::PnpSolverConfig_PnpSolveMethod_descriptor();
+}
+template <> struct is_proto_enum< ::CameraConfig::MatcherType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::MatcherType>() {
+  return ::CameraConfig::MatcherType_descriptor();
+}
 template <> struct is_proto_enum< ::CameraConfig::FeatureType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::FeatureType>() {
@@ -2140,15 +3334,10 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::DescriptorType>() {
   return ::CameraConfig::DescriptorType_descriptor();
 }
-template <> struct is_proto_enum< ::CameraConfig::MatcherType> : ::std::true_type {};
+template <> struct is_proto_enum< ::CameraConfig::DistortMethod> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::MatcherType>() {
-  return ::CameraConfig::MatcherType_descriptor();
-}
-template <> struct is_proto_enum< ::CameraConfig::TrackerMothod> : ::std::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::TrackerMothod>() {
-  return ::CameraConfig::TrackerMothod_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::CameraConfig::DistortMethod>() {
+  return ::CameraConfig::DistortMethod_descriptor();
 }
 
 }  // namespace protobuf

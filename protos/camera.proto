@@ -9,6 +9,12 @@ message Config {
   CameraModel camera_model = 2;
 }
 
+enum MatcherType {
+  HANMING = 0;
+  FLANN = 1;
+  SUPERGLUE = 2;
+};
+
 message FeatureConfig {
   FeatureType feature_type = 1;
   DescriptorType descriptor_type = 2;
@@ -56,20 +62,18 @@ enum DescriptorType {
   // TEBLID,
 };
 
-enum MatcherType {
-  HANMING = 0;
-  FLANN = 1;
-  SUPERGLUE = 2;
-};
-
 message FeatureTrackerConfig {
+  enum TrackerMothod {
+    KLOPTICALFLOW = 0;
+    FEATUREMATCH = 1;
+  }
   TrackerMothod tracker_method = 1;
   KLOpticalFlowConfig kloptical_flow_config = 2;
   OpenStereoConfig open_stereo_config = 3;
 }
 
-enum TrackerMothod {
-  KLOPTICALFLOW = 0;
+message OpenStereoConfig {
+  TensorRTConfig.Config tensor_config = 1;
 }
 
 message KLOpticalFlowConfig {
@@ -78,13 +82,112 @@ message KLOpticalFlowConfig {
   int32 min_tracked_nums = 3;
 }
 
-message OpenStereoConfig {
-  TensorRTConfig.Config tensor_config = 1;
-}
 
 message ORBSLAM {
 
 }
 
+enum DistortMethod {
+  OpenCV = 0;
+  VINSMONO = 1;
+}
+
+message PinholeConfig {
+  double fx = 1;
+  double fy = 2;
+  double cx = 3;
+  double cy = 4;
+  double k1 = 5;
+  double k2 = 6;
+  double p1 = 7;
+  double p2 = 8;
+  int32 iter_times = 9;
+  DistortMethod distort_method = 10;
+}
+
+message FishEyeConfig {
+  double fx = 1;
+  double fy = 2;
+  double cx = 3;
+  double cy = 4;
+  double k1 = 5;
+  double k2 = 6;
+  double k3 = 7;
+  double k4 = 8;
+  int32 iter_times = 9;
+}
+
 message CameraModel {
+  enum CameraType {
+    PINHOLE = 0;
+    // 鱼眼相机
+    FISHEYE = 1;
+  }
+  CameraType type = 1;
+  PinholeConfig pinhole_config = 2;
+  FishEyeConfig fish_eye_config = 3;
+}
+
+
+message SFM {
+  
+}
+
+message PnpSolverConfig {
+  enum PnpSolveMethod {
+    DLT = 0;
+    // P3P，利用三角形相似转化为ICP 
+    P3P = 1;
+    // ORB-SLAM3
+    EPNP = 2;
+    // ORB-SLAM3
+    MLPNP = 3;
+    /*
+      Pose refinement using non-linear Levenberg-Marquardt minimization scheme 
+      Initial solution for non-planar "objectPoints" needs at least 6 points and uses the DLT algorithm.
+      Initial solution for planar "objectPoints" needs at least 4 points and uses pose from homography decomposition.
+    */
+    OpenCV_SOLVEPNP_ITERATIVE = 4;
+    /*
+      EPnP: Efficient Perspective-n-Point Camera Pose Estimation
+    */
+    OpenCV_SOLVEPNP_EPNP = 5;
+    /*
+      Complete Solution Classification for the Perspective-Three-Point Problem
+    */
+    OpenCV_SOLVEPNP_P3P = 6;
+    /*
+      Broken implementation. Using this flag will fallback to EPnP. A Direct Least-Squares (DLS) Method for PnP [125]
+    */
+    OpenCV_SOLVEPNP_DLS = 7;
+    /*
+      Broken implementation. Using this flag will fallback to EPnP. Exhaustive Linearization for Robust Camera Pose and Focal Length Estimation
+    */
+    OpenCV_SOLVEPNP_UPNP = 8;
+    /*
+      An Efficient Algebraic Solution to the Perspective-Three-Point Problem
+    */
+    OpenCV_SOLVEPNP_AP3P = 9;
+    /*
+      Infinitesimal Plane-Based Pose Estimation. Object points must be coplanar.
+    */
+    OpenCV_SOLVEPNP_IPPE = 10;
+    /*
+      Infinitesimal Plane-Based Pose Estimation. 
+      This is a special case suitable for marker pose estimation.
+      4 coplanar object points must be defined in the following order:
+      point 0: [-squareLength / 2, squareLength / 2, 0]
+      point 1: [ squareLength / 2, squareLength / 2, 0]
+      point 2: [ squareLength / 2, -squareLength / 2, 0]
+      point 3: [-squareLength / 2, -squareLength / 2, 0]
+    */
+    OpenCV_SOLVEPNP_IPPE_SQUARE = 11;
+    /*
+      SQPnP: A Consistently Fast and Globally OptimalSolution to the Perspective-n-Point Problem.
+    */
+    OpenCV_SOLVEPNP_SQPNP = 12;
+  }
+  
+  PnpSolveMethod pnp_solve_method = 1;
+
 }
