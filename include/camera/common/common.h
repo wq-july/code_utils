@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Eigen/Core"
 #include "Eigen/Dense"
 #include "glog/logging.h"
 #include "opencv2/core/core.hpp"
@@ -40,7 +39,5 @@ bool CHECK_EQUAL_MAT(const Eigen::Matrix<T, rows, cols>& matrix1,
       }
   return true;
 }
-
-
 
 }  // namespace Camera

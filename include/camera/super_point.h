@@ -2,13 +2,8 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "Eigen/Core"
-#include "glog/logging.h"
-
 #include "../protos/pb/camera.pb.h"
 #include "tensorRT/generic.h"
-#include "tensorRT/logger.h"
-#include "tensorRT/logging.h"
 #include "util/time.h"
 
 namespace Camera {

@@ -37,6 +37,7 @@ function create_container {
     # 支持的cuda版本，然后修改对应的From img版本
     # -e NVIDIA_DISABLE_REQUIRE=1 \
     docker run \
+        --privileged \
         --network host \
         -p 6666:6666 \
         -e DISPLAY=$DISPLAY \
@@ -46,6 +47,7 @@ function create_container {
         -v $HOME/.ssh:/root/.ssh \
         -v /home:/home \
         -v /mnt/e:/home/wq/data \
+        -v /dev/kmsg:/dev/kmsg \
         -w /home \
         -itd --gpus all --name $CONTAINER_NAME $IMAGE_NAME zsh
 

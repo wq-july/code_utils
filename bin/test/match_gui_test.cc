@@ -4,20 +4,20 @@
 #include <thread>
 
 #include "gflags/gflags.h"
-#include "gtest/gtest.h"
-#include "pcl/filters/approximate_voxel_grid.h"
-#include "pcl/io/pcd_io.h"
-#include "pcl/point_types.h"
-#include "pcl/registration/icp.h"
-
 #include "glog/logging.h"
-#include "lidar/match.h"
+#include "gtest/gtest.h"
 #include "pangolin/display/display.h"
 #include "pangolin/display/view.h"
 #include "pangolin/gl/gldraw.h"
 #include "pangolin/handler/handler.h"
 #include "pangolin/pangolin.h"
 #include "pangolin/var/var.h"
+#include "pcl/filters/approximate_voxel_grid.h"
+#include "pcl/io/pcd_io.h"
+#include "pcl/point_types.h"
+#include "pcl/registration/icp.h"
+
+#include "lidar/match.h"
 
 typedef pcl::PointCloud<pcl::PointXYZ> PCLPointCloud;
 

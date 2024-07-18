@@ -5,12 +5,11 @@
 #include <cassert>
 #include <cmath>
 #include <cstdint>
+#include <opencv2/core/types.hpp>
 #include <vector>
 
-#include "Eigen/Core"
 #include "Eigen/Dense"
 #include "ceres/ceres.h"
-#include "glog/logging.h"
 
 namespace Utils {
 
@@ -91,13 +90,16 @@ inline Eigen::Matrix3d Exp(const Eigen::Vector3d& omega) {
 Eigen::Vector3d ComputeCentroid(const std::vector<Eigen::Vector3d>& points);
 
 bool PlaneFit(const std::vector<Eigen::Vector3d>& points,
-                     Eigen::Vector4d* const plane_coeffs,
-                     double eps = 1e-3);
+              Eigen::Vector4d* const plane_coeffs,
+              double eps = 1e-3);
 
 bool Line3DFit(std::vector<Eigen::Vector3d>& points,
-                      Eigen::Vector3d* const origin,
-                      Eigen::Vector3d* const dir,
-                      double eps = 0.1);
+               Eigen::Vector3d* const origin,
+               Eigen::Vector3d* const dir,
+               double eps = 0.1);
+
+// 计算一组2D点的方差
+double CalculateVariance(const std::vector<Eigen::Vector2d>& points);
 
 }  // namespace Math
 

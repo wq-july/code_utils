@@ -1,5 +1,6 @@
 #include "camera/super_point.h"
 
+#include "Eigen/Dense"
 #include "opencv2/core/eigen.hpp"
 namespace Camera {
 

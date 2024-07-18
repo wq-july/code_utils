@@ -66,6 +66,29 @@ Eigen::Vector3d ComputeCentroid(const std::vector<Eigen::Vector3d>& points) {
   return centroid;
 }
 
+double CalculateVariance(const std::vector<Eigen::Vector2d>& points) {
+  size_t n = points.size();
+  if (n == 0) {
+    return 0.0;
+  }
+
+  // 计算均值
+  Eigen::Vector2d mean = {0.0, 0.0};
+  for (const auto& p : points) {
+    mean.x() += p.x();
+    mean.y() += p.y();
+  }
+  mean.x() /= n;
+  mean.y() /= n;
+
+  // 计算方差
+  double variance = 0.0;
+  for (const auto& p : points) {
+    variance += (p.x() - mean.x()) * (p.x() - mean.x()) + (p.y() - mean.y()) * (p.y() - mean.y());
+  }
+  return variance / n;
+}
+
 }  // namespace Math
 
 }  // namespace Utils

@@ -77,9 +77,10 @@ message OpenStereoConfig {
 }
 
 message KLOpticalFlowConfig {
-  bool reverse_check = 1;
-  double pt_err = 2;
-  int32 min_tracked_nums = 3;
+  bool enable_klopflow = 1;
+  bool reverse_check = 2;
+  double pt_err = 3;
+  int32 min_tracked_nums = 4;
 }
 
 
@@ -87,10 +88,6 @@ message ORBSLAM {
 
 }
 
-enum DistortMethod {
-  OpenCV = 0;
-  VINSMONO = 1;
-}
 
 message PinholeConfig {
   double fx = 1;
@@ -101,8 +98,9 @@ message PinholeConfig {
   double k2 = 6;
   double p1 = 7;
   double p2 = 8;
-  int32 iter_times = 9;
-  DistortMethod distort_method = 10;
+  double focal_length = 9;
+  int32 iter_times = 10;
+  bool enable_cv_undistort = 11;
 }
 
 message FishEyeConfig {
@@ -114,7 +112,8 @@ message FishEyeConfig {
   double k2 = 6;
   double k3 = 7;
   double k4 = 8;
-  int32 iter_times = 9;
+  double focal_length = 9;
+  int32 iter_times = 10;
 }
 
 message CameraModel {
@@ -129,49 +128,69 @@ message CameraModel {
 }
 
 
-message SFM {
-  
+message SFMConfig {
+  CameraModel camera_model = 1;
+  PnpSolverConfig pnp_solver = 2;
+  FeatureConfig feature_config = 3;
+  bool enable_cv_p2p = 4;
+  int32 ransac_iterations = 5;
+  double reproj_err_th = 6;
+  double sigma = 7;
+  enum DecomposeHMethod {
+    // Z. Zhang, and A.R. Hanson, “3D Reconstruction based on homography mapping”
+    ZHANG = 0;
+    // Ezio Malis and Manuel Vargas, "Deeper understanding of the homography decomposition for vision-based control"
+    Ezio_Malis = 1;
+    // Motion and structure from motion in a piecewise planar environment. International Journal of Pattern Recognition and Artificial Intelligence, 1988 
+    ORBSLAM3 = 2;
+  }
+  DecomposeHMethod decompose_H_method = 8;
+  int32 min_triangulated_pts = 9;
+  double min_parallax = 10;
 }
 
 message PnpSolverConfig {
   enum PnpSolveMethod {
     DLT = 0;
-    // P3P，利用三角形相似转化为ICP 
-    P3P = 1;
+    // BA Gauss-Newton 
+    BA = 1;
     // ORB-SLAM3
     EPNP = 2;
     // ORB-SLAM3
     MLPNP = 3;
+  }
+    
+  enum PnpCvMethod {
     /*
       Pose refinement using non-linear Levenberg-Marquardt minimization scheme 
       Initial solution for non-planar "objectPoints" needs at least 6 points and uses the DLT algorithm.
       Initial solution for planar "objectPoints" needs at least 4 points and uses pose from homography decomposition.
     */
-    OpenCV_SOLVEPNP_ITERATIVE = 4;
+    OpenCV_SOLVEPNP_ITERATIVE = 0;
     /*
       EPnP: Efficient Perspective-n-Point Camera Pose Estimation
     */
-    OpenCV_SOLVEPNP_EPNP = 5;
+    OpenCV_SOLVEPNP_EPNP = 1;
     /*
       Complete Solution Classification for the Perspective-Three-Point Problem
     */
-    OpenCV_SOLVEPNP_P3P = 6;
+    OpenCV_SOLVEPNP_P3P = 2;
     /*
       Broken implementation. Using this flag will fallback to EPnP. A Direct Least-Squares (DLS) Method for PnP [125]
     */
-    OpenCV_SOLVEPNP_DLS = 7;
+    OpenCV_SOLVEPNP_DLS = 3;
     /*
       Broken implementation. Using this flag will fallback to EPnP. Exhaustive Linearization for Robust Camera Pose and Focal Length Estimation
     */
-    OpenCV_SOLVEPNP_UPNP = 8;
+    OpenCV_SOLVEPNP_UPNP = 4;
     /*
       An Efficient Algebraic Solution to the Perspective-Three-Point Problem
     */
-    OpenCV_SOLVEPNP_AP3P = 9;
+    OpenCV_SOLVEPNP_AP3P = 5;
     /*
       Infinitesimal Plane-Based Pose Estimation. Object points must be coplanar.
     */
-    OpenCV_SOLVEPNP_IPPE = 10;
+    OpenCV_SOLVEPNP_IPPE = 6;
     /*
       Infinitesimal Plane-Based Pose Estimation. 
       This is a special case suitable for marker pose estimation.
@@ -181,13 +200,15 @@ message PnpSolverConfig {
       point 2: [ squareLength / 2, -squareLength / 2, 0]
       point 3: [-squareLength / 2, -squareLength / 2, 0]
     */
-    OpenCV_SOLVEPNP_IPPE_SQUARE = 11;
+    OpenCV_SOLVEPNP_IPPE_SQUARE = 7;
     /*
       SQPnP: A Consistently Fast and Globally OptimalSolution to the Perspective-n-Point Problem.
     */
-    OpenCV_SOLVEPNP_SQPNP = 12;
+    OpenCV_SOLVEPNP_SQPNP = 8;
   }
-  
-  PnpSolveMethod pnp_solve_method = 1;
 
+  bool enable_cv_pnp = 1;
+  PnpSolveMethod pnp_solve_method = 2;
+  PnpCvMethod pnp_cv_method = 3;
+  int32 max_iterations = 4;
 }

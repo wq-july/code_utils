@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../protos/pb/camera.pb.h"
 #include "camera/camera_model/camera_model.h"
 
 namespace Camera {

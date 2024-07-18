@@ -1,6 +1,5 @@
 #include "camera/super_glue.h"
 
-#include <fstream>
 namespace Camera {
 
 SuperGlue::SuperGlue(const CameraConfig::SuperGlue& config)
@@ -182,12 +181,10 @@ bool SuperGlue::ProcessInput(const TensorRT::BufferManager& buffers) {
     }
   }
 
-
   return true;
 }
 
 bool SuperGlue::ProcessOutput(const TensorRT::BufferManager& buffers) {
-
   indices0_.clear();
   indices1_.clear();
   scores0_.clear();

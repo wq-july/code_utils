@@ -1,5 +1,6 @@
 #include "camera/pnp_solver.h"
 
+#include "glog/logging.h"
 namespace Camera {
 
 PnpSolver::PnpSolver(const CameraConfig::PnpSolverConfig& config,
@@ -11,80 +12,97 @@ bool PnpSolver::Solve(const std::vector<Eigen::Vector3d>& p3ds,
                       Sophus::SE3d* const relative_pose) {
   timer_.StartTimer("PNP Solver");
   bool res = false;
-  switch (config_.pnp_solve_method()) {
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_DLT: {
-      res = DLTSolve(p3ds, pt2s, relative_pose);
-      break;
-    }
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_EPNP: {
-      res = P3PSolve(p3ds, pt2s, relative_pose);
-      break;
-    }
+  if (config_.enable_cv_pnp()) {
+    switch (config_.pnp_cv_method()) {
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_ITERATIVE: {
+        res = CvIterative(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_MLPNP: {
-      res = EPNPSolve(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_EPNP: {
+        res = CvEPNP(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_ITERATIVE: {
-      res = MLPNPSolve(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_P3P: {
+        res = CvP3P(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_EPNP: {
-      res = CvIterative(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_DLS: {
+        res = CvDLS(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_P3P: {
-      res = CvEPNP(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_UPNP: {
+        res = CvUPNP(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_DLS: {
-      res = CvP3P(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_AP3P: {
+        res = CvAP3P(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_UPNP: {
-      res = CvDLS(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_IPPE: {
+        res = CvIPPE(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_AP3P: {
-      res = CvUPNP(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_IPPE_SQUARE: {
+        res = CvSquare(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE: {
-      res = CvAP3P(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpCvMethod::
+          PnpSolverConfig_PnpCvMethod_OpenCV_SOLVEPNP_SQPNP: {
+        res = CvSQPNP(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_IPPE_SQUARE: {
-      res = CvIPPE(p3ds, pt2s, relative_pose);
-      break;
+      default: {
+        LOG(WARNING) << "Unkown CV PNP Method, Using Default: CV_EPNP !";
+        res = CvEPNP(p3ds, pt2s, relative_pose);
+        break;
+      }
     }
+  } else {
+    switch (config_.pnp_solve_method()) {
+      case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_DLT: {
+        res = DLTSolve(p3ds, pt2s, relative_pose);
+        break;
+      }
+      case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_BA: {
+        res = BAGaussNewtonSolve(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    case CameraConfig::PnpSolverConfig::PnpSolveMethod::
-        PnpSolverConfig_PnpSolveMethod_OpenCV_SOLVEPNP_SQPNP: {
-      res = CvSquare(p3ds, pt2s, relative_pose);
-      break;
-    }
+      case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_EPNP: {
+        res = EPNPSolve(p3ds, pt2s, relative_pose);
+        break;
+      }
 
-    default: {
-      res = CvSQPNP(p3ds, pt2s, relative_pose);
-      break;
+      case CameraConfig::PnpSolverConfig::PnpSolveMethod::PnpSolverConfig_PnpSolveMethod_MLPNP: {
+        res = MLPNPSolve(p3ds, pt2s, relative_pose);
+        break;
+      }
+
+      default: {
+        LOG(WARNING) << "Unkown PNP Method, Using Default: EPNP !";
+        res = EPNPSolve(p3ds, pt2s, relative_pose);
+        break;
+      }
     }
   }
+
   timer_.StopTimer();
   timer_.PrintElapsedTime();
   return res;
@@ -203,9 +221,65 @@ bool PnpSolver::DLTSolve(const std::vector<Eigen::Vector3d>& p3ds,
   return true;
 }
 
-bool PnpSolver::P3PSolve(const std::vector<Eigen::Vector3d>& p3ds,
-                         const std::vector<Eigen::Vector2d>& pt2s,
-                         Sophus::SE3d* const relative_pose) const {
+bool PnpSolver::BAGaussNewtonSolve(const std::vector<Eigen::Vector3d>& p3ds,
+                                   const std::vector<Eigen::Vector2d>& pt2s,
+                                   Sophus::SE3d* const relative_pose) const {
+  // 检查输入是否为空，以及相对位姿指针是否为空
+  CHECK(!p3ds.empty() && !pt2s.empty() && relative_pose != nullptr) << "Empty input";
+  CHECK(p3ds.size() == pt2s.size() && p3ds.size() >= 10) << "Input size error !";
+  double cost = 0.0, last_cost = 0.0;
+  auto K = camera_model_ptr_->K_;
+  double fx = K(0, 0);
+  double fy = K(1, 1);
+  double cx = K(0, 2);
+  double cy = K(1, 2);
+
+  for (int32_t iter = 0; iter < config_.max_iterations(); ++iter) {
+    Eigen::Matrix<double, 6, 6> H = Eigen::Matrix<double, 6, 6>::Zero();
+    Eigen::Matrix<double, 6, 1> b = Eigen::Matrix<double, 6, 1>::Zero();
+    cost = 0.0;
+    // 计算代价函数
+    for (uint32_t i = 0; i < p3ds.size(); ++i) {
+      Eigen::Vector3d pc3ds = *relative_pose * p3ds[i];
+      double inv_z = 1.0 / pc3ds.z();
+      double inv_z2 = inv_z * inv_z;
+      Eigen::Vector2d proj =
+          Eigen::Vector2d(fx * pc3ds.x() / pc3ds.z() + cx, fy * pc3ds.y() / pc3ds.z() + cy);
+      Eigen::Vector2d err = pt2s[i] - proj;
+      cost += err.squaredNorm();
+      Eigen::Matrix<double, 2, 6> Jac = Eigen::Matrix<double, 2, 6>::Zero();
+      Jac << -fx * inv_z, 0.0, fx * pc3ds.x() * inv_z2, fx * pc3ds.x() * pc3ds.y() * inv_z2,
+          -fx - fx * pc3ds.x() * pc3ds.x() * inv_z2, fx * pc3ds.y() * inv_z, 0.0, -fy * inv_z,
+          fy * pc3ds.y() * inv_z, fy + fy * pc3ds.y() * pc3ds.y() * inv_z2,
+          -fy * pc3ds.x() * pc3ds.y() * inv_z2, -fy * pc3ds.x() * inv_z;
+      H += Jac.transpose() * Jac;
+      b += -Jac.transpose() * err;
+    }
+
+    Eigen::Matrix<double, 6, 1> dx = Eigen::Matrix<double, 6, 1>::Zero();
+
+    dx = H.ldlt().solve(b);
+
+    if (std::isnan(dx(0)) || std::isinf(dx.norm())) {
+      // LOG(WARNING) << "NAN || INF !";
+      break;
+    }
+
+    if (iter > 0 && cost >= last_cost) {
+      LOG(INFO) << "Cost: " << cost << ", Last cost: " << last_cost;
+      break;
+    }
+
+    *relative_pose = Sophus::SE3d::exp(dx) * (*relative_pose);
+    last_cost = cost;
+
+    LOG(INFO) << "Iteration: " << iter << "Cost: " << std::setprecision(12) << cost;
+    if (dx.norm() < 1.0e-6) {
+      break;
+    }
+  }
+  LOG(INFO) << "PNP BA-GS: \n" << relative_pose->matrix3x4();
+
   return true;
 }
 

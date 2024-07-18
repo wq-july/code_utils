@@ -20,8 +20,7 @@
 
 namespace Camera {
 
-class KeyFrame;
-
+// TODO 以后进一步拓展这个类，直接拓展为视觉前端，包含特征点跟踪，光流跟踪，光度直接法
 class FeatureManager {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -33,7 +32,16 @@ class FeatureManager {
 
   void Match(const cv::Mat& descriptors0,
              const cv::Mat& descriptors1,
-             std::vector<cv::DMatch>& matches);
+             std::vector<cv::DMatch>& matches) const;
+
+  // 基于几何的方法剔除异常值
+  // GMS方法剔除
+  // RANSAC
+  // 核函数
+  void OutlierFilter(const std::vector<cv::KeyPoint>& keypoints1,
+                     const std::vector<cv::KeyPoint>& keypoints2,
+                     const std::vector<cv::DMatch>& matches,
+                     std::vector<bool>* const inliers) const;
 
   // 可以用做双目匹配，也可以跟踪
   bool KLOpticalFlowTrack(const cv::Mat& left_img,

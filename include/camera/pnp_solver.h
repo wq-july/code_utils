@@ -1,9 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "Eigen/Core"
 #include "sophus/se3.hpp"
-#include "sophus/so3.hpp"
 
 #include "../protos/pb/camera.pb.h"
 #include "camera/camera_model/camera_model.h"
@@ -29,9 +27,9 @@ class PnpSolver {
                 const std::vector<Eigen::Vector2d>& pt2s,
                 Sophus::SE3d* const relative_pose) const;
 
-  bool P3PSolve(const std::vector<Eigen::Vector3d>& p3ds,
-                const std::vector<Eigen::Vector2d>& pt2s,
-                Sophus::SE3d* const relative_pose) const;
+  bool BAGaussNewtonSolve(const std::vector<Eigen::Vector3d>& p3ds,
+                          const std::vector<Eigen::Vector2d>& pt2s,
+                          Sophus::SE3d* const relative_pose) const;
 
   bool EPNPSolve(const std::vector<Eigen::Vector3d>& p3ds,
                  const std::vector<Eigen::Vector2d>& pt2s,

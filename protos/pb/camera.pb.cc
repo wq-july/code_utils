@@ -24,6 +24,7 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::inte
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_KLOpticalFlowConfig;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_ORBSLAM;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_PinholeConfig;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_PnpSolverConfig;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_OpenStereoConfig;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SuperGlue;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_camera_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SuperPoint;
@@ -90,11 +91,11 @@ class CameraModelDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<CameraModel>
       _instance;
 } _CameraModel_default_instance_;
-class SFMDefaultTypeInternal {
+class SFMConfigDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SFM>
+  ::google::protobuf::internal::ExplicitlyConstructed<SFMConfig>
       _instance;
-} _SFM_default_instance_;
+} _SFMConfig_default_instance_;
 class PnpSolverConfigDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<PnpSolverConfig>
@@ -269,19 +270,22 @@ static void InitDefaultsCameraModel() {
       &protobuf_camera_2eproto::scc_info_PinholeConfig.base,
       &protobuf_camera_2eproto::scc_info_FishEyeConfig.base,}};
 
-static void InitDefaultsSFM() {
+static void InitDefaultsSFMConfig() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::CameraConfig::_SFM_default_instance_;
-    new (ptr) ::CameraConfig::SFM();
+    void* ptr = &::CameraConfig::_SFMConfig_default_instance_;
+    new (ptr) ::CameraConfig::SFMConfig();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::CameraConfig::SFM::InitAsDefaultInstance();
+  ::CameraConfig::SFMConfig::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_SFM =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSFM}, {}};
+::google::protobuf::internal::SCCInfo<3> scc_info_SFMConfig =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsSFMConfig}, {
+      &protobuf_camera_2eproto::scc_info_CameraModel.base,
+      &protobuf_camera_2eproto::scc_info_PnpSolverConfig.base,
+      &protobuf_camera_2eproto::scc_info_FeatureConfig.base,}};
 
 static void InitDefaultsPnpSolverConfig() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -309,12 +313,12 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_PinholeConfig.base);
   ::google::protobuf::internal::InitSCC(&scc_info_FishEyeConfig.base);
   ::google::protobuf::internal::InitSCC(&scc_info_CameraModel.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SFM.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_SFMConfig.base);
   ::google::protobuf::internal::InitSCC(&scc_info_PnpSolverConfig.base);
 }
 
 ::google::protobuf::Metadata file_level_metadata[13];
-const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[7];
+const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[8];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -374,6 +378,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::KLOpticalFlowConfig, enable_klopflow_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::KLOpticalFlowConfig, reverse_check_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::KLOpticalFlowConfig, pt_err_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::KLOpticalFlowConfig, min_tracked_nums_),
@@ -395,8 +400,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, k2_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, p1_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, p2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, focal_length_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, iter_times_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, distort_method_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PinholeConfig, enable_cv_undistort_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -410,6 +416,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, k2_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, k3_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, k4_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, focal_length_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::FishEyeConfig, iter_times_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::CameraModel, _internal_metadata_),
@@ -420,16 +427,29 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::CameraModel, pinhole_config_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::CameraModel, fish_eye_config_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFM, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, camera_model_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, pnp_solver_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, feature_config_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, enable_cv_p2p_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, ransac_iterations_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, reproj_err_th_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, sigma_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, decompose_h_method_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, min_triangulated_pts_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::SFMConfig, min_parallax_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PnpSolverConfig, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PnpSolverConfig, enable_cv_pnp_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PnpSolverConfig, pnp_solve_method_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PnpSolverConfig, pnp_cv_method_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::CameraConfig::PnpSolverConfig, max_iterations_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::CameraConfig::Config)},
@@ -439,12 +459,12 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 38, -1, sizeof(::CameraConfig::FeatureTrackerConfig)},
   { 46, -1, sizeof(::CameraConfig::OpenStereoConfig)},
   { 52, -1, sizeof(::CameraConfig::KLOpticalFlowConfig)},
-  { 60, -1, sizeof(::CameraConfig::ORBSLAM)},
-  { 65, -1, sizeof(::CameraConfig::PinholeConfig)},
-  { 80, -1, sizeof(::CameraConfig::FishEyeConfig)},
-  { 94, -1, sizeof(::CameraConfig::CameraModel)},
-  { 102, -1, sizeof(::CameraConfig::SFM)},
-  { 107, -1, sizeof(::CameraConfig::PnpSolverConfig)},
+  { 61, -1, sizeof(::CameraConfig::ORBSLAM)},
+  { 66, -1, sizeof(::CameraConfig::PinholeConfig)},
+  { 82, -1, sizeof(::CameraConfig::FishEyeConfig)},
+  { 97, -1, sizeof(::CameraConfig::CameraModel)},
+  { 105, -1, sizeof(::CameraConfig::SFMConfig)},
+  { 120, -1, sizeof(::CameraConfig::PnpSolverConfig)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -459,7 +479,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_PinholeConfig_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_FishEyeConfig_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_CameraModel_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_SFM_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_SFMConfig_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::CameraConfig::_PnpSolverConfig_default_instance_),
 };
 
@@ -512,44 +532,58 @@ void AddDescriptorsImpl() {
       "ameraConfig.OpenStereoConfig\"4\n\rTrackerM"
       "othod\022\021\n\rKLOPTICALFLOW\020\000\022\020\n\014FEATUREMATCH"
       "\020\001\"A\n\020OpenStereoConfig\022-\n\rtensor_config\030"
-      "\001 \001(\0132\026.TensorRTConfig.Config\"V\n\023KLOptic"
-      "alFlowConfig\022\025\n\rreverse_check\030\001 \001(\010\022\016\n\006p"
-      "t_err\030\002 \001(\001\022\030\n\020min_tracked_nums\030\003 \001(\005\"\t\n"
-      "\007ORBSLAM\"\270\001\n\rPinholeConfig\022\n\n\002fx\030\001 \001(\001\022\n"
-      "\n\002fy\030\002 \001(\001\022\n\n\002cx\030\003 \001(\001\022\n\n\002cy\030\004 \001(\001\022\n\n\002k1"
-      "\030\005 \001(\001\022\n\n\002k2\030\006 \001(\001\022\n\n\002p1\030\007 \001(\001\022\n\n\002p2\030\010 \001"
-      "(\001\022\022\n\niter_times\030\t \001(\005\0223\n\016distort_method"
-      "\030\n \001(\0162\033.CameraConfig.DistortMethod\"\203\001\n\r"
-      "FishEyeConfig\022\n\n\002fx\030\001 \001(\001\022\n\n\002fy\030\002 \001(\001\022\n\n"
-      "\002cx\030\003 \001(\001\022\n\n\002cy\030\004 \001(\001\022\n\n\002k1\030\005 \001(\001\022\n\n\002k2\030"
-      "\006 \001(\001\022\n\n\002k3\030\007 \001(\001\022\n\n\002k4\030\010 \001(\001\022\022\n\niter_ti"
-      "mes\030\t \001(\005\"\324\001\n\013CameraModel\0222\n\004type\030\001 \001(\0162"
-      "$.CameraConfig.CameraModel.CameraType\0223\n"
-      "\016pinhole_config\030\002 \001(\0132\033.CameraConfig.Pin"
-      "holeConfig\0224\n\017fish_eye_config\030\003 \001(\0132\033.Ca"
-      "meraConfig.FishEyeConfig\"&\n\nCameraType\022\013"
-      "\n\007PINHOLE\020\000\022\013\n\007FISHEYE\020\001\"\005\n\003SFM\"\210\003\n\017PnpS"
-      "olverConfig\022F\n\020pnp_solve_method\030\001 \001(\0162,."
-      "CameraConfig.PnpSolverConfig.PnpSolveMet"
-      "hod\"\254\002\n\016PnpSolveMethod\022\007\n\003DLT\020\000\022\007\n\003P3P\020\001"
-      "\022\010\n\004EPNP\020\002\022\t\n\005MLPNP\020\003\022\035\n\031OpenCV_SOLVEPNP"
-      "_ITERATIVE\020\004\022\030\n\024OpenCV_SOLVEPNP_EPNP\020\005\022\027"
-      "\n\023OpenCV_SOLVEPNP_P3P\020\006\022\027\n\023OpenCV_SOLVEP"
-      "NP_DLS\020\007\022\030\n\024OpenCV_SOLVEPNP_UPNP\020\010\022\030\n\024Op"
-      "enCV_SOLVEPNP_AP3P\020\t\022\030\n\024OpenCV_SOLVEPNP_"
-      "IPPE\020\n\022\037\n\033OpenCV_SOLVEPNP_IPPE_SQUARE\020\013\022"
-      "\031\n\025OpenCV_SOLVEPNP_SQPNP\020\014*4\n\013MatcherTyp"
-      "e\022\013\n\007HANMING\020\000\022\t\n\005FLANN\020\001\022\r\n\tSUPERGLUE\020\002"
-      "*\\\n\013FeatureType\022\n\n\006F_SIFT\020\000\022\n\n\006F_SURF\020\001\022"
-      "\t\n\005F_ORB\020\002\022\013\n\007F_BRISK\020\003\022\013\n\007F_AKAZE\020\004\022\020\n\014"
-      "F_SUPERPOINT\020\005*_\n\016DescriptorType\022\n\n\006D_SI"
-      "FT\020\000\022\n\n\006D_SURF\020\001\022\t\n\005D_ORB\020\002\022\013\n\007D_BRISK\020\003"
-      "\022\013\n\007D_AKAZE\020\004\022\020\n\014D_SUPERPOINT\020\005*)\n\rDisto"
-      "rtMethod\022\n\n\006OpenCV\020\000\022\014\n\010VINSMONO\020\001b\006prot"
+      "\001 \001(\0132\026.TensorRTConfig.Config\"o\n\023KLOptic"
+      "alFlowConfig\022\027\n\017enable_klopflow\030\001 \001(\010\022\025\n"
+      "\rreverse_check\030\002 \001(\010\022\016\n\006pt_err\030\003 \001(\001\022\030\n\020"
+      "min_tracked_nums\030\004 \001(\005\"\t\n\007ORBSLAM\"\266\001\n\rPi"
+      "nholeConfig\022\n\n\002fx\030\001 \001(\001\022\n\n\002fy\030\002 \001(\001\022\n\n\002c"
+      "x\030\003 \001(\001\022\n\n\002cy\030\004 \001(\001\022\n\n\002k1\030\005 \001(\001\022\n\n\002k2\030\006 "
+      "\001(\001\022\n\n\002p1\030\007 \001(\001\022\n\n\002p2\030\010 \001(\001\022\024\n\014focal_len"
+      "gth\030\t \001(\001\022\022\n\niter_times\030\n \001(\005\022\033\n\023enable_"
+      "cv_undistort\030\013 \001(\010\"\231\001\n\rFishEyeConfig\022\n\n\002"
+      "fx\030\001 \001(\001\022\n\n\002fy\030\002 \001(\001\022\n\n\002cx\030\003 \001(\001\022\n\n\002cy\030\004"
+      " \001(\001\022\n\n\002k1\030\005 \001(\001\022\n\n\002k2\030\006 \001(\001\022\n\n\002k3\030\007 \001(\001"
+      "\022\n\n\002k4\030\010 \001(\001\022\024\n\014focal_length\030\t \001(\001\022\022\n\nit"
+      "er_times\030\n \001(\005\"\324\001\n\013CameraModel\0222\n\004type\030\001"
+      " \001(\0162$.CameraConfig.CameraModel.CameraTy"
+      "pe\0223\n\016pinhole_config\030\002 \001(\0132\033.CameraConfi"
+      "g.PinholeConfig\0224\n\017fish_eye_config\030\003 \001(\013"
+      "2\033.CameraConfig.FishEyeConfig\"&\n\nCameraT"
+      "ype\022\013\n\007PINHOLE\020\000\022\013\n\007FISHEYE\020\001\"\263\003\n\tSFMCon"
+      "fig\022/\n\014camera_model\030\001 \001(\0132\031.CameraConfig"
+      ".CameraModel\0221\n\npnp_solver\030\002 \001(\0132\035.Camer"
+      "aConfig.PnpSolverConfig\0223\n\016feature_confi"
+      "g\030\003 \001(\0132\033.CameraConfig.FeatureConfig\022\025\n\r"
+      "enable_cv_p2p\030\004 \001(\010\022\031\n\021ransac_iterations"
+      "\030\005 \001(\005\022\025\n\rreproj_err_th\030\006 \001(\001\022\r\n\005sigma\030\007"
+      " \001(\001\022D\n\022decompose_H_method\030\010 \001(\0162(.Camer"
+      "aConfig.SFMConfig.DecomposeHMethod\022\034\n\024mi"
+      "n_triangulated_pts\030\t \001(\005\022\024\n\014min_parallax"
+      "\030\n \001(\001\";\n\020DecomposeHMethod\022\t\n\005ZHANG\020\000\022\016\n"
+      "\nEzio_Malis\020\001\022\014\n\010ORBSLAM3\020\002\"\207\004\n\017PnpSolve"
+      "rConfig\022\025\n\renable_cv_pnp\030\001 \001(\010\022F\n\020pnp_so"
+      "lve_method\030\002 \001(\0162,.CameraConfig.PnpSolve"
+      "rConfig.PnpSolveMethod\022@\n\rpnp_cv_method\030"
+      "\003 \001(\0162).CameraConfig.PnpSolverConfig.Pnp"
+      "CvMethod\022\026\n\016max_iterations\030\004 \001(\005\"6\n\016PnpS"
+      "olveMethod\022\007\n\003DLT\020\000\022\006\n\002BA\020\001\022\010\n\004EPNP\020\002\022\t\n"
+      "\005MLPNP\020\003\"\202\002\n\013PnpCvMethod\022\035\n\031OpenCV_SOLVE"
+      "PNP_ITERATIVE\020\000\022\030\n\024OpenCV_SOLVEPNP_EPNP\020"
+      "\001\022\027\n\023OpenCV_SOLVEPNP_P3P\020\002\022\027\n\023OpenCV_SOL"
+      "VEPNP_DLS\020\003\022\030\n\024OpenCV_SOLVEPNP_UPNP\020\004\022\030\n"
+      "\024OpenCV_SOLVEPNP_AP3P\020\005\022\030\n\024OpenCV_SOLVEP"
+      "NP_IPPE\020\006\022\037\n\033OpenCV_SOLVEPNP_IPPE_SQUARE"
+      "\020\007\022\031\n\025OpenCV_SOLVEPNP_SQPNP\020\010*4\n\013Matcher"
+      "Type\022\013\n\007HANMING\020\000\022\t\n\005FLANN\020\001\022\r\n\tSUPERGLU"
+      "E\020\002*\\\n\013FeatureType\022\n\n\006F_SIFT\020\000\022\n\n\006F_SURF"
+      "\020\001\022\t\n\005F_ORB\020\002\022\013\n\007F_BRISK\020\003\022\013\n\007F_AKAZE\020\004\022"
+      "\020\n\014F_SUPERPOINT\020\005*_\n\016DescriptorType\022\n\n\006D"
+      "_SIFT\020\000\022\n\n\006D_SURF\020\001\022\t\n\005D_ORB\020\002\022\013\n\007D_BRIS"
+      "K\020\003\022\013\n\007D_AKAZE\020\004\022\020\n\014D_SUPERPOINT\020\005b\006prot"
       "o3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2482);
+      descriptor, 3042);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "camera.proto", &protobuf_RegisterTypes);
   ::protobuf_tensorRT_2eproto::AddDescriptors();
@@ -609,11 +643,59 @@ const CameraModel_CameraType CameraModel::CameraType_MIN;
 const CameraModel_CameraType CameraModel::CameraType_MAX;
 const int CameraModel::CameraType_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-const ::google::protobuf::EnumDescriptor* PnpSolverConfig_PnpSolveMethod_descriptor() {
+const ::google::protobuf::EnumDescriptor* SFMConfig_DecomposeHMethod_descriptor() {
   protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
   return protobuf_camera_2eproto::file_level_enum_descriptors[2];
 }
+bool SFMConfig_DecomposeHMethod_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const SFMConfig_DecomposeHMethod SFMConfig::ZHANG;
+const SFMConfig_DecomposeHMethod SFMConfig::Ezio_Malis;
+const SFMConfig_DecomposeHMethod SFMConfig::ORBSLAM3;
+const SFMConfig_DecomposeHMethod SFMConfig::DecomposeHMethod_MIN;
+const SFMConfig_DecomposeHMethod SFMConfig::DecomposeHMethod_MAX;
+const int SFMConfig::DecomposeHMethod_ARRAYSIZE;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+const ::google::protobuf::EnumDescriptor* PnpSolverConfig_PnpSolveMethod_descriptor() {
+  protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_camera_2eproto::file_level_enum_descriptors[3];
+}
 bool PnpSolverConfig_PnpSolveMethod_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::DLT;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::BA;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::EPNP;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::MLPNP;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::PnpSolveMethod_MIN;
+const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::PnpSolveMethod_MAX;
+const int PnpSolverConfig::PnpSolveMethod_ARRAYSIZE;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+const ::google::protobuf::EnumDescriptor* PnpSolverConfig_PnpCvMethod_descriptor() {
+  protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_camera_2eproto::file_level_enum_descriptors[4];
+}
+bool PnpSolverConfig_PnpCvMethod_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -624,10 +706,6 @@ bool PnpSolverConfig_PnpSolveMethod_IsValid(int value) {
     case 6:
     case 7:
     case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
       return true;
     default:
       return false;
@@ -635,26 +713,22 @@ bool PnpSolverConfig_PnpSolveMethod_IsValid(int value) {
 }
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::DLT;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::P3P;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::EPNP;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::MLPNP;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_ITERATIVE;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_EPNP;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_P3P;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_DLS;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_UPNP;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_AP3P;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_IPPE;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_IPPE_SQUARE;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::OpenCV_SOLVEPNP_SQPNP;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::PnpSolveMethod_MIN;
-const PnpSolverConfig_PnpSolveMethod PnpSolverConfig::PnpSolveMethod_MAX;
-const int PnpSolverConfig::PnpSolveMethod_ARRAYSIZE;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_ITERATIVE;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_EPNP;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_P3P;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_DLS;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_UPNP;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_AP3P;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_IPPE;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_IPPE_SQUARE;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::OpenCV_SOLVEPNP_SQPNP;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::PnpCvMethod_MIN;
+const PnpSolverConfig_PnpCvMethod PnpSolverConfig::PnpCvMethod_MAX;
+const int PnpSolverConfig::PnpCvMethod_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 const ::google::protobuf::EnumDescriptor* MatcherType_descriptor() {
   protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_camera_2eproto::file_level_enum_descriptors[3];
+  return protobuf_camera_2eproto::file_level_enum_descriptors[5];
 }
 bool MatcherType_IsValid(int value) {
   switch (value) {
@@ -669,7 +743,7 @@ bool MatcherType_IsValid(int value) {
 
 const ::google::protobuf::EnumDescriptor* FeatureType_descriptor() {
   protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_camera_2eproto::file_level_enum_descriptors[4];
+  return protobuf_camera_2eproto::file_level_enum_descriptors[6];
 }
 bool FeatureType_IsValid(int value) {
   switch (value) {
@@ -687,7 +761,7 @@ bool FeatureType_IsValid(int value) {
 
 const ::google::protobuf::EnumDescriptor* DescriptorType_descriptor() {
   protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_camera_2eproto::file_level_enum_descriptors[5];
+  return protobuf_camera_2eproto::file_level_enum_descriptors[7];
 }
 bool DescriptorType_IsValid(int value) {
   switch (value) {
@@ -697,20 +771,6 @@ bool DescriptorType_IsValid(int value) {
     case 3:
     case 4:
     case 5:
-      return true;
-    default:
-      return false;
-  }
-}
-
-const ::google::protobuf::EnumDescriptor* DistortMethod_descriptor() {
-  protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_camera_2eproto::file_level_enum_descriptors[6];
-}
-bool DistortMethod_IsValid(int value) {
-  switch (value) {
-    case 0:
-    case 1:
       return true;
     default:
       return false;
@@ -2822,6 +2882,7 @@ void OpenStereoConfig::InternalSwap(OpenStereoConfig* other) {
 void KLOpticalFlowConfig::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int KLOpticalFlowConfig::kEnableKlopflowFieldNumber;
 const int KLOpticalFlowConfig::kReverseCheckFieldNumber;
 const int KLOpticalFlowConfig::kPtErrFieldNumber;
 const int KLOpticalFlowConfig::kMinTrackedNumsFieldNumber;
@@ -2838,16 +2899,16 @@ KLOpticalFlowConfig::KLOpticalFlowConfig(const KLOpticalFlowConfig& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&pt_err_, &from.pt_err_,
-    static_cast<size_t>(reinterpret_cast<char*>(&min_tracked_nums_) -
-    reinterpret_cast<char*>(&pt_err_)) + sizeof(min_tracked_nums_));
+  ::memcpy(&enable_klopflow_, &from.enable_klopflow_,
+    static_cast<size_t>(reinterpret_cast<char*>(&pt_err_) -
+    reinterpret_cast<char*>(&enable_klopflow_)) + sizeof(pt_err_));
   // @@protoc_insertion_point(copy_constructor:CameraConfig.KLOpticalFlowConfig)
 }
 
 void KLOpticalFlowConfig::SharedCtor() {
-  ::memset(&pt_err_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&min_tracked_nums_) -
-      reinterpret_cast<char*>(&pt_err_)) + sizeof(min_tracked_nums_));
+  ::memset(&enable_klopflow_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&pt_err_) -
+      reinterpret_cast<char*>(&enable_klopflow_)) + sizeof(pt_err_));
 }
 
 KLOpticalFlowConfig::~KLOpticalFlowConfig() {
@@ -2878,9 +2939,9 @@ void KLOpticalFlowConfig::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&pt_err_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&min_tracked_nums_) -
-      reinterpret_cast<char*>(&pt_err_)) + sizeof(min_tracked_nums_));
+  ::memset(&enable_klopflow_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&pt_err_) -
+      reinterpret_cast<char*>(&enable_klopflow_)) + sizeof(pt_err_));
   _internal_metadata_.Clear();
 }
 
@@ -2894,10 +2955,24 @@ bool KLOpticalFlowConfig::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // bool reverse_check = 1;
+      // bool enable_klopflow = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enable_klopflow_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool reverse_check = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
@@ -2908,10 +2983,10 @@ bool KLOpticalFlowConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // double pt_err = 2;
-      case 2: {
+      // double pt_err = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(17u /* 17 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(25u /* 25 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
@@ -2922,10 +2997,10 @@ bool KLOpticalFlowConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 min_tracked_nums = 3;
-      case 3: {
+      // int32 min_tracked_nums = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -2962,19 +3037,24 @@ void KLOpticalFlowConfig::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // bool reverse_check = 1;
+  // bool enable_klopflow = 1;
+  if (this->enable_klopflow() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->enable_klopflow(), output);
+  }
+
+  // bool reverse_check = 2;
   if (this->reverse_check() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->reverse_check(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->reverse_check(), output);
   }
 
-  // double pt_err = 2;
+  // double pt_err = 3;
   if (this->pt_err() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->pt_err(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->pt_err(), output);
   }
 
-  // int32 min_tracked_nums = 3;
+  // int32 min_tracked_nums = 4;
   if (this->min_tracked_nums() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->min_tracked_nums(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->min_tracked_nums(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2991,19 +3071,24 @@ void KLOpticalFlowConfig::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // bool reverse_check = 1;
+  // bool enable_klopflow = 1;
+  if (this->enable_klopflow() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->enable_klopflow(), target);
+  }
+
+  // bool reverse_check = 2;
   if (this->reverse_check() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->reverse_check(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->reverse_check(), target);
   }
 
-  // double pt_err = 2;
+  // double pt_err = 3;
   if (this->pt_err() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->pt_err(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->pt_err(), target);
   }
 
-  // int32 min_tracked_nums = 3;
+  // int32 min_tracked_nums = 4;
   if (this->min_tracked_nums() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->min_tracked_nums(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->min_tracked_nums(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -3023,21 +3108,26 @@ size_t KLOpticalFlowConfig::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // double pt_err = 2;
-  if (this->pt_err() != 0) {
-    total_size += 1 + 8;
+  // bool enable_klopflow = 1;
+  if (this->enable_klopflow() != 0) {
+    total_size += 1 + 1;
   }
 
-  // bool reverse_check = 1;
+  // bool reverse_check = 2;
   if (this->reverse_check() != 0) {
     total_size += 1 + 1;
   }
 
-  // int32 min_tracked_nums = 3;
+  // int32 min_tracked_nums = 4;
   if (this->min_tracked_nums() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->min_tracked_nums());
+  }
+
+  // double pt_err = 3;
+  if (this->pt_err() != 0) {
+    total_size += 1 + 8;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -3067,14 +3157,17 @@ void KLOpticalFlowConfig::MergeFrom(const KLOpticalFlowConfig& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.pt_err() != 0) {
-    set_pt_err(from.pt_err());
+  if (from.enable_klopflow() != 0) {
+    set_enable_klopflow(from.enable_klopflow());
   }
   if (from.reverse_check() != 0) {
     set_reverse_check(from.reverse_check());
   }
   if (from.min_tracked_nums() != 0) {
     set_min_tracked_nums(from.min_tracked_nums());
+  }
+  if (from.pt_err() != 0) {
+    set_pt_err(from.pt_err());
   }
 }
 
@@ -3102,9 +3195,10 @@ void KLOpticalFlowConfig::Swap(KLOpticalFlowConfig* other) {
 }
 void KLOpticalFlowConfig::InternalSwap(KLOpticalFlowConfig* other) {
   using std::swap;
-  swap(pt_err_, other->pt_err_);
+  swap(enable_klopflow_, other->enable_klopflow_);
   swap(reverse_check_, other->reverse_check_);
   swap(min_tracked_nums_, other->min_tracked_nums_);
+  swap(pt_err_, other->pt_err_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
@@ -3306,8 +3400,9 @@ const int PinholeConfig::kK1FieldNumber;
 const int PinholeConfig::kK2FieldNumber;
 const int PinholeConfig::kP1FieldNumber;
 const int PinholeConfig::kP2FieldNumber;
+const int PinholeConfig::kFocalLengthFieldNumber;
 const int PinholeConfig::kIterTimesFieldNumber;
-const int PinholeConfig::kDistortMethodFieldNumber;
+const int PinholeConfig::kEnableCvUndistortFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PinholeConfig::PinholeConfig()
@@ -3322,15 +3417,15 @@ PinholeConfig::PinholeConfig(const PinholeConfig& from)
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&fx_, &from.fx_,
-    static_cast<size_t>(reinterpret_cast<char*>(&distort_method_) -
-    reinterpret_cast<char*>(&fx_)) + sizeof(distort_method_));
+    static_cast<size_t>(reinterpret_cast<char*>(&enable_cv_undistort_) -
+    reinterpret_cast<char*>(&fx_)) + sizeof(enable_cv_undistort_));
   // @@protoc_insertion_point(copy_constructor:CameraConfig.PinholeConfig)
 }
 
 void PinholeConfig::SharedCtor() {
   ::memset(&fx_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&distort_method_) -
-      reinterpret_cast<char*>(&fx_)) + sizeof(distort_method_));
+      reinterpret_cast<char*>(&enable_cv_undistort_) -
+      reinterpret_cast<char*>(&fx_)) + sizeof(enable_cv_undistort_));
 }
 
 PinholeConfig::~PinholeConfig() {
@@ -3362,8 +3457,8 @@ void PinholeConfig::Clear() {
   (void) cached_has_bits;
 
   ::memset(&fx_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&distort_method_) -
-      reinterpret_cast<char*>(&fx_)) + sizeof(distort_method_));
+      reinterpret_cast<char*>(&enable_cv_undistort_) -
+      reinterpret_cast<char*>(&fx_)) + sizeof(enable_cv_undistort_));
   _internal_metadata_.Clear();
 }
 
@@ -3489,10 +3584,24 @@ bool PinholeConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 iter_times = 9;
+      // double focal_length = 9;
       case 9: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(72u /* 72 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(73u /* 73 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &focal_length_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 iter_times = 10;
+      case 10: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(80u /* 80 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3503,15 +3612,14 @@ bool PinholeConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // .CameraConfig.DistortMethod distort_method = 10;
-      case 10: {
+      // bool enable_cv_undistort = 11;
+      case 11: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(80u /* 80 & 0xFF */)) {
-          int value;
+            static_cast< ::google::protobuf::uint8>(88u /* 88 & 0xFF */)) {
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_distort_method(static_cast< ::CameraConfig::DistortMethod >(value));
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enable_cv_undistort_)));
         } else {
           goto handle_unusual;
         }
@@ -3584,15 +3692,19 @@ void PinholeConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteDouble(8, this->p2(), output);
   }
 
-  // int32 iter_times = 9;
-  if (this->iter_times() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->iter_times(), output);
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(9, this->focal_length(), output);
   }
 
-  // .CameraConfig.DistortMethod distort_method = 10;
-  if (this->distort_method() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      10, this->distort_method(), output);
+  // int32 iter_times = 10;
+  if (this->iter_times() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->iter_times(), output);
+  }
+
+  // bool enable_cv_undistort = 11;
+  if (this->enable_cv_undistort() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(11, this->enable_cv_undistort(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -3649,15 +3761,19 @@ void PinholeConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(8, this->p2(), target);
   }
 
-  // int32 iter_times = 9;
-  if (this->iter_times() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->iter_times(), target);
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(9, this->focal_length(), target);
   }
 
-  // .CameraConfig.DistortMethod distort_method = 10;
-  if (this->distort_method() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      10, this->distort_method(), target);
+  // int32 iter_times = 10;
+  if (this->iter_times() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->iter_times(), target);
+  }
+
+  // bool enable_cv_undistort = 11;
+  if (this->enable_cv_undistort() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(11, this->enable_cv_undistort(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -3717,17 +3833,21 @@ size_t PinholeConfig::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int32 iter_times = 9;
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // int32 iter_times = 10;
   if (this->iter_times() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->iter_times());
   }
 
-  // .CameraConfig.DistortMethod distort_method = 10;
-  if (this->distort_method() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->distort_method());
+  // bool enable_cv_undistort = 11;
+  if (this->enable_cv_undistort() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -3781,11 +3901,14 @@ void PinholeConfig::MergeFrom(const PinholeConfig& from) {
   if (from.p2() != 0) {
     set_p2(from.p2());
   }
+  if (from.focal_length() != 0) {
+    set_focal_length(from.focal_length());
+  }
   if (from.iter_times() != 0) {
     set_iter_times(from.iter_times());
   }
-  if (from.distort_method() != 0) {
-    set_distort_method(from.distort_method());
+  if (from.enable_cv_undistort() != 0) {
+    set_enable_cv_undistort(from.enable_cv_undistort());
   }
 }
 
@@ -3821,8 +3944,9 @@ void PinholeConfig::InternalSwap(PinholeConfig* other) {
   swap(k2_, other->k2_);
   swap(p1_, other->p1_);
   swap(p2_, other->p2_);
+  swap(focal_length_, other->focal_length_);
   swap(iter_times_, other->iter_times_);
-  swap(distort_method_, other->distort_method_);
+  swap(enable_cv_undistort_, other->enable_cv_undistort_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
@@ -3845,6 +3969,7 @@ const int FishEyeConfig::kK1FieldNumber;
 const int FishEyeConfig::kK2FieldNumber;
 const int FishEyeConfig::kK3FieldNumber;
 const int FishEyeConfig::kK4FieldNumber;
+const int FishEyeConfig::kFocalLengthFieldNumber;
 const int FishEyeConfig::kIterTimesFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -4027,10 +4152,24 @@ bool FishEyeConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 iter_times = 9;
+      // double focal_length = 9;
       case 9: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(72u /* 72 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(73u /* 73 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &focal_length_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 iter_times = 10;
+      case 10: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(80u /* 80 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -4107,9 +4246,14 @@ void FishEyeConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteDouble(8, this->k4(), output);
   }
 
-  // int32 iter_times = 9;
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(9, this->focal_length(), output);
+  }
+
+  // int32 iter_times = 10;
   if (this->iter_times() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->iter_times(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->iter_times(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4166,9 +4310,14 @@ void FishEyeConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(8, this->k4(), target);
   }
 
-  // int32 iter_times = 9;
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(9, this->focal_length(), target);
+  }
+
+  // int32 iter_times = 10;
   if (this->iter_times() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->iter_times(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->iter_times(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4228,7 +4377,12 @@ size_t FishEyeConfig::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int32 iter_times = 9;
+  // double focal_length = 9;
+  if (this->focal_length() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // int32 iter_times = 10;
   if (this->iter_times() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -4286,6 +4440,9 @@ void FishEyeConfig::MergeFrom(const FishEyeConfig& from) {
   if (from.k4() != 0) {
     set_k4(from.k4());
   }
+  if (from.focal_length() != 0) {
+    set_focal_length(from.focal_length());
+  }
   if (from.iter_times() != 0) {
     set_iter_times(from.iter_times());
   }
@@ -4323,6 +4480,7 @@ void FishEyeConfig::InternalSwap(FishEyeConfig* other) {
   swap(k2_, other->k2_);
   swap(k3_, other->k3_);
   swap(k4_, other->k4_);
+  swap(focal_length_, other->focal_length_);
   swap(iter_times_, other->iter_times_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -4660,114 +4818,420 @@ void CameraModel::InternalSwap(CameraModel* other) {
 
 // ===================================================================
 
-void SFM::InitAsDefaultInstance() {
+void SFMConfig::InitAsDefaultInstance() {
+  ::CameraConfig::_SFMConfig_default_instance_._instance.get_mutable()->camera_model_ = const_cast< ::CameraConfig::CameraModel*>(
+      ::CameraConfig::CameraModel::internal_default_instance());
+  ::CameraConfig::_SFMConfig_default_instance_._instance.get_mutable()->pnp_solver_ = const_cast< ::CameraConfig::PnpSolverConfig*>(
+      ::CameraConfig::PnpSolverConfig::internal_default_instance());
+  ::CameraConfig::_SFMConfig_default_instance_._instance.get_mutable()->feature_config_ = const_cast< ::CameraConfig::FeatureConfig*>(
+      ::CameraConfig::FeatureConfig::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int SFMConfig::kCameraModelFieldNumber;
+const int SFMConfig::kPnpSolverFieldNumber;
+const int SFMConfig::kFeatureConfigFieldNumber;
+const int SFMConfig::kEnableCvP2PFieldNumber;
+const int SFMConfig::kRansacIterationsFieldNumber;
+const int SFMConfig::kReprojErrThFieldNumber;
+const int SFMConfig::kSigmaFieldNumber;
+const int SFMConfig::kDecomposeHMethodFieldNumber;
+const int SFMConfig::kMinTriangulatedPtsFieldNumber;
+const int SFMConfig::kMinParallaxFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-SFM::SFM()
+SFMConfig::SFMConfig()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_camera_2eproto::scc_info_SFM.base);
+      &protobuf_camera_2eproto::scc_info_SFMConfig.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:CameraConfig.SFM)
+  // @@protoc_insertion_point(constructor:CameraConfig.SFMConfig)
 }
-SFM::SFM(const SFM& from)
+SFMConfig::SFMConfig(const SFMConfig& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  // @@protoc_insertion_point(copy_constructor:CameraConfig.SFM)
+  if (from.has_camera_model()) {
+    camera_model_ = new ::CameraConfig::CameraModel(*from.camera_model_);
+  } else {
+    camera_model_ = NULL;
+  }
+  if (from.has_pnp_solver()) {
+    pnp_solver_ = new ::CameraConfig::PnpSolverConfig(*from.pnp_solver_);
+  } else {
+    pnp_solver_ = NULL;
+  }
+  if (from.has_feature_config()) {
+    feature_config_ = new ::CameraConfig::FeatureConfig(*from.feature_config_);
+  } else {
+    feature_config_ = NULL;
+  }
+  ::memcpy(&enable_cv_p2p_, &from.enable_cv_p2p_,
+    static_cast<size_t>(reinterpret_cast<char*>(&min_parallax_) -
+    reinterpret_cast<char*>(&enable_cv_p2p_)) + sizeof(min_parallax_));
+  // @@protoc_insertion_point(copy_constructor:CameraConfig.SFMConfig)
 }
 
-void SFM::SharedCtor() {
+void SFMConfig::SharedCtor() {
+  ::memset(&camera_model_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&min_parallax_) -
+      reinterpret_cast<char*>(&camera_model_)) + sizeof(min_parallax_));
 }
 
-SFM::~SFM() {
-  // @@protoc_insertion_point(destructor:CameraConfig.SFM)
+SFMConfig::~SFMConfig() {
+  // @@protoc_insertion_point(destructor:CameraConfig.SFMConfig)
   SharedDtor();
 }
 
-void SFM::SharedDtor() {
+void SFMConfig::SharedDtor() {
+  if (this != internal_default_instance()) delete camera_model_;
+  if (this != internal_default_instance()) delete pnp_solver_;
+  if (this != internal_default_instance()) delete feature_config_;
 }
 
-void SFM::SetCachedSize(int size) const {
+void SFMConfig::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* SFM::descriptor() {
+const ::google::protobuf::Descriptor* SFMConfig::descriptor() {
   ::protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_camera_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const SFM& SFM::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_camera_2eproto::scc_info_SFM.base);
+const SFMConfig& SFMConfig::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_camera_2eproto::scc_info_SFMConfig.base);
   return *internal_default_instance();
 }
 
 
-void SFM::Clear() {
-// @@protoc_insertion_point(message_clear_start:CameraConfig.SFM)
+void SFMConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:CameraConfig.SFMConfig)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  if (GetArenaNoVirtual() == NULL && camera_model_ != NULL) {
+    delete camera_model_;
+  }
+  camera_model_ = NULL;
+  if (GetArenaNoVirtual() == NULL && pnp_solver_ != NULL) {
+    delete pnp_solver_;
+  }
+  pnp_solver_ = NULL;
+  if (GetArenaNoVirtual() == NULL && feature_config_ != NULL) {
+    delete feature_config_;
+  }
+  feature_config_ = NULL;
+  ::memset(&enable_cv_p2p_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&min_parallax_) -
+      reinterpret_cast<char*>(&enable_cv_p2p_)) + sizeof(min_parallax_));
   _internal_metadata_.Clear();
 }
 
-bool SFM::MergePartialFromCodedStream(
+bool SFMConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:CameraConfig.SFM)
+  // @@protoc_insertion_point(parse_start:CameraConfig.SFMConfig)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-  handle_unusual:
-    if (tag == 0) {
-      goto success;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // .CameraConfig.CameraModel camera_model = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_camera_model()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .CameraConfig.PnpSolverConfig pnp_solver = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_pnp_solver()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .CameraConfig.FeatureConfig feature_config = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_feature_config()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool enable_cv_p2p = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enable_cv_p2p_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 ransac_iterations = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ransac_iterations_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // double reproj_err_th = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(49u /* 49 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &reproj_err_th_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // double sigma = 7;
+      case 7: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(57u /* 57 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &sigma_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .CameraConfig.SFMConfig.DecomposeHMethod decompose_H_method = 8;
+      case 8: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(64u /* 64 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_decompose_h_method(static_cast< ::CameraConfig::SFMConfig_DecomposeHMethod >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 min_triangulated_pts = 9;
+      case 9: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(72u /* 72 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &min_triangulated_pts_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // double min_parallax = 10;
+      case 10: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(81u /* 81 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &min_parallax_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
     }
-    DO_(::google::protobuf::internal::WireFormat::SkipField(
-          input, tag, _internal_metadata_.mutable_unknown_fields()));
   }
 success:
-  // @@protoc_insertion_point(parse_success:CameraConfig.SFM)
+  // @@protoc_insertion_point(parse_success:CameraConfig.SFMConfig)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:CameraConfig.SFM)
+  // @@protoc_insertion_point(parse_failure:CameraConfig.SFMConfig)
   return false;
 #undef DO_
 }
 
-void SFM::SerializeWithCachedSizes(
+void SFMConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:CameraConfig.SFM)
+  // @@protoc_insertion_point(serialize_start:CameraConfig.SFMConfig)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // .CameraConfig.CameraModel camera_model = 1;
+  if (this->has_camera_model()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->_internal_camera_model(), output);
+  }
+
+  // .CameraConfig.PnpSolverConfig pnp_solver = 2;
+  if (this->has_pnp_solver()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->_internal_pnp_solver(), output);
+  }
+
+  // .CameraConfig.FeatureConfig feature_config = 3;
+  if (this->has_feature_config()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->_internal_feature_config(), output);
+  }
+
+  // bool enable_cv_p2p = 4;
+  if (this->enable_cv_p2p() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->enable_cv_p2p(), output);
+  }
+
+  // int32 ransac_iterations = 5;
+  if (this->ransac_iterations() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->ransac_iterations(), output);
+  }
+
+  // double reproj_err_th = 6;
+  if (this->reproj_err_th() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(6, this->reproj_err_th(), output);
+  }
+
+  // double sigma = 7;
+  if (this->sigma() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(7, this->sigma(), output);
+  }
+
+  // .CameraConfig.SFMConfig.DecomposeHMethod decompose_H_method = 8;
+  if (this->decompose_h_method() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      8, this->decompose_h_method(), output);
+  }
+
+  // int32 min_triangulated_pts = 9;
+  if (this->min_triangulated_pts() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->min_triangulated_pts(), output);
+  }
+
+  // double min_parallax = 10;
+  if (this->min_parallax() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(10, this->min_parallax(), output);
+  }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:CameraConfig.SFM)
+  // @@protoc_insertion_point(serialize_end:CameraConfig.SFMConfig)
 }
 
-::google::protobuf::uint8* SFM::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SFMConfig::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:CameraConfig.SFM)
+  // @@protoc_insertion_point(serialize_to_array_start:CameraConfig.SFMConfig)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // .CameraConfig.CameraModel camera_model = 1;
+  if (this->has_camera_model()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->_internal_camera_model(), deterministic, target);
+  }
+
+  // .CameraConfig.PnpSolverConfig pnp_solver = 2;
+  if (this->has_pnp_solver()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, this->_internal_pnp_solver(), deterministic, target);
+  }
+
+  // .CameraConfig.FeatureConfig feature_config = 3;
+  if (this->has_feature_config()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, this->_internal_feature_config(), deterministic, target);
+  }
+
+  // bool enable_cv_p2p = 4;
+  if (this->enable_cv_p2p() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->enable_cv_p2p(), target);
+  }
+
+  // int32 ransac_iterations = 5;
+  if (this->ransac_iterations() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->ransac_iterations(), target);
+  }
+
+  // double reproj_err_th = 6;
+  if (this->reproj_err_th() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(6, this->reproj_err_th(), target);
+  }
+
+  // double sigma = 7;
+  if (this->sigma() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(7, this->sigma(), target);
+  }
+
+  // .CameraConfig.SFMConfig.DecomposeHMethod decompose_H_method = 8;
+  if (this->decompose_h_method() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      8, this->decompose_h_method(), target);
+  }
+
+  // int32 min_triangulated_pts = 9;
+  if (this->min_triangulated_pts() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->min_triangulated_pts(), target);
+  }
+
+  // double min_parallax = 10;
+  if (this->min_parallax() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(10, this->min_parallax(), target);
+  }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:CameraConfig.SFM)
+  // @@protoc_insertion_point(serialize_to_array_end:CameraConfig.SFMConfig)
   return target;
 }
 
-size_t SFM::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:CameraConfig.SFM)
+size_t SFMConfig::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:CameraConfig.SFMConfig)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4775,63 +5239,164 @@ size_t SFM::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
+  // .CameraConfig.CameraModel camera_model = 1;
+  if (this->has_camera_model()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
+        *camera_model_);
+  }
+
+  // .CameraConfig.PnpSolverConfig pnp_solver = 2;
+  if (this->has_pnp_solver()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
+        *pnp_solver_);
+  }
+
+  // .CameraConfig.FeatureConfig feature_config = 3;
+  if (this->has_feature_config()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
+        *feature_config_);
+  }
+
+  // bool enable_cv_p2p = 4;
+  if (this->enable_cv_p2p() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // int32 ransac_iterations = 5;
+  if (this->ransac_iterations() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->ransac_iterations());
+  }
+
+  // double reproj_err_th = 6;
+  if (this->reproj_err_th() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double sigma = 7;
+  if (this->sigma() != 0) {
+    total_size += 1 + 8;
+  }
+
+  // .CameraConfig.SFMConfig.DecomposeHMethod decompose_H_method = 8;
+  if (this->decompose_h_method() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->decompose_h_method());
+  }
+
+  // int32 min_triangulated_pts = 9;
+  if (this->min_triangulated_pts() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->min_triangulated_pts());
+  }
+
+  // double min_parallax = 10;
+  if (this->min_parallax() != 0) {
+    total_size += 1 + 8;
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void SFM::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:CameraConfig.SFM)
+void SFMConfig::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:CameraConfig.SFMConfig)
   GOOGLE_DCHECK_NE(&from, this);
-  const SFM* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const SFM>(
+  const SFMConfig* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const SFMConfig>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:CameraConfig.SFM)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:CameraConfig.SFMConfig)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:CameraConfig.SFM)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:CameraConfig.SFMConfig)
     MergeFrom(*source);
   }
 }
 
-void SFM::MergeFrom(const SFM& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:CameraConfig.SFM)
+void SFMConfig::MergeFrom(const SFMConfig& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:CameraConfig.SFMConfig)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.has_camera_model()) {
+    mutable_camera_model()->::CameraConfig::CameraModel::MergeFrom(from.camera_model());
+  }
+  if (from.has_pnp_solver()) {
+    mutable_pnp_solver()->::CameraConfig::PnpSolverConfig::MergeFrom(from.pnp_solver());
+  }
+  if (from.has_feature_config()) {
+    mutable_feature_config()->::CameraConfig::FeatureConfig::MergeFrom(from.feature_config());
+  }
+  if (from.enable_cv_p2p() != 0) {
+    set_enable_cv_p2p(from.enable_cv_p2p());
+  }
+  if (from.ransac_iterations() != 0) {
+    set_ransac_iterations(from.ransac_iterations());
+  }
+  if (from.reproj_err_th() != 0) {
+    set_reproj_err_th(from.reproj_err_th());
+  }
+  if (from.sigma() != 0) {
+    set_sigma(from.sigma());
+  }
+  if (from.decompose_h_method() != 0) {
+    set_decompose_h_method(from.decompose_h_method());
+  }
+  if (from.min_triangulated_pts() != 0) {
+    set_min_triangulated_pts(from.min_triangulated_pts());
+  }
+  if (from.min_parallax() != 0) {
+    set_min_parallax(from.min_parallax());
+  }
 }
 
-void SFM::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:CameraConfig.SFM)
+void SFMConfig::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:CameraConfig.SFMConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SFM::CopyFrom(const SFM& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:CameraConfig.SFM)
+void SFMConfig::CopyFrom(const SFMConfig& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:CameraConfig.SFMConfig)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SFM::IsInitialized() const {
+bool SFMConfig::IsInitialized() const {
   return true;
 }
 
-void SFM::Swap(SFM* other) {
+void SFMConfig::Swap(SFMConfig* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void SFM::InternalSwap(SFM* other) {
+void SFMConfig::InternalSwap(SFMConfig* other) {
   using std::swap;
+  swap(camera_model_, other->camera_model_);
+  swap(pnp_solver_, other->pnp_solver_);
+  swap(feature_config_, other->feature_config_);
+  swap(enable_cv_p2p_, other->enable_cv_p2p_);
+  swap(ransac_iterations_, other->ransac_iterations_);
+  swap(reproj_err_th_, other->reproj_err_th_);
+  swap(sigma_, other->sigma_);
+  swap(decompose_h_method_, other->decompose_h_method_);
+  swap(min_triangulated_pts_, other->min_triangulated_pts_);
+  swap(min_parallax_, other->min_parallax_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata SFM::GetMetadata() const {
+::google::protobuf::Metadata SFMConfig::GetMetadata() const {
   protobuf_camera_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_camera_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -4842,7 +5407,10 @@ void SFM::InternalSwap(SFM* other) {
 void PnpSolverConfig::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int PnpSolverConfig::kEnableCvPnpFieldNumber;
 const int PnpSolverConfig::kPnpSolveMethodFieldNumber;
+const int PnpSolverConfig::kPnpCvMethodFieldNumber;
+const int PnpSolverConfig::kMaxIterationsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PnpSolverConfig::PnpSolverConfig()
@@ -4856,12 +5424,16 @@ PnpSolverConfig::PnpSolverConfig(const PnpSolverConfig& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  pnp_solve_method_ = from.pnp_solve_method_;
+  ::memcpy(&enable_cv_pnp_, &from.enable_cv_pnp_,
+    static_cast<size_t>(reinterpret_cast<char*>(&max_iterations_) -
+    reinterpret_cast<char*>(&enable_cv_pnp_)) + sizeof(max_iterations_));
   // @@protoc_insertion_point(copy_constructor:CameraConfig.PnpSolverConfig)
 }
 
 void PnpSolverConfig::SharedCtor() {
-  pnp_solve_method_ = 0;
+  ::memset(&enable_cv_pnp_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&max_iterations_) -
+      reinterpret_cast<char*>(&enable_cv_pnp_)) + sizeof(max_iterations_));
 }
 
 PnpSolverConfig::~PnpSolverConfig() {
@@ -4892,7 +5464,9 @@ void PnpSolverConfig::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  pnp_solve_method_ = 0;
+  ::memset(&enable_cv_pnp_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&max_iterations_) -
+      reinterpret_cast<char*>(&enable_cv_pnp_)) + sizeof(max_iterations_));
   _internal_metadata_.Clear();
 }
 
@@ -4906,15 +5480,58 @@ bool PnpSolverConfig::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+      // bool enable_cv_pnp = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enable_cv_pnp_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
           set_pnp_solve_method(static_cast< ::CameraConfig::PnpSolverConfig_PnpSolveMethod >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .CameraConfig.PnpSolverConfig.PnpCvMethod pnp_cv_method = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_pnp_cv_method(static_cast< ::CameraConfig::PnpSolverConfig_PnpCvMethod >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 max_iterations = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &max_iterations_)));
         } else {
           goto handle_unusual;
         }
@@ -4947,10 +5564,26 @@ void PnpSolverConfig::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+  // bool enable_cv_pnp = 1;
+  if (this->enable_cv_pnp() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->enable_cv_pnp(), output);
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 2;
   if (this->pnp_solve_method() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->pnp_solve_method(), output);
+      2, this->pnp_solve_method(), output);
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpCvMethod pnp_cv_method = 3;
+  if (this->pnp_cv_method() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->pnp_cv_method(), output);
+  }
+
+  // int32 max_iterations = 4;
+  if (this->max_iterations() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->max_iterations(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4967,10 +5600,26 @@ void PnpSolverConfig::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+  // bool enable_cv_pnp = 1;
+  if (this->enable_cv_pnp() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->enable_cv_pnp(), target);
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 2;
   if (this->pnp_solve_method() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->pnp_solve_method(), target);
+      2, this->pnp_solve_method(), target);
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpCvMethod pnp_cv_method = 3;
+  if (this->pnp_cv_method() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->pnp_cv_method(), target);
+  }
+
+  // int32 max_iterations = 4;
+  if (this->max_iterations() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->max_iterations(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4990,10 +5639,28 @@ size_t PnpSolverConfig::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 1;
+  // bool enable_cv_pnp = 1;
+  if (this->enable_cv_pnp() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpSolveMethod pnp_solve_method = 2;
   if (this->pnp_solve_method() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->pnp_solve_method());
+  }
+
+  // .CameraConfig.PnpSolverConfig.PnpCvMethod pnp_cv_method = 3;
+  if (this->pnp_cv_method() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->pnp_cv_method());
+  }
+
+  // int32 max_iterations = 4;
+  if (this->max_iterations() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->max_iterations());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -5023,8 +5690,17 @@ void PnpSolverConfig::MergeFrom(const PnpSolverConfig& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.enable_cv_pnp() != 0) {
+    set_enable_cv_pnp(from.enable_cv_pnp());
+  }
   if (from.pnp_solve_method() != 0) {
     set_pnp_solve_method(from.pnp_solve_method());
+  }
+  if (from.pnp_cv_method() != 0) {
+    set_pnp_cv_method(from.pnp_cv_method());
+  }
+  if (from.max_iterations() != 0) {
+    set_max_iterations(from.max_iterations());
   }
 }
 
@@ -5052,7 +5728,10 @@ void PnpSolverConfig::Swap(PnpSolverConfig* other) {
 }
 void PnpSolverConfig::InternalSwap(PnpSolverConfig* other) {
   using std::swap;
+  swap(enable_cv_pnp_, other->enable_cv_pnp_);
   swap(pnp_solve_method_, other->pnp_solve_method_);
+  swap(pnp_cv_method_, other->pnp_cv_method_);
+  swap(max_iterations_, other->max_iterations_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
@@ -5099,8 +5778,8 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::CameraConfig::FishEyeConfig* Are
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::CameraConfig::CameraModel* Arena::CreateMaybeMessage< ::CameraConfig::CameraModel >(Arena* arena) {
   return Arena::CreateInternal< ::CameraConfig::CameraModel >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::CameraConfig::SFM* Arena::CreateMaybeMessage< ::CameraConfig::SFM >(Arena* arena) {
-  return Arena::CreateInternal< ::CameraConfig::SFM >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::CameraConfig::SFMConfig* Arena::CreateMaybeMessage< ::CameraConfig::SFMConfig >(Arena* arena) {
+  return Arena::CreateInternal< ::CameraConfig::SFMConfig >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::CameraConfig::PnpSolverConfig* Arena::CreateMaybeMessage< ::CameraConfig::PnpSolverConfig >(Arena* arena) {
   return Arena::CreateInternal< ::CameraConfig::PnpSolverConfig >(arena);

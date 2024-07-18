@@ -3,7 +3,7 @@ project(code_utils)
 
 set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS "-std=c++17")
-set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -fPIC -fopenmp")
+set(CMAKE_CXX_FLAGS_DEBUG "-O3 -Wall -g -ggdb -fPIC -fopenmp")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 cmake_policy(SET CMP0028 NEW)
 
@@ -95,12 +95,14 @@ add_library(code_utils_libs
     src/lidar/filter.cc
     src/camera/camera_model/fisheye.cc
     src/camera/camera_model/pinhole.cc
+    src/camera/camera_model/camera_model.cc
+    src/camera/open_stereo/inference.cc
+    src/camera/open_stereo/transforms.cc
     src/camera/feature_manager.cc
     src/camera/super_point.cc
     src/camera/super_glue.cc
-    src/camera/open_stereo/inference.cc
-    src/camera/open_stereo/transforms.cc
     src/camera/pnp_solver.cc
+    src/camera/sfm.cc
     src/tensorRT/generic.cc
     src/tensorRT/logger.cc
 )
@@ -159,6 +161,10 @@ if(BUILD_TESTS)
 
   add_executable(cv_test bin/test/cv_test.cc)
   target_link_libraries(cv_test code_utils_libs ${GTEST_LIBRARIES})
+
+  add_executable(sfm_test include/camera/sfm_test.cc)
+  target_link_libraries(sfm_test code_utils_libs ${GTEST_LIBRARIES})
+
 endif()
 
 add_executable(hello_world bin/hello_world.cc)
