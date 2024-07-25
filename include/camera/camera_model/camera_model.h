@@ -100,6 +100,7 @@ class CameraBase {
  public:
   double inv_fx_ = 0.0;
   double inv_fy_ = 0.0;
+  double focal_length_ = 0.0;
   Eigen::Matrix3d K_ = Eigen::Matrix3d::Zero();
   cv::Mat K_mat_;
   Eigen::Vector4d dist_coef_ = Eigen::Vector4d::Zero();

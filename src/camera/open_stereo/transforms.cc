@@ -116,7 +116,7 @@ RightBottomCrop::RightBottomCrop(int target_height, int target_width)
 std::unordered_map<std::string, cv::Mat> RightBottomCrop::operator()(
     std::unordered_map<std::string, cv::Mat>& sample) const {
   for (auto& item : sample) {
-    const std::string& key = item.first;
+    // const std::string& key = item.first;
     cv::Mat& image = item.second;
 
     int h = image.rows;

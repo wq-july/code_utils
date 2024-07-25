@@ -7,6 +7,7 @@ FishEyeKB::FishEyeKB(const CameraConfig::FishEyeConfig& config) : config_(config
   K_(1, 1) = config_.fy();
   K_(0, 2) = config_.cx();
   K_(1, 2) = config_.cy();
+  focal_length_ = config_.focal_length();
   CHECK(K_.determinant() != 0.0) << "Maybe Empty intrinsic matrix, please check !";
 
   inv_fx_ = 1.0 / K_(0, 0);
@@ -14,14 +15,13 @@ FishEyeKB::FishEyeKB(const CameraConfig::FishEyeConfig& config) : config_(config
 
   dist_coef_ = Eigen::Vector4d(config_.k1(), config_.k2(), config_.k3(), config_.k4());
 
-  // K_mat_ =
-  //     cv::Mat_<double>(3, 3) << (K_(0, 0), 0.0, K_(1, 1), 0.0, K_(0, 2), K_(1, 2), 0.0,
-  //     0.0, 1.0);
+  K_mat_ =
+      cv::Mat_<double>(3, 3) << (K_(0, 0), 0.0, K_(1, 1), 0.0, K_(0, 2), K_(1, 2), 0.0, 0.0, 1.0);
 
-  // dist_coef_mat_.at<double>(0) = dist_coef_(0);
-  // dist_coef_mat_.at<double>(1) = dist_coef_(1);
-  // dist_coef_mat_.at<double>(2) = dist_coef_(2);
-  // dist_coef_mat_.at<double>(3) = dist_coef_(3);
+  dist_coef_mat_.at<double>(0) = dist_coef_(0);
+  dist_coef_mat_.at<double>(1) = dist_coef_(1);
+  dist_coef_mat_.at<double>(2) = dist_coef_(2);
+  dist_coef_mat_.at<double>(3) = dist_coef_(3);
 }
 
 /**
